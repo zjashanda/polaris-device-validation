@@ -1,0 +1,140 @@
+{
+  "version": 1,
+  "actions": {
+    "network.ensure_online": {
+      "description": "Check or recover DUT online state through Windows hotspot and project network helpers.",
+      "side_effects": [
+        "windows_hotspot",
+        "serial_asr_reboot_if_needed"
+      ],
+      "command_template": [
+        "{python}",
+        "tools/device/polaris_network_orchestrator.py",
+        "ensure-online",
+        "--ssid",
+        "{wifi_ssid}",
+        "--pwd",
+        "{wifi_password}",
+        "--label",
+        "{label}"
+      ]
+    },
+    "audio.phrase_probe": {
+      "description": "Play phrase audio and collect serial ASR/TTS evidence.",
+      "side_effects": [
+        "audio_playback"
+      ],
+      "command_template": [
+        "{python}",
+        "tools/probe/polaris_phrase_probe.py",
+        "--text",
+        "{text}",
+        "--observe-ms",
+        "{observe_ms}",
+        "--label",
+        "{label}",
+        "--device-key",
+        "{device_key}"
+      ]
+    },
+    "doc_case.run": {
+      "description": "Run a Polaris document case by case id.",
+      "side_effects": [
+        "audio_playback",
+        "cloud_optional",
+        "serial"
+      ],
+      "command_template": [
+        "{python}",
+        "tools/execution/polaris_doc_case_runner.py",
+        "--case-id",
+        "{case_id}",
+        "--device-key",
+        "{device_key}"
+      ]
+    },
+    "fa2.command_batch": {
+      "description": "Run FA2 command batch playback and assertion flow.",
+      "side_effects": [
+        "audio_playback",
+        "serial"
+      ],
+      "command_template": [
+        "{python}",
+        "tools/validation/polaris_fa2_command_batch.py",
+        "--command-file",
+        "{command_file}",
+        "--wake-word",
+        "{wake_word}",
+        "--device-key",
+        "{device_key}",
+        "--limit",
+        "{command_limit}",
+        "--label",
+        "{label}"
+      ]
+    },
+    "cloud.set_full_duplex": {
+      "description": "Set duplex mode timeout; enable=1 means full duplex, enable=0 means half duplex.",
+      "side_effects": [
+        "cloud_config"
+      ],
+      "command_template": [
+        "{python}",
+        "tools/cloud/polaris_app_control.py",
+        "set-full-duplex",
+        "--enable",
+        "{enable}",
+        "--timeout",
+        "{timeout_s}"
+      ]
+    },
+    "cloud.set_wakeup_word": {
+      "description": "Set wake word through cloud API.",
+      "side_effects": [
+        "cloud_config"
+      ],
+      "command_template": [
+        "{python}",
+        "tools/cloud/polaris_app_control.py",
+        "set-wakeup-word",
+        "--word",
+        "{wake_word}"
+      ]
+    },
+    "cloud.set_volume": {
+      "description": "Set device volume through cloud API.",
+      "side_effects": [
+        "cloud_config"
+      ],
+      "command_template": [
+        "{python}",
+        "tools/cloud/polaris_app_control.py",
+        "set-volume",
+        "--value",
+        "{volume}"
+      ]
+    },
+    "cloud.set_night_mode": {
+      "description": "Set night mode through cloud API.",
+      "side_effects": [
+        "cloud_config"
+      ],
+      "command_template": [
+        "{python}",
+        "tools/cloud/polaris_app_control.py",
+        "set-night-mode",
+        "--enable",
+        "{enable}",
+        "--time-from",
+        "{time_from}",
+        "--time-to",
+        "{time_to}",
+        "--volume",
+        "{volume}",
+        "--awake-threshold",
+        "{awake_threshold}"
+      ]
+    }
+  }
+}

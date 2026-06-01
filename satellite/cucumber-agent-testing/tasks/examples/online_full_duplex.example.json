@@ -1,0 +1,102 @@
+{
+  "schema": "polaris.online-full-duplex.task.v1",
+  "task_id": "online_full_duplex",
+  "description": "在线全双工 FD-001 smoke：检查 laid、切设备云环境、确认在线、下发全双工，再执行 @full_duplex_recognition。",
+  "validation_pack": {
+    "pack": "docs/wiki/voice-validation/packs/online-full-duplex.md",
+    "case_ids": [
+      "FD-001"
+    ],
+    "linked_tag": "full_duplex_recognition"
+  },
+  "scenario": {
+    "tag": "full_duplex_recognition"
+  },
+  "runner": {
+    "mode": "dry-run",
+    "compile_first": true,
+    "strict_compile": true,
+    "feature": "satellite/cucumber-agent-testing/features/polaris_voice_core.feature",
+    "mapping": "satellite/cucumber-agent-testing/references/voice_core_mapping.json"
+  },
+  "environment": {
+    "env_file": "polaris.local.json"
+  },
+  "inputs": {
+    "command_text": "今天天气怎么样"
+  },
+  "execution": {
+    "observe_ms": 30000,
+    "full_duplex_timeout_s": 60,
+    "half_duplex_timeout_s": 15,
+    "timing_guard_ms": 1200,
+    "manage_session": true,
+    "runtime_strict": true,
+    "allow_side_effects": false,
+    "adapter_flows": {
+      "pre": [
+        {
+          "flow": "laid_check",
+          "when": "always",
+          "required": false
+        },
+        {
+          "flow": "switch_device_env",
+          "when": "always",
+          "required": true
+        },
+        {
+          "flow": "ensure_online",
+          "when": "always",
+          "required": false
+        },
+        {
+          "flow": "set_full_duplex",
+          "when": "always",
+          "required": true,
+          "params": {
+            "full_duplex_timeout_s": "{full_duplex_timeout_s}"
+          }
+        }
+      ],
+      "post": [
+        {
+          "flow": "set_half_duplex",
+          "when": "always",
+          "required": false,
+          "execute": false,
+          "params": {
+            "half_duplex_timeout_s": "{half_duplex_timeout_s}"
+          }
+        }
+      ]
+    }
+  },
+  "expected": {
+    "summary": "设备在线且云环境一致；全双工配置下发成功；唤醒后在线命令出现 ASR、云端 TTS/media 或命令闭环；无 reboot/crash/watchdog。",
+    "key_assertions": [
+      "cloud_full_duplex_apply == success",
+      "duplex_timeout_applied includes full_duplex_timeout_s",
+      "wake_before_command observed",
+      "command_asr_or_keyword observed",
+      "successful_response_count >= 1",
+      "no_reboot_in_duplex_recognition",
+      "no_crash_in_duplex_recognition"
+    ],
+    "failure_attribution": [
+      "laid_check 失败：本机声卡查询工具缺失，先执行 tools/audio/polaris_laid.py ensure。",
+      "switch_device_env 或 set_full_duplex 失败：云控/API 环境、设备端 UAT/SIT、token 或网络问题。",
+      "设备未在线：联网/热点/路由/云端前置问题，不能判全双工 FAIL。",
+      "播放返回非 0 或目标声卡不存在：声卡/播放链路问题。",
+      "播放成功但没有唤醒：PA、设备听音链路、麦克风或唤醒固件问题。",
+      "已唤醒且全双工配置生效但无 ASR/响应：固件/ASR/云端识别或媒体响应链路问题。",
+      "命令落在唤醒 TTS 或全双工超时临界区：标记 TIMING_AMBIGUOUS，不直接判固件 FAIL。",
+      "需求未明确播报中识别、打断还是连续对话：标记 REQUIREMENT_REVIEW。"
+    ]
+  },
+  "command_examples": {
+    "precheck": "python satellite/cucumber-agent-testing/scripts/run_optimized_task.py --task satellite/cucumber-agent-testing/tasks/examples/online_full_duplex.example.json --precheck-only",
+    "dry_run": "python satellite/cucumber-agent-testing/scripts/run_optimized_task.py --task satellite/cucumber-agent-testing/tasks/examples/online_full_duplex.example.json --mode dry-run",
+    "execute": "python satellite/cucumber-agent-testing/scripts/run_optimized_task.py --task satellite/cucumber-agent-testing/tasks/examples/online_full_duplex.example.json --mode execute --allow-side-effects --manage-session --runtime-strict"
+  }
+}

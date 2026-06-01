@@ -1,0 +1,144 @@
+{
+  "schema": "polaris.local.v1",
+  "active_project": "venusws63",
+  "description": "Polaris 本机基础配置。新用户复制为 polaris.local.json 后，只改串口、声卡、Wi-Fi、唤醒词和云环境。",
+  "common": {
+    "audio": {
+      "default_playback_device_key": "",
+      "device_key_policy": "留空时使用电脑默认播放声卡；多声卡或指定声卡测试时填写 laid/listenai-play 扫描到的稳定 key。",
+      "playback_volume": 80,
+      "capture_device_key": "",
+      "loopback_device_key": "",
+      "capture_device_name": "",
+      "capture_sample_rate": 16000,
+      "capture_channels": 1,
+      "capture_duration_s": 5,
+      "acoustic_oracle": {
+        "thresholds": {
+          "active_threshold_dbfs": -50,
+          "min_rms_dbfs": -45,
+          "min_peak_dbfs": -35,
+          "min_active_duration_ms": 300,
+          "max_clip_ratio": 0.01
+        }
+      }
+    },
+    "device": {
+      "wake_word": "小美小美",
+      "wakeup_id": "xiao mei xiao mei",
+      "iot_id": ""
+    },
+    "network": {
+      "wifi_ssid": "",
+      "wifi_password": "",
+      "enable_hotspot_control": false
+    },
+    "timeouts": {
+      "observe_ms": 15000,
+      "recognition_timeout_s": 15,
+      "half_duplex_timeout_s": 15,
+      "full_duplex_timeout_s": 60,
+      "timing_guard_ms": 1200,
+      "wake_cluster_gap_ms": 2500,
+      "interrupt_guard_ms": 600,
+      "post_injection_ms": 5000,
+      "post_recovery_ms": 60000
+    },
+    "paths": {
+      "command_file": "docs/fa2命令词.txt",
+      "debug_root": "satellite/cucumber-agent-testing/debug",
+      "result_root": "result"
+    }
+  },
+  "projects": {
+    "cskwb01": {
+      "project_type": "wb01",
+      "assertion_profile": "ap_asr_cp_optional",
+      "serial": {
+        "topology": "csk_ap_cp_wb01_control",
+        "baudrate": 921600,
+        "ports": {
+          "ap": "COM13",
+          "cp": "COM14",
+          "asr": "COM11",
+          "control": "COM12"
+        },
+        "control_preconditions": [
+          "uut-pa.on",
+          "pa-enable.set 0 17 0 1"
+        ],
+        "control_baudrate": 115200
+      },
+      "network": {
+        "wifi_ssid": "",
+        "wifi_password": "",
+        "enable_hotspot_control": true
+      },
+      "cloud": {
+        "api_environment": "sit",
+        "device_env": "sit",
+        "device_env_command": "flash.set.int env@2",
+        "device_env_reboot_required": true,
+        "capabilities": [],
+        "device_id": ""
+      },
+      "notes": [
+        "WB01/CSK 三端项目需要 AP、CP、ASR/WB01、控制口 4 个串口。",
+        "执行 API/云控前，CSK/AP 设备端环境必须和 cloud.api_environment 一致。",
+        "如果声卡播放成功但设备无唤醒证据，先在控制口执行 PA 前置：uut-pa.on、pa-enable.set 0 17 0 1；命令必须发到 control 串口。",
+        "2026-06-01 最新串口：AP COM13、CP COM14、WB01/ASR COM11 均为 921600；控制口 COM12@115200。",
+        "WB01 云控若未恢复，按 BLOCKED 留证，不影响非云控快照/语音验证。"
+      ],
+      "audio": {
+        "default_playback_device_key": "VID_8765&PID_5678:9_2A847557_7_0000"
+      }
+    },
+    "venusws63": {
+      "project_type": "ws63",
+      "assertion_profile": "ap_upper_no_cp",
+      "serial": {
+        "topology": "ap_wifi_control_no_cp",
+        "baudrate": 921600,
+        "control_baudrate": 115200,
+        "ports": {
+          "ap": "COM20",
+          "upper": "COM17",
+          "asr": "COM17",
+          "cp": "",
+          "control": "COM19"
+        },
+        "control_preconditions": [
+          "uut-pa.on",
+          "pa-enable.set 0 17 0 1"
+        ]
+      },
+      "cloud": {
+        "api_environment": "uat",
+        "device_env": "uat",
+        "device_env_command": "flash.set.int env@1",
+        "device_env_reboot_required": true,
+        "version_gate": {
+          "authorized_versions": [
+            "35.03.01.01.18.26.05.04.00.01"
+          ],
+          "unauthorized_versions": [
+            "35.03.01.01.18.26.05.04.00.02"
+          ]
+        },
+        "capabilities": [],
+        "device_id": ""
+      },
+      "notes": [
+        "WS63/AP+WiFi 项目没有独立 CP 串口，cp 必须留空。",
+        "PA 相关命令走控制口，不要发到 AP 或上位/WiFi 口。",
+        "云控 API 不生效时先用 tools/cloud/polaris_cloud_diagnostics.py 检查 Project Version、UAT/SIT 环境和业务码。",
+        "2026-06-01 最新串口：AP COM20、upper/asr COM17 均为 921600；控制口 COM19@115200。",
+        "云控 API 前必须先 check-env，确认设备端 env=1/UAT 与 cloud.api_environment=uat 一致。",
+        "当前 WS63 真机验证声卡 key：VID_8765&PID_5678:9_27F546DA_3_0000。"
+      ],
+      "audio": {
+        "default_playback_device_key": "VID_8765&PID_5678:9_27F546DA_3_0000"
+      }
+    }
+  }
+}

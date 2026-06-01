@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "metrics": {
+    "playback_returncode": {
+      "source": "probe_summary/fa2_summary",
+      "pass": "==0"
+    },
+    "cp_wake_count": {
+      "source": "COM12 WAKE(1)",
+      "pass": ">=1"
+    },
+    "ap_wake_count": {
+      "source": "COM14 wakeup_callback",
+      "pass": ">=1"
+    },
+    "asr_wake_count": {
+      "source": "COM13 offline_wakeup/online_wakeup",
+      "pass": ">=1"
+    },
+    "cloud_apply_success": {
+      "source": "app/doc runner setup summary",
+      "pass": "true"
+    },
+    "command_asr_or_keyword": {
+      "source": "online_asr_callbak or cp_command_keywords",
+      "pass": "observed"
+    },
+    "successful_response_count": {
+      "source": "cloud.instructions.audioBroadcast + TTS play",
+      "pass": ">=1"
+    },
+    "session_timeout": {
+      "source": "stop interactive by session timeout/session timeout",
+      "pass": "as required"
+    },
+    "forbidden_recognition_during_playback": {
+      "source": "TTS play window + ASR/command events",
+      "pass": "false when half-duplex forbids"
+    }
+  },
+  "result_policy": {
+    "PASS": "Preconditions are met and all required evidence satisfies the assertion.",
+    "FAIL": "Environment and evidence are valid, but observed DUT behavior contradicts the requirement.",
+    "BLOCKED": "A serial, audio, network, cloud, identity, or control precondition is missing, so the feature cannot be judged."
+  }
+}

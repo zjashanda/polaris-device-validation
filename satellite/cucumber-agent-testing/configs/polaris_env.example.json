@@ -1,0 +1,73 @@
+{
+  "schema": "polaris.env.v1",
+  "serial": {
+    "baudrate": 115200,
+    "ports": {
+      "ap": "COM14",
+      "cp": "COM12",
+      "asr": "COM13",
+      "control": "COM15"
+    },
+    "roles": {
+      "ap": "cskap/AP 日志和部分控制",
+      "cp": "cskcp/CP 日志",
+      "asr": "ASR/WB01 日志",
+      "control": "上下电或复位控制串口"
+    }
+  },
+  "audio": {
+    "default_playback_device_key": "",
+    "playback_volume": 80,
+    "capture_device_key": "",
+    "loopback_device_key": "",
+    "capture_device_name": "",
+    "capture_sample_rate": 16000,
+    "capture_channels": 1,
+    "capture_duration_s": 5,
+    "acoustic_oracle": {
+      "thresholds": {
+        "active_threshold_dbfs": -50,
+        "min_rms_dbfs": -45,
+        "min_peak_dbfs": -35,
+        "min_active_duration_ms": 300,
+        "max_clip_ratio": 0.01
+      }
+    }
+  },
+  "device": {
+    "wake_word": "小美小美",
+    "wakeup_id": "xiao mei xiao mei",
+    "model": "",
+    "iot_id": "",
+    "mac": ""
+  },
+  "cloud": {
+    "api_environment": "uat",
+    "device_env": "uat",
+    "device_env_command": "flash.set.int env@1",
+    "device_env_reboot_required": true,
+    "device_id": "",
+    "note": "使用 API 前，设备端 CSK/AP 环境必须和 api_environment 一致：uat=flash.set.int env@1，sit=flash.set.int env@2。"
+  },
+  "network": {
+    "wifi_ssid": "",
+    "wifi_password": "",
+    "enable_hotspot_control": false
+  },
+  "timeouts": {
+    "observe_ms": 15000,
+    "recognition_timeout_s": 15,
+    "half_duplex_timeout_s": 15,
+    "full_duplex_timeout_s": 60,
+    "timing_guard_ms": 1200
+  },
+  "limits": {
+    "command_limit": 20,
+    "stress_rounds": 100
+  },
+  "paths": {
+    "command_file": "docs/fa2命令词.txt",
+    "debug_root": "satellite/cucumber-agent-testing/debug",
+    "result_root": "result"
+  }
+}

@@ -1,0 +1,3461 @@
+{
+  "schema": "polaris.fa2_command_beep_expectation.v1",
+  "source_file": "D:\\revolution4s\\Polaris\\docs\\fa2命令词.txt",
+  "command_count": 343,
+  "counts": {
+    "command_kind": {
+      "power_control": 2,
+      "mode_control": 6,
+      "temperature_control": 38,
+      "airflow_control": 102,
+      "feature_toggle": 83,
+      "volume_control": 13,
+      "timer_control": 19,
+      "online_or_general": 75,
+      "query": 4,
+      "network_query_or_setup": 1
+    },
+    "beep_expectation": {
+      "expected_if_state_changes": 263,
+      "not_required": 80
+    },
+    "noop_expectation": {
+      "not_expected_if_noop": 263,
+      "not_required": 80
+    }
+  },
+  "rows": [
+    {
+      "index": 1,
+      "case_id": "F001",
+      "command": "空调开机",
+      "command_kind": "power_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 2,
+      "case_id": "F002",
+      "command": "空调关机",
+      "command_kind": "power_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 3,
+      "case_id": "F003",
+      "command": "制冷模式",
+      "command_kind": "mode_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 4,
+      "case_id": "F004",
+      "command": "制热模式",
+      "command_kind": "mode_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 5,
+      "case_id": "F005",
+      "command": "自动模式",
+      "command_kind": "mode_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 6,
+      "case_id": "F006",
+      "command": "送风模式",
+      "command_kind": "mode_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 7,
+      "case_id": "F007",
+      "command": "抽湿模式",
+      "command_kind": "mode_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 8,
+      "case_id": "F008",
+      "command": "关闭模式",
+      "command_kind": "mode_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 9,
+      "case_id": "F009",
+      "command": "十六度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 10,
+      "case_id": "F010",
+      "command": "十六点五度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 11,
+      "case_id": "F011",
+      "command": "十七度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 12,
+      "case_id": "F012",
+      "command": "十七点五度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 13,
+      "case_id": "F013",
+      "command": "十八度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 14,
+      "case_id": "F014",
+      "command": "十八点五度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 15,
+      "case_id": "F015",
+      "command": "十九度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 16,
+      "case_id": "F016",
+      "command": "十九点五度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 17,
+      "case_id": "F017",
+      "command": "二十度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 18,
+      "case_id": "F018",
+      "command": "二十点五度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 19,
+      "case_id": "F019",
+      "command": "二十一度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 20,
+      "case_id": "F020",
+      "command": "二十一点五度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 21,
+      "case_id": "F021",
+      "command": "二十二度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 22,
+      "case_id": "F022",
+      "command": "二十二点五度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 23,
+      "case_id": "F023",
+      "command": "二十三度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 24,
+      "case_id": "F024",
+      "command": "二十三点五度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 25,
+      "case_id": "F025",
+      "command": "二十四度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 26,
+      "case_id": "F026",
+      "command": "二十四点五度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 27,
+      "case_id": "F027",
+      "command": "二十五度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 28,
+      "case_id": "F028",
+      "command": "二十五点五度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 29,
+      "case_id": "F029",
+      "command": "二十六度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 30,
+      "case_id": "F030",
+      "command": "二十六点五度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 31,
+      "case_id": "F031",
+      "command": "二十七度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 32,
+      "case_id": "F032",
+      "command": "二十七点五度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 33,
+      "case_id": "F033",
+      "command": "二十八度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 34,
+      "case_id": "F034",
+      "command": "二十八点五度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 35,
+      "case_id": "F035",
+      "command": "二十九度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 36,
+      "case_id": "F036",
+      "command": "二十九点五度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 37,
+      "case_id": "F037",
+      "command": "三十度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 38,
+      "case_id": "F038",
+      "command": "最高温度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 39,
+      "case_id": "F039",
+      "command": "调高一度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 40,
+      "case_id": "F040",
+      "command": "调低一度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 41,
+      "case_id": "F041",
+      "command": "调高两度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 42,
+      "case_id": "F042",
+      "command": "调低两度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 43,
+      "case_id": "F043",
+      "command": "调高三度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 44,
+      "case_id": "F044",
+      "command": "调低三度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 45,
+      "case_id": "F045",
+      "command": "调高零点五度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 46,
+      "case_id": "F046",
+      "command": "调低零点五度",
+      "command_kind": "temperature_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 47,
+      "case_id": "F047",
+      "command": "自动风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 48,
+      "case_id": "F048",
+      "command": "强劲风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 49,
+      "case_id": "F049",
+      "command": "关闭强劲",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 50,
+      "case_id": "F050",
+      "command": "减小风速",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 51,
+      "case_id": "F051",
+      "command": "增大风速",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 52,
+      "case_id": "F052",
+      "command": "风速百分之一",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 53,
+      "case_id": "F053",
+      "command": "风速百分之十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 54,
+      "case_id": "F054",
+      "command": "风速百分之二十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 55,
+      "case_id": "F055",
+      "command": "风速百分之三十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 56,
+      "case_id": "F056",
+      "command": "风速百分之四十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 57,
+      "case_id": "F057",
+      "command": "风速百分之五十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 58,
+      "case_id": "F058",
+      "command": "风速百分之六十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 59,
+      "case_id": "F059",
+      "command": "风速百分之七十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 60,
+      "case_id": "F060",
+      "command": "风速百分之八十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 61,
+      "case_id": "F061",
+      "command": "风速百分之九十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 62,
+      "case_id": "F062",
+      "command": "风速百分之一百",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 63,
+      "case_id": "F063",
+      "command": "左风道自动风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 64,
+      "case_id": "F064",
+      "command": "左风道减小风速",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 65,
+      "case_id": "F065",
+      "command": "左风道增大风速",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 66,
+      "case_id": "F066",
+      "command": "左风道风速百分之一",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 67,
+      "case_id": "F067",
+      "command": "左风道风速百分之十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 68,
+      "case_id": "F068",
+      "command": "左风道风速百分之二十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 69,
+      "case_id": "F069",
+      "command": "左风道风速百分之三十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 70,
+      "case_id": "F070",
+      "command": "左风道风速百分之四十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 71,
+      "case_id": "F071",
+      "command": "左风道风速百分之五十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 72,
+      "case_id": "F072",
+      "command": "左风道风速百分之六十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 73,
+      "case_id": "F073",
+      "command": "左风道风速百分之七十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 74,
+      "case_id": "F074",
+      "command": "左风道风速百分之八十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 75,
+      "case_id": "F075",
+      "command": "左风道风速百分之九十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 76,
+      "case_id": "F076",
+      "command": "左风道风速百分之一百",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 77,
+      "case_id": "F077",
+      "command": "右风道自动风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 78,
+      "case_id": "F078",
+      "command": "右风道减小风速",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 79,
+      "case_id": "F079",
+      "command": "右风道增大风速",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 80,
+      "case_id": "F080",
+      "command": "右风道风速百分之一",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 81,
+      "case_id": "F081",
+      "command": "右风道风速百分之十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 82,
+      "case_id": "F082",
+      "command": "右风道风速百分之二十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 83,
+      "case_id": "F083",
+      "command": "右风道风速百分之三十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 84,
+      "case_id": "F084",
+      "command": "右风道风速百分之四十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 85,
+      "case_id": "F085",
+      "command": "右风道风速百分之五十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 86,
+      "case_id": "F086",
+      "command": "右风道风速百分之六十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 87,
+      "case_id": "F087",
+      "command": "右风道风速百分之七十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 88,
+      "case_id": "F088",
+      "command": "右风道风速百分之八十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 89,
+      "case_id": "F089",
+      "command": "右风道风速百分之九十",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 90,
+      "case_id": "F090",
+      "command": "右风道风速百分之一百",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 91,
+      "case_id": "F091",
+      "command": "打开摆风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 92,
+      "case_id": "F092",
+      "command": "关闭摆风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 93,
+      "case_id": "F093",
+      "command": "打开上下摆风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 94,
+      "case_id": "F094",
+      "command": "关闭上下摆风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 95,
+      "case_id": "F095",
+      "command": "打开左右摆风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 96,
+      "case_id": "F096",
+      "command": "关闭左右摆风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 97,
+      "case_id": "F097",
+      "command": "打开左风道摆风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 98,
+      "case_id": "F098",
+      "command": "关闭左风道摆风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 99,
+      "case_id": "F099",
+      "command": "打开左风道上下摆风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 100,
+      "case_id": "F100",
+      "command": "关闭左风道上下摆风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 101,
+      "case_id": "F101",
+      "command": "打开左风道左右摆风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 102,
+      "case_id": "F102",
+      "command": "关闭左风道左右摆风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 103,
+      "case_id": "F103",
+      "command": "打开右风道摆风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 104,
+      "case_id": "F104",
+      "command": "关闭右风道摆风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 105,
+      "case_id": "F105",
+      "command": "打开右风道上下摆风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 106,
+      "case_id": "F106",
+      "command": "关闭右风道上下摆风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 107,
+      "case_id": "F107",
+      "command": "打开右风道左右摆风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 108,
+      "case_id": "F108",
+      "command": "关闭右风道左右摆风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 109,
+      "case_id": "F109",
+      "command": "风向左吹",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 110,
+      "case_id": "F110",
+      "command": "风向右吹",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 111,
+      "case_id": "F111",
+      "command": "风向上吹",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 112,
+      "case_id": "F112",
+      "command": "风向下吹",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 113,
+      "case_id": "F113",
+      "command": "风向中间吹",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 114,
+      "case_id": "F114",
+      "command": "左风道风向左吹",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 115,
+      "case_id": "F115",
+      "command": "左风道风向右吹",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 116,
+      "case_id": "F116",
+      "command": "左风道风向上吹",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 117,
+      "case_id": "F117",
+      "command": "左风道风向下吹",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 118,
+      "case_id": "F118",
+      "command": "左风道风向中间吹",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 119,
+      "case_id": "F119",
+      "command": "右风道风向左吹",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 120,
+      "case_id": "F120",
+      "command": "右风道风向右吹",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 121,
+      "case_id": "F121",
+      "command": "右风道风向上吹",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 122,
+      "case_id": "F122",
+      "command": "右风道风向下吹",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 123,
+      "case_id": "F123",
+      "command": "右风道风向中间吹",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 124,
+      "case_id": "F124",
+      "command": "减小音量",
+      "command_kind": "volume_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 125,
+      "case_id": "F125",
+      "command": "增大音量",
+      "command_kind": "volume_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 126,
+      "case_id": "F126",
+      "command": "音量百分之一",
+      "command_kind": "volume_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 127,
+      "case_id": "F127",
+      "command": "音量百分之十",
+      "command_kind": "volume_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 128,
+      "case_id": "F128",
+      "command": "音量百分之二十",
+      "command_kind": "volume_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 129,
+      "case_id": "F129",
+      "command": "音量百分之三十",
+      "command_kind": "volume_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 130,
+      "case_id": "F130",
+      "command": "音量百分之四十",
+      "command_kind": "volume_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 131,
+      "case_id": "F131",
+      "command": "音量百分之五十",
+      "command_kind": "volume_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 132,
+      "case_id": "F132",
+      "command": "音量百分之六十",
+      "command_kind": "volume_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 133,
+      "case_id": "F133",
+      "command": "音量百分之七十",
+      "command_kind": "volume_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 134,
+      "case_id": "F134",
+      "command": "音量百分之八十",
+      "command_kind": "volume_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 135,
+      "case_id": "F135",
+      "command": "音量百分之九十",
+      "command_kind": "volume_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 136,
+      "case_id": "F136",
+      "command": "音量百分之一百",
+      "command_kind": "volume_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 137,
+      "case_id": "F137",
+      "command": "定时半小时开机",
+      "command_kind": "timer_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 138,
+      "case_id": "F138",
+      "command": "定时一小时开机",
+      "command_kind": "timer_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 139,
+      "case_id": "F139",
+      "command": "定时两小时开机",
+      "command_kind": "timer_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 140,
+      "case_id": "F140",
+      "command": "定时三小时开机",
+      "command_kind": "timer_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 141,
+      "case_id": "F141",
+      "command": "定时四小时开机",
+      "command_kind": "timer_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 142,
+      "case_id": "F142",
+      "command": "定时五小时开机",
+      "command_kind": "timer_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 143,
+      "case_id": "F143",
+      "command": "定时六小时开机",
+      "command_kind": "timer_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 144,
+      "case_id": "F144",
+      "command": "定时七小时开机",
+      "command_kind": "timer_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 145,
+      "case_id": "F145",
+      "command": "定时八小时开机",
+      "command_kind": "timer_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 146,
+      "case_id": "F146",
+      "command": "定时半小时关机",
+      "command_kind": "timer_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 147,
+      "case_id": "F147",
+      "command": "定时一小时关机",
+      "command_kind": "timer_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 148,
+      "case_id": "F148",
+      "command": "定时两小时关机",
+      "command_kind": "timer_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 149,
+      "case_id": "F149",
+      "command": "定时三小时关机",
+      "command_kind": "timer_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 150,
+      "case_id": "F150",
+      "command": "定时四小时关机",
+      "command_kind": "timer_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 151,
+      "case_id": "F151",
+      "command": "定时五小时关机",
+      "command_kind": "timer_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 152,
+      "case_id": "F152",
+      "command": "定时六小时关机",
+      "command_kind": "timer_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 153,
+      "case_id": "F153",
+      "command": "定时七小时关机",
+      "command_kind": "timer_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 154,
+      "case_id": "F154",
+      "command": "定时八小时关机",
+      "command_kind": "timer_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 155,
+      "case_id": "F155",
+      "command": "取消定时",
+      "command_kind": "timer_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 156,
+      "case_id": "F156",
+      "command": "打开电辅热",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 157,
+      "case_id": "F157",
+      "command": "关闭电辅热",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 158,
+      "case_id": "F158",
+      "command": "打开自动电辅热",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 159,
+      "case_id": "F159",
+      "command": "打开强制电辅热",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 160,
+      "case_id": "F160",
+      "command": "打开回温除湿",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 161,
+      "case_id": "F161",
+      "command": "关闭回温除湿",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 162,
+      "case_id": "F162",
+      "command": "打开舒适除湿",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 163,
+      "case_id": "F163",
+      "command": "关闭舒适除湿",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 164,
+      "case_id": "F164",
+      "command": "打开智清洁",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 165,
+      "case_id": "F165",
+      "command": "关闭智清洁",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 166,
+      "case_id": "F166",
+      "command": "打开无风感",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 167,
+      "case_id": "F167",
+      "command": "关闭无风感",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 168,
+      "case_id": "F168",
+      "command": "打开左风道无风感",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 169,
+      "case_id": "F169",
+      "command": "关闭左风道无风感",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 170,
+      "case_id": "F170",
+      "command": "打开右风道无风感",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 171,
+      "case_id": "F171",
+      "command": "关闭右风道无风感",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 172,
+      "case_id": "F172",
+      "command": "打开智控温",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 173,
+      "case_id": "F173",
+      "command": "关闭智控温",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 174,
+      "case_id": "F174",
+      "command": "打开节能省电",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 175,
+      "case_id": "F175",
+      "command": "关闭节能省电",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 176,
+      "case_id": "F176",
+      "command": "打开舒省",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 177,
+      "case_id": "F177",
+      "command": "关闭舒省",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 178,
+      "case_id": "F178",
+      "command": "打开睡眠",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 179,
+      "case_id": "F179",
+      "command": "关闭睡眠",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 180,
+      "case_id": "F180",
+      "command": "风别吹我",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 181,
+      "case_id": "F181",
+      "command": "打开防直吹",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 182,
+      "case_id": "F182",
+      "command": "关闭防直吹",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 183,
+      "case_id": "F183",
+      "command": "打开左风道防直吹",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 184,
+      "case_id": "F184",
+      "command": "关闭左风道防直吹",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 185,
+      "case_id": "F185",
+      "command": "打开右风道防直吹",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 186,
+      "case_id": "F186",
+      "command": "关闭右风道防直吹",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 187,
+      "case_id": "F187",
+      "command": "打开柔风感",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 188,
+      "case_id": "F188",
+      "command": "关闭柔风感",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 189,
+      "case_id": "F189",
+      "command": "打开防冷风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 190,
+      "case_id": "F190",
+      "command": "关闭防冷风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 191,
+      "case_id": "F191",
+      "command": "打开主动防冷风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 192,
+      "case_id": "F192",
+      "command": "关闭主动防冷风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 193,
+      "case_id": "F193",
+      "command": "打开儿童防冷风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 194,
+      "case_id": "F194",
+      "command": "关闭儿童防冷风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 195,
+      "case_id": "F195",
+      "command": "打开全域风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 196,
+      "case_id": "F196",
+      "command": "关闭全域风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 197,
+      "case_id": "F197",
+      "command": "打开自然对话",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 198,
+      "case_id": "F198",
+      "command": "关闭自然对话",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 199,
+      "case_id": "F199",
+      "command": "打开屏显",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 200,
+      "case_id": "F200",
+      "command": "关闭屏显",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 201,
+      "case_id": "F201",
+      "command": "打开氛围灯",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 202,
+      "case_id": "F202",
+      "command": "关闭氛围灯",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 203,
+      "case_id": "F203",
+      "command": "打开灯光",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 204,
+      "case_id": "F204",
+      "command": "关闭灯光",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 205,
+      "case_id": "F205",
+      "command": "打开智能光感",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 206,
+      "case_id": "F206",
+      "command": "关闭智能光感",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 207,
+      "case_id": "F207",
+      "command": "打开内机防霉",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 208,
+      "case_id": "F208",
+      "command": "关闭内机防霉",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 209,
+      "case_id": "F209",
+      "command": "查询空调温度",
+      "command_kind": "query",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 210,
+      "case_id": "F210",
+      "command": "查询空调模式",
+      "command_kind": "query",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 211,
+      "case_id": "F211",
+      "command": "查询空调风速",
+      "command_kind": "query",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 212,
+      "case_id": "F212",
+      "command": "打开速冷热",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 213,
+      "case_id": "F213",
+      "command": "关闭速冷热",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 214,
+      "case_id": "F214",
+      "command": "打开新风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 215,
+      "case_id": "F215",
+      "command": "关闭新风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 216,
+      "case_id": "F216",
+      "command": "打开自动新风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 217,
+      "case_id": "F217",
+      "command": "关闭自动新风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 218,
+      "case_id": "F218",
+      "command": "减小新风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 219,
+      "case_id": "F219",
+      "command": "增大新风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 220,
+      "case_id": "F220",
+      "command": "最大新风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 221,
+      "case_id": "F221",
+      "command": "中等新风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 222,
+      "case_id": "F222",
+      "command": "高速新风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 223,
+      "case_id": "F223",
+      "command": "强劲新风",
+      "command_kind": "airflow_control",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 224,
+      "case_id": "F224",
+      "command": "新风一档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 225,
+      "case_id": "F225",
+      "command": "新风二档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 226,
+      "case_id": "F226",
+      "command": "新风三档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 227,
+      "case_id": "F227",
+      "command": "新风四档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 228,
+      "case_id": "F228",
+      "command": "打开加湿",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 229,
+      "case_id": "F229",
+      "command": "关闭加湿",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 230,
+      "case_id": "F230",
+      "command": "减小加湿",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 231,
+      "case_id": "F231",
+      "command": "增大加湿",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 232,
+      "case_id": "F232",
+      "command": "最大加湿",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 233,
+      "case_id": "F233",
+      "command": "中等加湿",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 234,
+      "case_id": "F234",
+      "command": "高速加湿",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 235,
+      "case_id": "F235",
+      "command": "强劲加湿",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 236,
+      "case_id": "F236",
+      "command": "加湿一档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 237,
+      "case_id": "F237",
+      "command": "加湿二档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 238,
+      "case_id": "F238",
+      "command": "加湿三档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 239,
+      "case_id": "F239",
+      "command": "加湿四档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 240,
+      "case_id": "F240",
+      "command": "打开自动加湿",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 241,
+      "case_id": "F241",
+      "command": "关闭自动加湿",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 242,
+      "case_id": "F242",
+      "command": "打开净化",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 243,
+      "case_id": "F243",
+      "command": "关闭净化",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 244,
+      "case_id": "F244",
+      "command": "减小净化",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 245,
+      "case_id": "F245",
+      "command": "增大净化",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 246,
+      "case_id": "F246",
+      "command": "最大净化",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 247,
+      "case_id": "F247",
+      "command": "中等净化",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 248,
+      "case_id": "F248",
+      "command": "高速净化",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 249,
+      "case_id": "F249",
+      "command": "强劲净化",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 250,
+      "case_id": "F250",
+      "command": "净化一档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 251,
+      "case_id": "F251",
+      "command": "净化二档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 252,
+      "case_id": "F252",
+      "command": "净化三档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 253,
+      "case_id": "F253",
+      "command": "净化四档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 254,
+      "case_id": "F254",
+      "command": "打开保湿",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 255,
+      "case_id": "F255",
+      "command": "关闭保湿",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 256,
+      "case_id": "F256",
+      "command": "减小保湿",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 257,
+      "case_id": "F257",
+      "command": "增大保湿",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 258,
+      "case_id": "F258",
+      "command": "最大保湿",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 259,
+      "case_id": "F259",
+      "command": "中等保湿",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 260,
+      "case_id": "F260",
+      "command": "高速保湿",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 261,
+      "case_id": "F261",
+      "command": "强劲保湿",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 262,
+      "case_id": "F262",
+      "command": "保湿一档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 263,
+      "case_id": "F263",
+      "command": "保湿二档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 264,
+      "case_id": "F264",
+      "command": "保湿三档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 265,
+      "case_id": "F265",
+      "command": "保湿四档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 266,
+      "case_id": "F266",
+      "command": "打开除菌",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 267,
+      "case_id": "F267",
+      "command": "关闭除菌",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 268,
+      "case_id": "F268",
+      "command": "打开机身除菌",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 269,
+      "case_id": "F269",
+      "command": "关闭机身除菌",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 270,
+      "case_id": "F270",
+      "command": "打开空气除菌",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 271,
+      "case_id": "F271",
+      "command": "关闭空气除菌",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 272,
+      "case_id": "F272",
+      "command": "打开空调除菌",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 273,
+      "case_id": "F273",
+      "command": "关闭空调除菌",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 274,
+      "case_id": "F274",
+      "command": "强劲除菌",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 275,
+      "case_id": "F275",
+      "command": "标准除菌",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 276,
+      "case_id": "F276",
+      "command": "打开除过敏",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 277,
+      "case_id": "F277",
+      "command": "关闭除过敏",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 278,
+      "case_id": "F278",
+      "command": "减小除过敏",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 279,
+      "case_id": "F279",
+      "command": "增大除过敏",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 280,
+      "case_id": "F280",
+      "command": "除过敏一档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 281,
+      "case_id": "F281",
+      "command": "中等除过敏",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 282,
+      "case_id": "F282",
+      "command": "除过敏二档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 283,
+      "case_id": "F283",
+      "command": "高速除过敏",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 284,
+      "case_id": "F284",
+      "command": "除过敏三档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 285,
+      "case_id": "F285",
+      "command": "除过敏四档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 286,
+      "case_id": "F286",
+      "command": "最大除过敏",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 287,
+      "case_id": "F287",
+      "command": "强劲除过敏",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 288,
+      "case_id": "F288",
+      "command": "打开除尘",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 289,
+      "case_id": "F289",
+      "command": "关闭除尘",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 290,
+      "case_id": "F290",
+      "command": "减小除尘",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 291,
+      "case_id": "F291",
+      "command": "增大除尘",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 292,
+      "case_id": "F292",
+      "command": "除尘一档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 293,
+      "case_id": "F293",
+      "command": "中等除尘",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 294,
+      "case_id": "F294",
+      "command": "除尘二档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 295,
+      "case_id": "F295",
+      "command": "高速除尘",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 296,
+      "case_id": "F296",
+      "command": "除尘三档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 297,
+      "case_id": "F297",
+      "command": "除尘四档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 298,
+      "case_id": "F298",
+      "command": "最大除尘",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 299,
+      "case_id": "F299",
+      "command": "强劲除尘",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 300,
+      "case_id": "F300",
+      "command": "打开除醛",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 301,
+      "case_id": "F301",
+      "command": "关闭除醛",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 302,
+      "case_id": "F302",
+      "command": "减小除醛",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 303,
+      "case_id": "F303",
+      "command": "增大除醛",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 304,
+      "case_id": "F304",
+      "command": "除醛一档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 305,
+      "case_id": "F305",
+      "command": "中等除醛",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 306,
+      "case_id": "F306",
+      "command": "除醛二档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 307,
+      "case_id": "F307",
+      "command": "高速除醛",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 308,
+      "case_id": "F308",
+      "command": "除醛三档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 309,
+      "case_id": "F309",
+      "command": "除醛四档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 310,
+      "case_id": "F310",
+      "command": "最大除醛",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 311,
+      "case_id": "F311",
+      "command": "强劲除醛",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 312,
+      "case_id": "F312",
+      "command": "打开一键好空气",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 313,
+      "case_id": "F313",
+      "command": "关闭一键好空气",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 314,
+      "case_id": "F314",
+      "command": "打开健康",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 315,
+      "case_id": "F315",
+      "command": "关闭健康",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 316,
+      "case_id": "F316",
+      "command": "打开AI优化",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 317,
+      "case_id": "F317",
+      "command": "关闭AI优化",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 318,
+      "case_id": "F318",
+      "command": "打开净呼吸",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 319,
+      "case_id": "F319",
+      "command": "关闭净呼吸",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 320,
+      "case_id": "F320",
+      "command": "打开AI",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 321,
+      "case_id": "F321",
+      "command": "关闭AI",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 322,
+      "case_id": "F322",
+      "command": "打开均匀智控温",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 323,
+      "case_id": "F323",
+      "command": "关闭均匀智控温",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 324,
+      "case_id": "F324",
+      "command": "打开调温循环扇",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 325,
+      "case_id": "F325",
+      "command": "关闭调温循环扇",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 326,
+      "case_id": "F326",
+      "command": "打开多维联动",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 327,
+      "case_id": "F327",
+      "command": "关闭多维联动",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 328,
+      "case_id": "F328",
+      "command": "打开静眠",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 329,
+      "case_id": "F329",
+      "command": "关闭静眠",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 330,
+      "case_id": "F330",
+      "command": "调温循环扇一档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 331,
+      "case_id": "F331",
+      "command": "调温循环扇二档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 332,
+      "case_id": "F332",
+      "command": "调温循环扇三档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 333,
+      "case_id": "F333",
+      "command": "调温循环扇四档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 334,
+      "case_id": "F334",
+      "command": "调温循环扇五档",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 335,
+      "case_id": "F335",
+      "command": "调温循环扇反集",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 336,
+      "case_id": "F336",
+      "command": "增大调温循环扇",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 337,
+      "case_id": "F337",
+      "command": "减少调温循环扇",
+      "command_kind": "online_or_general",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 338,
+      "case_id": "F338",
+      "command": "打开恒温除湿",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 339,
+      "case_id": "F339",
+      "command": "关闭恒温除湿",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 340,
+      "case_id": "F340",
+      "command": "打开干燥防霉",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 341,
+      "case_id": "F341",
+      "command": "关闭干燥防霉",
+      "command_kind": "feature_toggle",
+      "beep_expectation": "expected_if_state_changes",
+      "noop_expectation": "not_expected_if_noop",
+      "assertion_policy": "split_recognition_control_tts_actuator",
+      "notes": "控制类命令只有发生状态变化时才期望执行/蜂鸣反馈；no-op、拒绝、不支持时不强制蜂鸣。"
+    },
+    {
+      "index": 342,
+      "case_id": "F342",
+      "command": "语音配网",
+      "command_kind": "network_query_or_setup",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    },
+    {
+      "index": 343,
+      "case_id": "F343",
+      "command": "查询空调联网状态",
+      "command_kind": "query",
+      "beep_expectation": "not_required",
+      "noop_expectation": "not_required",
+      "assertion_policy": "do_not_require_actuator_or_beep",
+      "notes": "查询/联网/媒体/通用在线类命令重点看识别和回复，不要求蜂鸣器。"
+    }
+  ],
+  "json_output": "D:\\revolution4s\\Polaris\\docs\\wiki\\voice-validation\\fa2-command-beep-expectation.json",
+  "csv_output": "D:\\revolution4s\\Polaris\\docs\\wiki\\voice-validation\\fa2-command-beep-expectation.csv"
+}

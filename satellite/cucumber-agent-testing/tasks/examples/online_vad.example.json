@@ -1,0 +1,31 @@
+{
+  "schema": "polaris.cucumber.task.v1",
+  "task_id": "online_vad_smoke",
+  "description": "在线 VAD 专项小样本：验证短句、停顿句、长停顿在线语料的 ASR/VAD/播报证据。",
+  "scenario": {
+    "tag": "online_vad_special_smoke"
+  },
+  "runner": {
+    "mode": "dry-run",
+    "compile_first": false,
+    "feature": "satellite/cucumber-agent-testing/features/polaris_voice_core.feature",
+    "mapping": "satellite/cucumber-agent-testing/references/voice_core_mapping.json"
+  },
+  "environment": {
+    "env_file": "polaris.local.json"
+  },
+  "execution": {
+    "observe_ms": 20000,
+    "manage_session": true,
+    "allow_side_effects": false
+  },
+  "expected": {
+    "summary": "在线状态下应看到 online ASR、VAD end、云端播报或在线响应证据。",
+    "failure_attribution": [
+      "设备未联网：网络/热点/云端前置问题",
+      "无 VAD end：VAD 或采集链路问题",
+      "文本截断但无正式容差：先标记探索性待复核"
+    ]
+  }
+}
+

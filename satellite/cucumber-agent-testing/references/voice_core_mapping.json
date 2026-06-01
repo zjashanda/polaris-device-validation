@@ -1,0 +1,1258 @@
+{
+  "framework": {
+    "name": "Polaris Cucumber Agent Testing",
+    "mode": "BDD + Agent Testing",
+    "debug_root": "satellite/cucumber-agent-testing/debug",
+    "note": "默认 plan-only 不占用串口、不播放音频、不调用云端。"
+  },
+  "defaults": {
+    "wake_word": "小美小美",
+    "command_text": "打开空调",
+    "command_file": "docs/fa2命令词.txt",
+    "device_key": "",
+    "wifi_ssid": "",
+    "wifi_password": "",
+    "observe_ms": "15000",
+    "command_limit": "20"
+  },
+  "scenarios": {
+    "first_wake": {
+      "title": "首次唤醒",
+      "source_test_item": "唤醒/首次唤醒",
+      "validation_module": "wake-session",
+      "agent_goal": "验证待唤醒状态下播放唤醒词后，CP/AP/ASR 日志出现唤醒闭环。",
+      "preconditions": [
+        "串口 logger 已启动且 CP/ASR/AP 日志可读。",
+        "播放声卡可用，DUT 能听到播放音频。",
+        "设备当前不在识别模式或上一轮会话已退出。"
+      ],
+      "commands": [
+        {
+          "name": "phrase_probe_first_wake",
+          "cmd": [
+            "{python}",
+            "tools/probe/polaris_phrase_probe.py",
+            "--text",
+            "{wake_word}",
+            "--observe-ms",
+            "{observe_ms}",
+            "--label",
+            "bdd_first_wake",
+            "--device-key",
+            "{device_key}"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "name": "playback_returncode",
+          "expected": "0",
+          "owner": "audio/playback"
+        },
+        {
+          "name": "cp_wake_count",
+          "expected": ">=1",
+          "owner": "firmware-or-device"
+        },
+        {
+          "name": "ap_wake_count",
+          "expected": ">=1",
+          "owner": "firmware-or-device"
+        },
+        {
+          "name": "asr_wake_count",
+          "expected": ">=1",
+          "owner": "asr-device"
+        }
+      ],
+      "failure_split": [
+        "播放失败或目标声卡不存在：测试环境/设备连接问题。",
+        "串口日志缺失：测试环境或 logger 问题。",
+        "播放成功但无任何唤醒证据：音频链路、麦克风链路或固件唤醒问题。",
+        "只有部分端口有证据：按 CP/AP/ASR 缺失位置定位模块问题。"
+      ]
+    },
+    "recognition_mode_wake": {
+      "title": "识别模式下唤醒",
+      "source_test_item": "唤醒/识别模式唤醒",
+      "validation_module": "wake-session",
+      "agent_goal": "验证设备已进入识别模式后，在识别超时窗口内再次播放唤醒词仍能被正确处理。",
+      "preconditions": [
+        "先通过首次唤醒让设备进入识别模式。",
+        "第二次唤醒必须避开识别超时边界，否则标记 TIMING_AMBIGUOUS。",
+        "使用固定 wake_stress runner 记录前置唤醒、目标唤醒和窗口证据。"
+      ],
+      "commands": [
+        {
+          "name": "wake_stress_recognition_mode_smoke",
+          "cmd": [
+            "{python}",
+            "satellite/cucumber-agent-testing/scripts/run_wake_stress.py",
+            "--wake-word",
+            "{wake_word}",
+            "--device-key",
+            "{device_key}",
+            "--max-first-rounds",
+            "1",
+            "--max-recognition-rounds",
+            "1",
+            "--recognition-intervals",
+            "2",
+            "--precondition-observe-s",
+            "8",
+            "--target-observe-s",
+            "8",
+            "--idle-wait-s",
+            "2",
+            "--run-dir",
+            "{debug_dir}/recognition_mode_wake_stress"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "name": "first_wake_success",
+          "expected": "true",
+          "owner": "precondition"
+        },
+        {
+          "name": "recognition_window_second_wake",
+          "expected": "observed",
+          "owner": "firmware-or-requirement"
+        },
+        {
+          "name": "session_timeout_boundary",
+          "expected": "not expired before second wake",
+          "owner": "test-design"
+        }
+      ],
+      "failure_split": [
+        "第一次唤醒失败：不能归为识别模式唤醒失败，应先归因首次唤醒或音频链路。",
+        "第二次播放超出识别超时窗口：测试设计/执行问题。",
+        "窗口内播放成功但不唤醒：固件行为或需求定义需确认。"
+      ]
+    },
+    "half_duplex_recognition": {
+      "title": "半双工识别",
+      "source_test_item": "在线识别/半双工识别",
+      "validation_module": "duplex-mode",
+      "agent_goal": "验证半双工模式下唤醒后命令词识别、播报中输入抑制和播报后恢复符合需求。",
+      "preconditions": [
+        "设备在线，云端控制链路可用。",
+        "自然对话/全双工开关已切到半双工口径。",
+        "需要区分命令识别窗口和播报窗口。"
+      ],
+      "commands": [
+        {
+          "name": "ensure_online_before_half_duplex",
+          "cmd": [
+            "{python}",
+            "tools/device/polaris_network_orchestrator.py",
+            "ensure-online",
+            "--ssid",
+            "{wifi_ssid}",
+            "--pwd",
+            "{wifi_password}",
+            "--label",
+            "bdd_ensure_online_half_duplex"
+          ]
+        },
+        {
+          "name": "doc_case_half_duplex_1s_command",
+          "cmd": [
+            "{python}",
+            "tools/execution/polaris_doc_case_runner.py",
+            "--case-id",
+            "美的空调_23",
+            "--device-key",
+            "{device_key}"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "name": "cloud_half_duplex_apply",
+          "expected": "success",
+          "owner": "cloud-or-config"
+        },
+        {
+          "name": "wake_before_command",
+          "expected": "observed",
+          "owner": "precondition"
+        },
+        {
+          "name": "command_asr_or_keyword",
+          "expected": "observed",
+          "owner": "firmware-or-device"
+        },
+        {
+          "name": "playback_window_policy",
+          "expected": "no forbidden recognition during half-duplex playback",
+          "owner": "requirement"
+        }
+      ],
+      "failure_split": [
+        "云端配置未生效：云端/网络/配置问题。",
+        "未唤醒导致无 ASR：前置唤醒问题。",
+        "唤醒成功但命令未进 ASR：固件/设备识别问题。",
+        "播报中输入是否应响应不清晰：需求问题。"
+      ]
+    },
+    "full_duplex_recognition": {
+      "title": "全双工识别",
+      "source_test_item": "在线识别/全双工识别",
+      "validation_module": "duplex-mode",
+      "agent_goal": "验证全双工模式下连续命令、播报中识别或打断能力符合需求。",
+      "preconditions": [
+        "设备在线，云端控制链路可用。",
+        "自然对话/全双工开关已切到全双工口径。",
+        "播报中识别、打断、连续对话三者必须按需求定义区分。"
+      ],
+      "commands": [
+        {
+          "name": "ensure_online_before_full_duplex",
+          "cmd": [
+            "{python}",
+            "tools/device/polaris_network_orchestrator.py",
+            "ensure-online",
+            "--ssid",
+            "{wifi_ssid}",
+            "--pwd",
+            "{wifi_password}",
+            "--label",
+            "bdd_ensure_online_full_duplex"
+          ]
+        },
+        {
+          "name": "doc_case_full_duplex_1s_command",
+          "cmd": [
+            "{python}",
+            "tools/execution/polaris_doc_case_runner.py",
+            "--case-id",
+            "美的空调_26",
+            "--device-key",
+            "{device_key}"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "name": "cloud_full_duplex_apply",
+          "expected": "success",
+          "owner": "cloud-or-config"
+        },
+        {
+          "name": "wake_before_command",
+          "expected": "observed",
+          "owner": "precondition"
+        },
+        {
+          "name": "command_asr_or_keyword",
+          "expected": "observed",
+          "owner": "firmware-or-device"
+        },
+        {
+          "name": "duplex_policy",
+          "expected": "matches requirement",
+          "owner": "requirement"
+        }
+      ],
+      "failure_split": [
+        "云端配置未生效：云端/网络/配置问题。",
+        "命令闭环缺失但配置已生效：固件/ASR/设备行为问题。",
+        "播报中是否允许识别或只允许打断不明确：需求问题。"
+      ]
+    },
+    "basic_command_recognition": {
+      "title": "基础命令词识别",
+      "source_test_item": "命令词/基础命令词识别率",
+      "validation_module": "ac-control-command",
+      "agent_goal": "对命令词词表执行先唤醒再命令的基础识别验证，并产出逐条 PASS/FAIL/BLOCKED 证据。",
+      "preconditions": [
+        "命令词词表存在且编码可读。",
+        "每条命令前必须先播放唤醒词。",
+        "串口日志窗口能覆盖唤醒、ASR、命令和 TTS/tone 反馈。"
+      ],
+      "commands": [
+        {
+          "name": "fa2_basic_command_batch",
+          "cmd": [
+            "{python}",
+            "tools/validation/polaris_fa2_command_batch.py",
+            "--command-file",
+            "{command_file}",
+            "--wake-word",
+            "{wake_word}",
+            "--device-key",
+            "{device_key}",
+            "--limit",
+            "{command_limit}",
+            "--label",
+            "bdd_basic_command"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "name": "playback_returncode",
+          "expected": "0",
+          "owner": "audio/playback"
+        },
+        {
+          "name": "cp_wake_count",
+          "expected": ">=1 per command",
+          "owner": "firmware-or-device"
+        },
+        {
+          "name": "asr_total",
+          "expected": ">=1 per command",
+          "owner": "asr-device"
+        },
+        {
+          "name": "cp_command_count_or_keyword",
+          "expected": ">=1 per command",
+          "owner": "firmware-or-device"
+        }
+      ],
+      "failure_split": [
+        "词表为空或不可读：测试数据问题。",
+        "播放失败：测试环境或声卡问题。",
+        "唤醒失败：前置唤醒或音频链路问题。",
+        "唤醒成功但命令无 ASR/关键词：固件或 ASR 问题。",
+        "识别文本与期望词表不一致：词表/需求/语义映射问题。"
+      ]
+    },
+    "requirement_command_smoke": {
+      "title": "需求命令词小样本识别",
+      "source_test_item": "命令词/需求文档命令词覆盖 smoke",
+      "validation_module": "requirements-command-smoke",
+      "agent_goal": "对从需求文档抽取或用户指定的命令词文件执行先唤醒再命令的 Cucumber 小样本验证。",
+      "preconditions": [
+        "命令文件存在且每行是一条可播放语料。",
+        "每条命令前必须先播放唤醒词。",
+        "如果 oracle 仍是草案，只能输出探索性 PASS/FAIL 和归因，不能直接作为正式固件结论。"
+      ],
+      "commands": [
+        {
+          "name": "fa2_requirement_command_batch",
+          "cmd": [
+            "{python}",
+            "tools/validation/polaris_fa2_command_batch.py",
+            "--command-file",
+            "{command_file}",
+            "--wake-word",
+            "{wake_word}",
+            "--device-key",
+            "{device_key}",
+            "--limit",
+            "{command_limit}",
+            "--label",
+            "bdd_requirement_command"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "name": "playback_returncode",
+          "expected": "0",
+          "owner": "audio/playback"
+        },
+        {
+          "name": "wake_evidence",
+          "expected": ">=1 per command",
+          "owner": "precondition/firmware"
+        },
+        {
+          "name": "command_or_asr_evidence",
+          "expected": ">=1 per command",
+          "owner": "firmware-or-asr"
+        },
+        {
+          "name": "oracle_status",
+          "expected": "formal or exploratory clearly marked",
+          "owner": "test-design"
+        }
+      ],
+      "failure_split": [
+        "命令文件为空或不可读：测试数据问题。",
+        "播放或串口失败：测试环境问题。",
+        "唤醒失败：唤醒前置或音频链路问题。",
+        "有唤醒但无命令/ASR/TTS：固件或 ASR 问题。",
+        "期望口径缺失或文本不一致：需求/oracle 待复核。"
+      ]
+    },
+    "requirement_free_speech_smoke": {
+      "title": "需求自由说小样本识别",
+      "source_test_item": "自由说/需求文档自由说覆盖 smoke",
+      "validation_module": "requirements-free-speech-smoke",
+      "agent_goal": "对从需求文档抽取或用户指定的自由说语料执行探索性真机识别验证，并明确 oracle 是否正式。",
+      "preconditions": [
+        "语料文件存在且每行是一条自由说候选。",
+        "每条语料前必须先播放唤醒词。",
+        "自由说 intent/slot oracle 未确认前，结论必须标记 exploratory。"
+      ],
+      "commands": [
+        {
+          "name": "fa2_requirement_free_speech_batch",
+          "cmd": [
+            "{python}",
+            "tools/validation/polaris_fa2_command_batch.py",
+            "--command-file",
+            "{command_file}",
+            "--wake-word",
+            "{wake_word}",
+            "--device-key",
+            "{device_key}",
+            "--limit",
+            "{command_limit}",
+            "--label",
+            "bdd_requirement_free_speech"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "name": "playback_returncode",
+          "expected": "0",
+          "owner": "audio/playback"
+        },
+        {
+          "name": "wake_evidence",
+          "expected": ">=1 per utterance",
+          "owner": "precondition/firmware"
+        },
+        {
+          "name": "asr_or_intent_evidence",
+          "expected": ">=1 per utterance when supported",
+          "owner": "firmware-or-asr"
+        },
+        {
+          "name": "exploratory_policy",
+          "expected": "no formal FAIL without oracle",
+          "owner": "test-design"
+        }
+      ],
+      "failure_split": [
+        "语料不可播放或声卡失败：测试环境问题。",
+        "未唤醒：前置唤醒或音频链路问题。",
+        "自由说无正式 oracle：NEEDS_REVIEW，不直接判固件 FAIL。",
+        "正式 oracle 已确认但 ASR/intent 缺失：固件/ASR/语义问题。"
+      ]
+    },
+    "interrupt_prerequisite_measurement": {
+      "title": "打断前置自播测量",
+      "source_test_item": "打断/自播前置发现与测量",
+      "validation_module": "interrupt-prerequisite",
+      "agent_goal": "自动触发候选长播报，解析自播/TTS start-end，选出可用于后续唤醒打断或识别打断的稳定前置。",
+      "preconditions": [
+        "串口 logger 和播放声卡可用。",
+        "候选来自 interrupt_prerequisite_candidates.json 或用户指定命令文件。",
+        "只有测到稳定 start-end 且时长足够的候选才能进入打断主流程。"
+      ],
+      "commands": [
+        {
+          "name": "measure_interrupt_prerequisite",
+          "cmd": [
+            "{python}",
+            "satellite/cucumber-agent-testing/scripts/measure_interrupt_prerequisites.py",
+            "--run-batch",
+            "--candidate-limit",
+            "{command_limit}",
+            "--candidate-type",
+            "requirements_candidate",
+            "--candidate-type",
+            "offline_command_candidate",
+            "--device-key",
+            "{device_key}",
+            "--wake-word",
+            "{wake_word}",
+            "--minimum-duration-ms",
+            "2500",
+            "--label",
+            "bdd_interrupt_prerequisite"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "name": "candidate_recognition",
+          "expected": "PASS or unusable attribution",
+          "owner": "precondition"
+        },
+        {
+          "name": "self_play_start_end_detected",
+          "expected": "observed for selected candidate",
+          "owner": "serial-evidence"
+        },
+        {
+          "name": "duration_enough_for_injection",
+          "expected": ">=2500ms and guard remains",
+          "owner": "test-design"
+        },
+        {
+          "name": "selected_prerequisite",
+          "expected": "selected or BLOCKED/NEEDS_REVIEW",
+          "owner": "test-design"
+        }
+      ],
+      "failure_split": [
+        "候选未识别：候选不可用/前置问题，不算打断失败。",
+        "无自播 start/end：日志口径或设备播报证据不足，NEEDS_REVIEW。",
+        "时长不足：候选不可用。",
+        "播放/串口/重启异常：环境或设备稳定性阻塞。",
+        "候选可用后打断仍失败：才进入后续打断主流程归因。"
+      ]
+    },
+    "wake_interrupt": {
+      "title": "自播中唤醒打断",
+      "source_test_item": "打断/唤醒打断",
+      "validation_module": "interrupt-wake",
+      "agent_goal": "复用已测得的自播前置和注入点，在设备播报中播放唤醒词，验证是否产生新的唤醒证据。",
+      "preconditions": [
+        "必须先执行 interrupt_prerequisite_measurement 并生成 selected_interrupt_prerequisite.json。",
+        "注入点必须落在自播 start/end 之间且留有保护时间。",
+        "如果时序没有命中自播窗口，结果应为 TIMING_AMBIGUOUS/BLOCKED。"
+      ],
+      "commands": [
+        {
+          "name": "run_wake_interrupt",
+          "cmd": [
+            "{python}",
+            "satellite/cucumber-agent-testing/scripts/run_interrupt_injection.py",
+            "--kind",
+            "wake",
+            "--device-key",
+            "{device_key}",
+            "--wake-word",
+            "{wake_word}",
+            "--sync-on-self-play"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "name": "selected_prerequisite_exists",
+          "expected": "true",
+          "owner": "precondition"
+        },
+        {
+          "name": "injection_inside_self_play",
+          "expected": "true or TIMING_AMBIGUOUS",
+          "owner": "test-design"
+        },
+        {
+          "name": "wake_evidence_after_injection",
+          "expected": ">=1 when timing hit",
+          "owner": "firmware-or-device"
+        },
+        {
+          "name": "failure_attribution",
+          "expected": "timing/environment separated from firmware",
+          "owner": "test-design"
+        }
+      ],
+      "failure_split": [
+        "缺少 selected_interrupt_prerequisite.json：前置未完成。",
+        "注入时间不在自播窗口：时序不明确，不能判固件失败。",
+        "播放/串口异常：环境 BLOCKED。",
+        "注入命中自播窗口但无唤醒证据：固件/设备打断能力问题。",
+        "需求规定自播中不允许唤醒：需求口径问题。"
+      ]
+    },
+    "command_interrupt": {
+      "title": "自播中识别打断",
+      "source_test_item": "打断/识别打断",
+      "validation_module": "interrupt-command",
+      "agent_goal": "复用已测得的自播前置和注入点，在设备播报中播放命令词，验证是否产生新的 ASR/命令识别证据。",
+      "preconditions": [
+        "必须先执行 interrupt_prerequisite_measurement 并生成 selected_interrupt_prerequisite.json。",
+        "注入点必须落在自播 start/end 之间且留有保护时间。",
+        "如果设备当前模式不允许播报中识别，应归为需求或模式配置口径。"
+      ],
+      "commands": [
+        {
+          "name": "run_command_interrupt",
+          "cmd": [
+            "{python}",
+            "satellite/cucumber-agent-testing/scripts/run_interrupt_injection.py",
+            "--kind",
+            "command",
+            "--injection-text",
+            "{command_text}",
+            "--device-key",
+            "{device_key}",
+            "--wake-word",
+            "{wake_word}",
+            "--sync-on-self-play",
+            "--timing-advance-ms",
+            "0"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "name": "selected_prerequisite_exists",
+          "expected": "true",
+          "owner": "precondition"
+        },
+        {
+          "name": "injection_inside_self_play",
+          "expected": "true or TIMING_AMBIGUOUS",
+          "owner": "test-design"
+        },
+        {
+          "name": "asr_or_command_after_injection",
+          "expected": ">=1 when timing hit and mode supports",
+          "owner": "firmware-or-device"
+        },
+        {
+          "name": "mode_policy",
+          "expected": "requirement/config separated from firmware",
+          "owner": "requirement"
+        }
+      ],
+      "failure_split": [
+        "缺少 selected_interrupt_prerequisite.json：前置未完成。",
+        "注入时间不在自播窗口：时序不明确，不能判固件失败。",
+        "播放/串口异常：环境 BLOCKED。",
+        "注入命中自播窗口但无 ASR/命令证据：若模式允许则为固件/ASR问题，否则为需求/模式配置问题。",
+        "识别文本与命令期望不一致：命令 oracle 或语义映射待复核。"
+      ]
+    },
+    "network_recovery_basic": {
+      "title": "联网恢复基础验证",
+      "source_test_item": "联网/断网恢复",
+      "validation_module": "network-recovery",
+      "agent_goal": "关闭并恢复本地热点，验证设备重新在线后可以完成一次在线语音 smoke，并区分热点、设备联网和在线语音链路问题。",
+      "preconditions": [
+        "Windows 本地热点可被脚本开关。",
+        "设备联网信息已通过参数或本机配置指定。",
+        "串口 logger 可采集 COM13/COM14 联网日志。"
+      ],
+      "commands": [
+        {
+          "name": "run_network_recovery_basic",
+          "cmd": [
+            "{python}",
+            "satellite/cucumber-agent-testing/scripts/run_network_recovery_basic.py",
+            "--ssid",
+            "{wifi_ssid}",
+            "--pwd",
+            "{wifi_password}",
+            "--device-key",
+            "{device_key}",
+            "--wake-word",
+            "{wake_word}",
+            "--query",
+            "今天天气怎么样"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "name": "hotspot_restarted",
+          "expected": "true",
+          "owner": "test-environment"
+        },
+        {
+          "name": "device_online_after_recovery",
+          "expected": "true",
+          "owner": "device-or-network"
+        },
+        {
+          "name": "online_query_smoke",
+          "expected": "PASS",
+          "owner": "firmware-or-cloud"
+        },
+        {
+          "name": "failure_attribution",
+          "expected": "hotspot/device/voice separated",
+          "owner": "test-design"
+        }
+      ],
+      "failure_split": [
+        "热点开关失败：测试环境或 Windows 热点问题。",
+        "热点恢复但设备未上线：设备联网或环境问题。",
+        "设备已上线但在线语音 smoke 失败：在线语音链路/云端/固件问题。",
+        "断网串口证据弱但热点状态已 off/on：记录为弱证据，不直接判失败。"
+      ]
+    },
+    "offline_oneshot_matrix": {
+      "title": "离线 one-shot 间隔矩阵",
+      "source_test_item": "命令词/离线 one-shot 间隔",
+      "validation_module": "oneshot-interval",
+      "agent_goal": "按多个唤醒词后间隔播放命令词，验证 one-shot 唤醒+识别闭环，并输出逐间隔归因。",
+      "preconditions": [
+        "声卡和串口 logger 可用。",
+        "唤醒词和命令词音频可合成。",
+        "正式阈值未确认时，本场景作为小样本能力探测。"
+      ],
+      "commands": [
+        {
+          "name": "run_offline_oneshot_matrix",
+          "cmd": [
+            "{python}",
+            "satellite/cucumber-agent-testing/scripts/run_oneshot_matrix.py",
+            "--intervals",
+            "500,800,1000",
+            "--command-text",
+            "{command_text}",
+            "--device-key",
+            "{device_key}",
+            "--wake-word",
+            "{wake_word}"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "name": "interval_results",
+          "expected": "PASS/BLOCKED/FAIL per interval",
+          "owner": "test-design"
+        },
+        {
+          "name": "wake_evidence",
+          "expected": "observed per interval",
+          "owner": "firmware-or-device"
+        },
+        {
+          "name": "command_evidence",
+          "expected": "observed per interval",
+          "owner": "firmware-or-asr"
+        },
+        {
+          "name": "attribution",
+          "expected": "audio/serial/interval/asr separated",
+          "owner": "test-design"
+        }
+      ],
+      "failure_split": [
+        "播放失败或串口缺失：环境 BLOCKED。",
+        "唤醒失败：唤醒或音频链路问题。",
+        "唤醒成功但命令无证据：固件/ASR/间隔策略问题。",
+        "正式阈值未确认：小样本结果先用于能力探测，不能代替压测阈值。"
+      ]
+    },
+    "false_wake_quiet_basic": {
+      "title": "静默误唤醒基础监听",
+      "source_test_item": "误唤醒/静默环境基础监听",
+      "validation_module": "false-wake",
+      "agent_goal": "在不主动播放音频的静默窗口内监听串口日志，验证是否出现误唤醒 marker，并区分 logger、重启和环境问题。",
+      "preconditions": [
+        "测试期间不播放唤醒词或命令词。",
+        "串口 logger 可采集 COM12/COM13/COM14 日志。",
+        "短时 smoke 只能证明该窗口无误唤醒，不能代替长时间误唤醒率压测。"
+      ],
+      "commands": [
+        {
+          "name": "run_false_wake_quiet_basic",
+          "cmd": [
+            "{python}",
+            "satellite/cucumber-agent-testing/scripts/run_false_wake_quiet.py",
+            "--duration-s",
+            "30"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "name": "no_wake_marker",
+          "expected": "wake_line_count == 0",
+          "owner": "firmware-or-environment"
+        },
+        {
+          "name": "serial_logger_available",
+          "expected": "total_lines > 0",
+          "owner": "test-environment"
+        },
+        {
+          "name": "no_reboot_or_crash",
+          "expected": "boot_or_crash_count == 0",
+          "owner": "device-stability"
+        },
+        {
+          "name": "false_wake_attribution",
+          "expected": "logger/reboot/noise separated",
+          "owner": "test-design"
+        }
+      ],
+      "failure_split": [
+        "串口全无日志：logger/串口 BLOCKED。",
+        "窗口内设备重启或异常：设备稳定性问题，不计入误唤醒。",
+        "窗口内出现 wake marker：误唤醒 FAIL，需复核环境噪声和日志证据。",
+        "短时无误唤醒：仅代表本窗口 PASS，不替代长时间频次阈值。"
+      ]
+    },
+    "online_oneshot_matrix": {
+      "title": "在线 one-shot 间隔矩阵",
+      "source_test_item": "在线识别/在线 one-shot 间隔",
+      "validation_module": "oneshot-online-interval",
+      "agent_goal": "按多个唤醒词后间隔播放在线语料，验证 one-shot 唤醒+在线识别/云端播报闭环，并输出逐间隔归因。",
+      "preconditions": [
+        "设备已联网，云端在线识别链路可用。",
+        "声卡和串口 logger 可用。",
+        "正式阈值未确认时，本场景作为小样本能力探测。"
+      ],
+      "commands": [
+        {
+          "name": "ensure_online_before_online_oneshot",
+          "cmd": [
+            "{python}",
+            "tools/device/polaris_network_orchestrator.py",
+            "ensure-online",
+            "--ssid",
+            "{wifi_ssid}",
+            "--pwd",
+            "{wifi_password}",
+            "--label",
+            "bdd_online_oneshot_ensure_online"
+          ]
+        },
+        {
+          "name": "run_online_oneshot_matrix",
+          "cmd": [
+            "{python}",
+            "satellite/cucumber-agent-testing/scripts/run_oneshot_matrix.py",
+            "--intervals",
+            "800,1000",
+            "--command-text",
+            "今天天气怎么样",
+            "--device-key",
+            "{device_key}",
+            "--wake-word",
+            "{wake_word}",
+            "--post-command-gap-ms",
+            "9000"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "name": "device_online",
+          "expected": "true",
+          "owner": "network-or-cloud"
+        },
+        {
+          "name": "interval_results",
+          "expected": "PASS/BLOCKED/FAIL per interval",
+          "owner": "test-design"
+        },
+        {
+          "name": "online_asr_or_cloud_tts",
+          "expected": "observed per interval",
+          "owner": "firmware-or-cloud"
+        },
+        {
+          "name": "attribution",
+          "expected": "network/cloud/audio/interval separated",
+          "owner": "test-design"
+        }
+      ],
+      "failure_split": [
+        "ensure-online 失败：联网前置 BLOCKED。",
+        "播放失败或串口缺失：环境 BLOCKED。",
+        "唤醒成功但无在线 ASR/云端播报：在线识别/云端/固件问题。",
+        "正式阈值未确认：小样本结果先用于能力探测。"
+      ]
+    },
+    "wake_latency_smoke": {
+      "title": "唤醒响应时间小样本",
+      "source_test_item": "唤醒/响应时间",
+      "validation_module": "wake-latency-smoke",
+      "agent_goal": "多轮播放唤醒词并用串口 marker 做响应时间小样本统计，只统计成功轮次，输出 avg/min/max 和超阈值候选；无音频回采时标记为粗略 proxy。",
+      "preconditions": [
+        "唤醒音频可合成并可播放到目标声卡。",
+        "CP/AP/ASR 串口时间戳可采集。",
+        "正式响应时间阈值或音频回采 marker 未确认时，本场景只把耗时作为统计指标，不把慢样本直接判固件 FAIL。"
+      ],
+      "commands": [
+        {
+          "name": "run_wake_latency_smoke",
+          "cmd": [
+            "{python}",
+            "satellite/cucumber-agent-testing/scripts/run_wake_matrix.py",
+            "--scenario",
+            "latency",
+            "--rounds",
+            "3",
+            "--observe-s",
+            "6",
+            "--idle-wait-s",
+            "18",
+            "--wake-word",
+            "{wake_word}",
+            "--device-key",
+            "{device_key}"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "name": "wake_success_rounds",
+          "expected": "PASS/BLOCKED/FAIL per round",
+          "owner": "firmware-or-device"
+        },
+        {
+          "name": "latency_only_success_samples",
+          "expected": "true",
+          "owner": "test-design"
+        },
+        {
+          "name": "avg_min_max_latency_reported",
+          "expected": "reported",
+          "owner": "test-design"
+        },
+        {
+          "name": "missing_threshold_policy",
+          "expected": "report-only without formal threshold",
+          "owner": "requirement"
+        }
+      ],
+      "failure_split": [
+        "播放失败或串口无日志：环境 BLOCKED。",
+        "唤醒成功样本才进入响应时间统计；未唤醒样本独立归因。",
+        "出现 reboot/crash：设备稳定性问题。",
+        "未给正式阈值或音频回采起点时，不因耗时偏大直接判固件 FAIL。"
+      ]
+    },
+    "continuous_wake_smoke": {
+      "title": "连续唤醒稳定性小样本",
+      "source_test_item": "唤醒/连续唤醒",
+      "validation_module": "wake-continuous-smoke",
+      "agent_goal": "连续播放多段唤醒词，观察三端唤醒证据、日志连续性、reboot/crash 和连续失败风险。",
+      "preconditions": [
+        "唤醒音频可合成为连续片段。",
+        "串口 logger 可覆盖整个连续播放窗口。",
+        "该小样本为稳定性 smoke，不与正式首次唤醒率混算。"
+      ],
+      "commands": [
+        {
+          "name": "run_continuous_wake_smoke",
+          "cmd": [
+            "{python}",
+            "satellite/cucumber-agent-testing/scripts/run_wake_matrix.py",
+            "--scenario",
+            "continuous",
+            "--rounds",
+            "5",
+            "--observe-s",
+            "8",
+            "--continuous-gap-ms",
+            "0",
+            "--min-expected-wakes",
+            "1",
+            "--wake-word",
+            "{wake_word}",
+            "--device-key",
+            "{device_key}"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "name": "continuous_wake_evidence",
+          "expected": "reported",
+          "owner": "firmware-or-device"
+        },
+        {
+          "name": "no_reboot_or_crash",
+          "expected": "true",
+          "owner": "device-stability"
+        },
+        {
+          "name": "serial_not_silent",
+          "expected": "true",
+          "owner": "test-environment"
+        },
+        {
+          "name": "not_mixed_with_first_wake_rate",
+          "expected": "true",
+          "owner": "test-design"
+        }
+      ],
+      "failure_split": [
+        "播放失败或串口无日志：环境 BLOCKED。",
+        "reboot/crash/log stop：设备稳定性问题。",
+        "连续播放成功但三端唤醒证据不足：连续唤醒/状态保持/音频链路问题。",
+        "正式压测次数和阈值未确认时，先作为小样本稳定性 smoke。"
+      ]
+    },
+    "random_interval_wake_smoke": {
+      "title": "随机间隔唤醒小样本",
+      "source_test_item": "唤醒/随机间隔唤醒",
+      "validation_module": "wake-random-interval-smoke",
+      "agent_goal": "按随机间隔多轮播放唤醒词，逐轮统计唤醒闭环、状态异常、连续失败和随机间隔下的稳定性。",
+      "preconditions": [
+        "唤醒音频可合成并可播放到目标声卡。",
+        "串口 logger 可按轮次切片。",
+        "随机间隔小样本不要求每次处于同一设备状态，重点观察状态稳定。"
+      ],
+      "commands": [
+        {
+          "name": "run_random_interval_wake_smoke",
+          "cmd": [
+            "{python}",
+            "satellite/cucumber-agent-testing/scripts/run_wake_matrix.py",
+            "--scenario",
+            "random",
+            "--rounds",
+            "5",
+            "--observe-s",
+            "6",
+            "--random-min-s",
+            "1",
+            "--random-max-s",
+            "6",
+            "--seed",
+            "20260514",
+            "--wake-word",
+            "{wake_word}",
+            "--device-key",
+            "{device_key}"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "name": "random_interval_round_results",
+          "expected": "PASS/BLOCKED/FAIL per round",
+          "owner": "test-design"
+        },
+        {
+          "name": "wake_rate_reported",
+          "expected": "reported",
+          "owner": "test-design"
+        },
+        {
+          "name": "state_abnormal_reported",
+          "expected": "reported",
+          "owner": "device-stability"
+        },
+        {
+          "name": "timing_gray_zone_policy",
+          "expected": "ambiguous not firmware fail",
+          "owner": "test-design"
+        }
+      ],
+      "failure_split": [
+        "播放失败或串口无日志：环境 BLOCKED。",
+        "窗口内 reboot/crash：设备稳定性问题。",
+        "播放成功但目标唤醒闭环缺失：固件/设备/音频链路问题。",
+        "随机间隔恰好压到识别超时临界时，应保留间隔和时间线证据用于复核。"
+      ]
+    },
+    "online_vad_special_smoke": {
+      "title": "在线 VAD 专项小样本",
+      "source_test_item": "在线识别/VAD 专项",
+      "validation_module": "online-vad-special-smoke",
+      "agent_goal": "构造短句、正常句、停顿句和长停顿在线语料，采集在线 ASR、VAD end、云端播报和文本覆盖证据，先做探索性 VAD 归因。",
+      "preconditions": [
+        "设备已联网，云端在线识别链路可用。",
+        "声卡和串口 logger 可用。",
+        "正式 VAD 截断容差和标注集未确认时，文本差异只标记待复核。"
+      ],
+      "commands": [
+        {
+          "name": "ensure_online_before_vad_special",
+          "cmd": [
+            "{python}",
+            "tools/device/polaris_network_orchestrator.py",
+            "ensure-online",
+            "--ssid",
+            "{wifi_ssid}",
+            "--pwd",
+            "{wifi_password}",
+            "--label",
+            "bdd_online_vad_ensure_online"
+          ]
+        },
+        {
+          "name": "run_online_vad_special_smoke",
+          "cmd": [
+            "{python}",
+            "satellite/cucumber-agent-testing/scripts/run_online_vad_special.py",
+            "--limit",
+            "4",
+            "--wake-word",
+            "{wake_word}",
+            "--device-key",
+            "{device_key}"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "name": "device_online",
+          "expected": "true",
+          "owner": "network-or-cloud"
+        },
+        {
+          "name": "vad_candidate_results",
+          "expected": "PASS/BLOCKED/FAIL per candidate",
+          "owner": "test-design"
+        },
+        {
+          "name": "online_asr_or_vad_end_or_cloud_tts",
+          "expected": "observed per candidate",
+          "owner": "firmware-or-cloud"
+        },
+        {
+          "name": "truncation_review_policy",
+          "expected": "needs_review without formal tolerance",
+          "owner": "requirement"
+        }
+      ],
+      "failure_split": [
+        "ensure-online 失败：联网前置 BLOCKED。",
+        "播放失败或串口缺失：环境 BLOCKED。",
+        "唤醒成功但无在线 ASR/VAD end/云端播报：在线 VAD/云端链路问题。",
+        "文本覆盖差异在无正式容差时先标记探索性待复核，不直接归固件。"
+      ]
+    },
+    "attribution_validator_smoke": {
+      "title": "归因一致性复核",
+      "source_test_item": "测试执行/失败归因复核",
+      "validation_module": "attribution-validator",
+      "agent_goal": "二次解析最近每个场景的 BDD summary、模块 summary 和关键原始日志，发现脚本误判、产物缺失、前置阻塞和 oracle 缺失。",
+      "preconditions": [
+        "已有 Cucumber run 目录和 bdd_run_summary.json。",
+        "各模块脚本输出 summary 或原始日志可访问。",
+        "复核只判断测试归因一致性，不重新执行真机动作。"
+      ],
+      "commands": [
+        {
+          "name": "run_attribution_validator_smoke",
+          "cmd": [
+            "{python}",
+            "satellite/cucumber-agent-testing/scripts/run_attribution_validator.py",
+            "--scan-root",
+            "satellite/cucumber-agent-testing/debug/runs",
+            "--limit",
+            "30"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "name": "bdd_module_result_consistency",
+          "expected": "no ERROR mismatch",
+          "owner": "test-framework"
+        },
+        {
+          "name": "raw_marker_false_fail_detected",
+          "expected": "reported as script issue",
+          "owner": "test-framework"
+        },
+        {
+          "name": "missing_precondition_policy",
+          "expected": "BLOCKED not firmware FAIL",
+          "owner": "test-design"
+        }
+      ],
+      "failure_split": [
+        "BDD 与模块 summary 不一致：脚本/汇总问题。",
+        "原始日志存在目标 marker 但 runner 判 FAIL：脚本 marker 覆盖不足。",
+        "缺少前置或缺少产物：BLOCKED/测试产物问题。",
+        "需求或 oracle 不明确：NEEDS_REVIEW，不直接归固件。"
+      ]
+    },
+    "false_wake_human_speech_smoke": {
+      "title": "合成人声干扰误唤醒小样本",
+      "source_test_item": "误唤醒/人声噪误唤醒",
+      "validation_module": "false-wake-human-speech-smoke",
+      "agent_goal": "播放不包含唤醒词的合成人声干扰，监听 CP/AP/ASR 唤醒 marker、reboot/crash 和串口状态，作为人声噪误唤醒基础 smoke。",
+      "preconditions": [
+        "播放声卡可用，DUT 能听到干扰音频。",
+        "串口 logger 覆盖整个播放窗口。",
+        "合成 TTS 只能作为基础 smoke，不能替代标准人声噪声场。"
+      ],
+      "commands": [
+        {
+          "name": "run_false_wake_human_speech_smoke",
+          "cmd": [
+            "{python}",
+            "satellite/cucumber-agent-testing/scripts/run_false_wake_playback.py",
+            "--kind",
+            "human_speech",
+            "--device-key",
+            "{device_key}"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "name": "no_wake_marker",
+          "expected": "true",
+          "owner": "firmware-or-device"
+        },
+        {
+          "name": "serial_not_silent",
+          "expected": "true",
+          "owner": "test-environment"
+        },
+        {
+          "name": "no_reboot_or_crash",
+          "expected": "true",
+          "owner": "device-stability"
+        }
+      ],
+      "failure_split": [
+        "播放失败或串口无日志：环境 BLOCKED。",
+        "干扰播放期间出现唤醒 marker：误唤醒 FAIL。",
+        "reboot/crash：设备稳定性问题。",
+        "正式人声噪测试仍需用户补充标准素材、声压和声场。"
+      ]
+    },
+    "false_wake_white_noise_smoke": {
+      "title": "白噪声误唤醒小样本",
+      "source_test_item": "误唤醒/非人声噪误唤醒",
+      "validation_module": "false-wake-white-noise-smoke",
+      "agent_goal": "播放本地生成白噪声，监听 CP/AP/ASR 唤醒 marker、reboot/crash 和串口状态，作为非人声噪误唤醒基础 smoke。",
+      "preconditions": [
+        "播放声卡可用，DUT 能听到低幅度白噪声。",
+        "串口 logger 覆盖整个播放窗口。",
+        "正式非人声噪测试仍需标准噪声素材、声压级和声场。"
+      ],
+      "commands": [
+        {
+          "name": "run_false_wake_white_noise_smoke",
+          "cmd": [
+            "{python}",
+            "satellite/cucumber-agent-testing/scripts/run_false_wake_playback.py",
+            "--kind",
+            "white_noise",
+            "--duration-s",
+            "20",
+            "--amplitude",
+            "0.08",
+            "--device-key",
+            "{device_key}"
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "name": "no_wake_marker",
+          "expected": "true",
+          "owner": "firmware-or-device"
+        },
+        {
+          "name": "serial_not_silent",
+          "expected": "true",
+          "owner": "test-environment"
+        },
+        {
+          "name": "no_reboot_or_crash",
+          "expected": "true",
+          "owner": "device-stability"
+        }
+      ],
+      "failure_split": [
+        "播放失败或串口无日志：环境 BLOCKED。",
+        "干扰播放期间出现唤醒 marker：误唤醒 FAIL。",
+        "reboot/crash：设备稳定性问题。",
+        "正式非人声噪测试仍需用户补充标准素材、声压和声场。"
+      ]
+    }
+  }
+}

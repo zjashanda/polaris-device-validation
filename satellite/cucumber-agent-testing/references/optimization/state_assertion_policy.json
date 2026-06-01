@@ -1,0 +1,547 @@
+{
+  "schema": "polaris.state_assertion_policy.v1",
+  "description": "Validation Kernel 默认状态断言策略。common 适用于所有 profile，profiles 按 runtime profile 追加；不替代 Python 业务断言，只补齐崩溃/重启/关键事件兜底。",
+  "common": [
+    "FORBID_STATE parallel_states.power = CRASHED",
+    "FORBID_STATE final_state = CRASHED",
+    "FORBID_HISTORY CrashDetected"
+  ],
+  "profiles": {
+    "first_wake": [
+      "EXPECT_HISTORY WakeDetected",
+      "FORBID_HISTORY RebootDetected"
+    ],
+    "recognition_mode_wake": [
+      "EXPECT_HISTORY WakeDetected",
+      "FORBID_HISTORY RebootDetected"
+    ],
+    "basic_command": [
+      "EXPECT_ANY_HISTORY ASRDetected|CommandDetected",
+      "FORBID_HISTORY RebootDetected"
+    ],
+    "command_batch": [
+      "EXPECT_ANY_HISTORY ASRDetected|CommandDetected",
+      "FORBID_HISTORY RebootDetected"
+    ],
+    "command_batch_exploratory": [
+      "EXPECT_ANY_HISTORY ASRDetected|CommandDetected",
+      "FORBID_HISTORY RebootDetected"
+    ],
+    "offline_oneshot_matrix": [
+      "EXPECT_ANY_HISTORY ASRDetected|CommandDetected",
+      "FORBID_HISTORY RebootDetected"
+    ],
+    "online_oneshot_matrix": [
+      "EXPECT_ANY_HISTORY ASRDetected|CommandDetected",
+      "EXPECT_ANY_HISTORY TTSStarted|MediaStarted",
+      "FORBID_HISTORY RebootDetected"
+    ],
+    "wake_matrix": [
+      "EXPECT_HISTORY WakeDetected",
+      "FORBID_HISTORY RebootDetected"
+    ],
+    "online_vad_special": [
+      "EXPECT_ANY_HISTORY ASRDetected|CommandDetected",
+      "EXPECT_ANY_HISTORY TTSStarted|MediaStarted",
+      "FORBID_HISTORY RebootDetected"
+    ],
+    "false_wake_quiet": [
+      "FORBID_HISTORY WakeDetected",
+      "FORBID_HISTORY RebootDetected"
+    ],
+    "false_wake_playback": [
+      "FORBID_HISTORY WakeDetected",
+      "FORBID_HISTORY RebootDetected"
+    ],
+    "wake_interrupt": [
+      "EXPECT_HISTORY WakeDetected",
+      "EXPECT_HISTORY InterruptInjected",
+      "FORBID_HISTORY RebootDetected"
+    ],
+    "command_interrupt": [
+      "EXPECT_ANY_HISTORY ASRDetected|CommandDetected",
+      "EXPECT_HISTORY InterruptInjected",
+      "FORBID_HISTORY RebootDetected"
+    ],
+    "network_recovery_basic": [
+      "EXPECT_HISTORY NetworkLost",
+      "EXPECT_HISTORY NetworkRecovered"
+    ],
+    "interrupt_prerequisite_measurement": [
+      "EXPECT_ANY_HISTORY TTSStarted|MediaStarted",
+      "FORBID_HISTORY RebootDetected"
+    ],
+    "attribution_validator": [
+      "FORBID_HISTORY RebootDetected"
+    ],
+    "half_duplex_recognition": [
+      "EXPECT_HISTORY WakeDetected",
+      "EXPECT_ANY_HISTORY ASRDetected|CommandDetected",
+      "FORBID_HISTORY RebootDetected"
+    ],
+    "full_duplex_recognition": [
+      "EXPECT_HISTORY WakeDetected",
+      "EXPECT_ANY_HISTORY ASRDetected|CommandDetected",
+      "EXPECT_ANY_HISTORY TTSStarted|MediaStarted",
+      "FORBID_HISTORY RebootDetected"
+    ]
+  },
+  "coverage": {
+    "common": {
+      "max_error_violations": 0,
+      "min_transition_count": 1
+    },
+    "profiles": {
+      "first_wake": {
+        "required_event_types": [
+          "WakeDetected"
+        ],
+        "forbidden_event_types": [
+          "CrashDetected",
+          "RebootDetected"
+        ],
+        "required_any_parallel_states": {
+          "recognition": [
+            "LISTENING",
+            "RECOGNIZING"
+          ]
+        }
+      },
+      "recognition_mode_wake": {
+        "required_event_types": [
+          "WakeDetected"
+        ],
+        "forbidden_event_types": [
+          "CrashDetected",
+          "RebootDetected"
+        ],
+        "required_any_parallel_states": {
+          "recognition": [
+            "LISTENING",
+            "RECOGNIZING"
+          ]
+        }
+      },
+      "basic_command": {
+        "required_event_types": [
+          "WakeDetected"
+        ],
+        "required_any_event_types": [
+          [
+            "ASRDetected",
+            "CommandDetected"
+          ]
+        ],
+        "forbidden_event_types": [
+          "CrashDetected",
+          "RebootDetected"
+        ],
+        "required_any_parallel_states": {
+          "recognition": [
+            "LISTENING",
+            "RECOGNIZING"
+          ]
+        }
+      },
+      "command_batch": {
+        "required_any_event_types": [
+          [
+            "ASRDetected",
+            "CommandDetected"
+          ]
+        ],
+        "forbidden_event_types": [
+          "CrashDetected",
+          "RebootDetected"
+        ]
+      },
+      "command_batch_exploratory": {
+        "required_any_event_types": [
+          [
+            "ASRDetected",
+            "CommandDetected"
+          ]
+        ],
+        "forbidden_event_types": [
+          "CrashDetected",
+          "RebootDetected"
+        ]
+      },
+      "wake_matrix": {
+        "required_event_types": [
+          "WakeDetected"
+        ],
+        "forbidden_event_types": [
+          "CrashDetected",
+          "RebootDetected"
+        ]
+      },
+      "online_oneshot_matrix": {
+        "required_any_event_types": [
+          [
+            "ASRDetected",
+            "CommandDetected"
+          ],
+          [
+            "TTSStarted",
+            "MediaStarted"
+          ]
+        ],
+        "forbidden_event_types": [
+          "CrashDetected",
+          "RebootDetected"
+        ]
+      },
+      "offline_oneshot_matrix": {
+        "required_any_event_types": [
+          [
+            "ASRDetected",
+            "CommandDetected"
+          ]
+        ],
+        "forbidden_event_types": [
+          "CrashDetected",
+          "RebootDetected"
+        ]
+      },
+      "online_vad_special": {
+        "required_any_event_types": [
+          [
+            "ASRDetected",
+            "CommandDetected"
+          ],
+          [
+            "TTSStarted",
+            "MediaStarted"
+          ]
+        ],
+        "forbidden_event_types": [
+          "CrashDetected",
+          "RebootDetected"
+        ]
+      },
+      "false_wake_quiet": {
+        "forbidden_event_types": [
+          "WakeDetected",
+          "ASRDetected",
+          "CommandDetected",
+          "CrashDetected",
+          "RebootDetected"
+        ],
+        "min_transition_count": 0
+      },
+      "false_wake_playback": {
+        "forbidden_event_types": [
+          "WakeDetected",
+          "CrashDetected",
+          "RebootDetected"
+        ],
+        "min_transition_count": 0
+      },
+      "wake_interrupt": {
+        "required_event_types": [
+          "WakeDetected",
+          "InterruptInjected"
+        ],
+        "forbidden_event_types": [
+          "CrashDetected",
+          "RebootDetected"
+        ]
+      },
+      "command_interrupt": {
+        "required_event_types": [
+          "InterruptInjected"
+        ],
+        "required_any_event_types": [
+          [
+            "ASRDetected",
+            "CommandDetected"
+          ]
+        ],
+        "forbidden_event_types": [
+          "CrashDetected",
+          "RebootDetected"
+        ]
+      },
+      "network_recovery_basic": {
+        "required_event_types": [
+          "NetworkLost",
+          "NetworkRecovered"
+        ],
+        "forbidden_event_types": [
+          "CrashDetected"
+        ]
+      },
+      "interrupt_prerequisite_measurement": {
+        "required_any_event_types": [
+          [
+            "TTSStarted",
+            "MediaStarted"
+          ]
+        ],
+        "forbidden_event_types": [
+          "CrashDetected",
+          "RebootDetected"
+        ]
+      },
+      "attribution_validator": {
+        "forbidden_event_types": [
+          "CrashDetected",
+          "RebootDetected"
+        ],
+        "min_transition_count": 0
+      },
+      "half_duplex_recognition": {
+        "required_event_types": [
+          "WakeDetected"
+        ],
+        "required_any_event_types": [
+          [
+            "ASRDetected",
+            "CommandDetected"
+          ]
+        ],
+        "forbidden_event_types": [
+          "CrashDetected",
+          "RebootDetected"
+        ],
+        "required_any_parallel_states": {
+          "recognition": [
+            "LISTENING",
+            "RECOGNIZING"
+          ]
+        }
+      },
+      "full_duplex_recognition": {
+        "required_event_types": [
+          "WakeDetected"
+        ],
+        "required_any_event_types": [
+          [
+            "ASRDetected",
+            "CommandDetected"
+          ],
+          [
+            "TTSStarted",
+            "MediaStarted"
+          ]
+        ],
+        "forbidden_event_types": [
+          "CrashDetected",
+          "RebootDetected"
+        ],
+        "required_any_parallel_states": {
+          "recognition": [
+            "LISTENING",
+            "RECOGNIZING"
+          ],
+          "network": [
+            "ONLINE"
+          ]
+        }
+      }
+    },
+    "projects": {
+      "cskwb01": {
+        "description": "WB01 uses CP/AP/ASR multi-role evidence; summary and state coverage must keep the three-role distinction.",
+        "common": {
+          "max_error_violations": 0,
+          "max_warn_violations": 3,
+          "min_transition_count": 1
+        },
+        "profiles": {
+          "first_wake": {
+            "required_event_types": [
+              "WakeDetected"
+            ],
+            "forbidden_event_types": [
+              "CrashDetected",
+              "RebootDetected"
+            ],
+            "min_transition_count": 1
+          },
+          "recognition_mode_wake": {
+            "required_event_types": [
+              "WakeDetected"
+            ],
+            "forbidden_event_types": [
+              "CrashDetected",
+              "RebootDetected"
+            ],
+            "min_transition_count": 1
+          },
+          "basic_command": {
+            "required_event_types": [
+              "WakeDetected"
+            ],
+            "required_any_event_types": [
+              [
+                "ASRDetected",
+                "CommandDetected"
+              ]
+            ],
+            "forbidden_event_types": [
+              "CrashDetected",
+              "RebootDetected"
+            ],
+            "min_transition_count": 2
+          },
+          "half_duplex_recognition": {
+            "required_event_types": [
+              "WakeDetected"
+            ],
+            "required_any_event_types": [
+              [
+                "ASRDetected",
+                "CommandDetected"
+              ]
+            ],
+            "forbidden_event_types": [
+              "CrashDetected",
+              "RebootDetected"
+            ],
+            "min_transition_count": 2
+          },
+          "full_duplex_recognition": {
+            "required_event_types": [
+              "WakeDetected"
+            ],
+            "required_any_event_types": [
+              [
+                "ASRDetected",
+                "CommandDetected"
+              ],
+              [
+                "TTSStarted",
+                "MediaStarted"
+              ]
+            ],
+            "forbidden_event_types": [
+              "CrashDetected",
+              "RebootDetected"
+            ],
+            "min_transition_count": 3
+          },
+          "online_vad_special": {
+            "required_any_event_types": [
+              [
+                "ASRDetected",
+                "CommandDetected"
+              ],
+              [
+                "TTSStarted",
+                "MediaStarted"
+              ]
+            ],
+            "forbidden_event_types": [
+              "CrashDetected",
+              "RebootDetected"
+            ],
+            "min_transition_count": 2
+          }
+        }
+      },
+      "venusws63": {
+        "description": "WS63/AP+WiFi has no CP; state coverage must not require CP and should rely on AP plus upper evidence in summary/Event Graph.",
+        "common": {
+          "max_error_violations": 0,
+          "max_warn_violations": 3,
+          "min_transition_count": 1
+        },
+        "profiles": {
+          "first_wake": {
+            "required_event_types": [
+              "WakeDetected"
+            ],
+            "forbidden_event_types": [
+              "CrashDetected",
+              "RebootDetected"
+            ],
+            "min_transition_count": 1,
+            "notes": "WS63 has no CP, so CP wake marker is not required."
+          },
+          "recognition_mode_wake": {
+            "required_event_types": [
+              "WakeDetected"
+            ],
+            "forbidden_event_types": [
+              "CrashDetected",
+              "RebootDetected"
+            ],
+            "min_transition_count": 1
+          },
+          "basic_command": {
+            "required_event_types": [
+              "WakeDetected"
+            ],
+            "required_any_event_types": [
+              [
+                "ASRDetected",
+                "CommandDetected"
+              ]
+            ],
+            "forbidden_event_types": [
+              "CrashDetected",
+              "RebootDetected"
+            ],
+            "min_transition_count": 2
+          },
+          "half_duplex_recognition": {
+            "required_event_types": [
+              "WakeDetected"
+            ],
+            "required_any_event_types": [
+              [
+                "ASRDetected",
+                "CommandDetected"
+              ]
+            ],
+            "forbidden_event_types": [
+              "CrashDetected",
+              "RebootDetected"
+            ],
+            "min_transition_count": 2
+          },
+          "full_duplex_recognition": {
+            "required_event_types": [
+              "WakeDetected"
+            ],
+            "required_any_event_types": [
+              [
+                "ASRDetected",
+                "CommandDetected"
+              ],
+              [
+                "TTSStarted",
+                "MediaStarted"
+              ]
+            ],
+            "forbidden_event_types": [
+              "CrashDetected",
+              "RebootDetected"
+            ],
+            "min_transition_count": 3,
+            "notes": "WS63 has no CP, so CP wake marker is not required."
+          },
+          "online_vad_special": {
+            "required_any_event_types": [
+              [
+                "ASRDetected",
+                "CommandDetected"
+              ],
+              [
+                "TTSStarted",
+                "MediaStarted"
+              ]
+            ],
+            "forbidden_event_types": [
+              "CrashDetected",
+              "RebootDetected"
+            ],
+            "min_transition_count": 2
+          }
+        }
+      }
+    }
+  }
+}

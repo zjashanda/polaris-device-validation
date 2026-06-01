@@ -1,0 +1,389 @@
+{
+  "version": 1,
+  "source": [
+    "docs/wiki/voice-validation/test-item-index.md",
+    "references/validation-pool/wake-session.md",
+    "references/validation-pool/duplex-mode.md",
+    "references/validation-pool/ac-control-command.md",
+    "Polaris current runtime contracts"
+  ],
+  "contracts": {
+    "wake.first_wake": {
+      "title": "First wake",
+      "support_status": "automated",
+      "intent": "Verify that the DUT wakes from idle after the configured wake word is played.",
+      "parameters": {
+        "wake_word": "xiaomei",
+        "observe_ms": 15000
+      },
+      "preconditions": [
+        "serial.ready",
+        "audio.playback_ready",
+        "session.idle"
+      ],
+      "actions": [
+        "audio.play_wake_word"
+      ],
+      "evidence": [
+        "CP: WAKE(1)",
+        "AP: wakeup_callback",
+        "ASR: offline_wakeup/online_wakeup",
+        "player: tone/TTS status"
+      ],
+      "assertions": [
+        {
+          "metric": "playback_returncode",
+          "operator": "==",
+          "expected": 0,
+          "owner": "audio/playback"
+        },
+        {
+          "metric": "cp_wake_count",
+          "operator": ">=",
+          "expected": 1,
+          "owner": "firmware-or-device"
+        },
+        {
+          "metric": "ap_wake_count",
+          "operator": ">=",
+          "expected": 1,
+          "owner": "firmware-or-device"
+        },
+        {
+          "metric": "asr_wake_count",
+          "operator": ">=",
+          "expected": 1,
+          "owner": "asr-device"
+        }
+      ],
+      "failure_split": [
+        "Playback failure -> audio or host environment",
+        "No serial logs -> logger or port coverage",
+        "Playback succeeds but no wake -> audio path, PA, microphone, or firmware wake issue",
+        "Partial wake evidence -> locate missing CP/AP/ASR or AP/upper role"
+      ]
+    },
+    "wake.recognition_mode_wake": {
+      "title": "Recognition-mode wake",
+      "support_status": "automated",
+      "intent": "Verify that the DUT can accept a second wake while still inside the recognition window.",
+      "parameters": {
+        "wake_word": "xiaomei",
+        "recognition_timeout_s": 15,
+        "second_wake_delay_s": 1
+      },
+      "preconditions": [
+        "network.online_if_cloud_case",
+        "first_wake_success",
+        "second_wake_before_timeout"
+      ],
+      "actions": [
+        "network.ensure_online",
+        "audio.play_wake_then_rewake"
+      ],
+      "evidence": [
+        "second CP/AP wake",
+        "AP restart session timer",
+        "second wake before session timeout"
+      ],
+      "assertions": [
+        {
+          "metric": "first_wake_success",
+          "operator": "==",
+          "expected": true,
+          "owner": "precondition"
+        },
+        {
+          "metric": "cp_wake_count",
+          "operator": ">=",
+          "expected": 2,
+          "owner": "firmware-or-device"
+        },
+        {
+          "metric": "ap_wake_count",
+          "operator": ">=",
+          "expected": 2,
+          "owner": "firmware-or-device"
+        },
+        {
+          "metric": "timeout_before_second_wake",
+          "operator": "==",
+          "expected": false,
+          "owner": "test-design"
+        }
+      ],
+      "failure_split": [
+        "First wake failed -> precondition failure",
+        "Second wake after timeout -> test timing issue",
+        "No evidence inside window -> firmware, ASR, or session-state issue"
+      ]
+    },
+    "duplex.half": {
+      "title": "Half-duplex recognition",
+      "support_status": "automated",
+      "intent": "Verify wake plus command recognition after half-duplex mode is applied.",
+      "parameters": {
+        "timeout_s": 15,
+        "command_text": "open air conditioner"
+      },
+      "preconditions": [
+        "network.online",
+        "cloud.duplex_half_applied",
+        "serial.ready",
+        "audio.ready"
+      ],
+      "actions": [
+        "network.ensure_online",
+        "cloud.set_duplex_half",
+        "audio.play_wake_then_command"
+      ],
+      "evidence": [
+        "cloud apply success",
+        "CP/AP wake",
+        "online_asr or cp_command_keyword",
+        "cloud.instructions.audioBroadcast",
+        "TTS play/stop"
+      ],
+      "assertions": [
+        {
+          "metric": "cloud_apply_success",
+          "operator": "==",
+          "expected": true,
+          "owner": "cloud-or-config"
+        },
+        {
+          "metric": "cp_wake_count",
+          "operator": ">=",
+          "expected": 1,
+          "owner": "precondition"
+        },
+        {
+          "metric": "ap_wake_count",
+          "operator": ">=",
+          "expected": 1,
+          "owner": "precondition"
+        },
+        {
+          "metric": "command_asr_or_keyword",
+          "operator": "observed",
+          "expected": true,
+          "owner": "firmware-or-device"
+        },
+        {
+          "metric": "forbidden_recognition_during_playback",
+          "operator": "==",
+          "expected": false,
+          "owner": "requirement"
+        }
+      ],
+      "failure_split": [
+        "Network or cloud config failure -> BLOCKED",
+        "No wake -> wake precondition",
+        "Wake exists but no ASR or keyword -> audio, ASR, command-domain, or oracle issue",
+        "Unexpected playback recognition -> requirement review"
+      ]
+    },
+    "duplex.full": {
+      "title": "Full-duplex recognition",
+      "support_status": "automated",
+      "intent": "Verify continuous recognition and response after full-duplex mode is applied.",
+      "parameters": {
+        "timeout_s": 60,
+        "command_text": "open air conditioner"
+      },
+      "preconditions": [
+        "network.online",
+        "cloud.duplex_full_applied",
+        "serial.ready",
+        "audio.ready"
+      ],
+      "actions": [
+        "network.ensure_online",
+        "cloud.set_duplex_full",
+        "audio.play_wake_then_command"
+      ],
+      "evidence": [
+        "fullduplex timeout refresh",
+        "restart session timer",
+        "online_asr/cp_keyword",
+        "cloud.instructions.audioBroadcast",
+        "TTS play/stop"
+      ],
+      "assertions": [
+        {
+          "metric": "cloud_apply_success",
+          "operator": "==",
+          "expected": true,
+          "owner": "cloud-or-config"
+        },
+        {
+          "metric": "cp_wake_count",
+          "operator": ">=",
+          "expected": 1,
+          "owner": "precondition"
+        },
+        {
+          "metric": "ap_wake_count",
+          "operator": ">=",
+          "expected": 1,
+          "owner": "precondition"
+        },
+        {
+          "metric": "command_asr_or_keyword",
+          "operator": "observed",
+          "expected": true,
+          "owner": "firmware-or-device"
+        },
+        {
+          "metric": "successful_response_count",
+          "operator": ">=",
+          "expected": 1,
+          "owner": "cloud-or-firmware"
+        }
+      ],
+      "failure_split": [
+        "Network or cloud config failure -> BLOCKED",
+        "Wake exists but no command closure -> audio, ASR, command-domain, or oracle issue",
+        "Cloud response exists but no TTS/media closure -> media response chain issue",
+        "Timing boundary unclear -> TIMING_AMBIGUOUS"
+      ]
+    },
+    "command.basic_recognition": {
+      "title": "Basic command recognition",
+      "support_status": "automated",
+      "intent": "Run a command list and verify wake, ASR or keyword, and response evidence for each command.",
+      "parameters": {
+        "command_file": "docs/fa2命令词.txt",
+        "wake_word": "xiaomei",
+        "limit": 20
+      },
+      "preconditions": [
+        "serial.ready",
+        "audio.ready",
+        "command_file.readable"
+      ],
+      "actions": [
+        "audio.play_wake_then_each_command"
+      ],
+      "evidence": [
+        "per_command/*.json",
+        "fa2_command_batch_summary.json",
+        "CP/AP wake",
+        "ASR/keyword",
+        "tone/TTS"
+      ],
+      "assertions": [
+        {
+          "metric": "playback_returncode",
+          "operator": "==",
+          "expected": 0,
+          "owner": "audio/playback"
+        },
+        {
+          "metric": "per_command.cp_wake_count",
+          "operator": ">=",
+          "expected": 1,
+          "owner": "precondition"
+        },
+        {
+          "metric": "per_command.asr_or_keyword",
+          "operator": "observed",
+          "expected": true,
+          "owner": "firmware-or-device"
+        }
+      ],
+      "failure_split": [
+        "Command file unreadable -> data issue",
+        "Playback failure -> audio or host issue",
+        "No wake -> wake precondition or PA issue",
+        "Wake but no ASR or keyword -> firmware, ASR, command-domain, or oracle issue",
+        "Unexpected extra ASR -> interference, previous session, or oracle review"
+      ]
+    },
+    "session.timeout_boundary": {
+      "title": "Session timeout boundary",
+      "support_status": "contract_ready",
+      "intent": "Verify behavior immediately before and after the configured recognition timeout.",
+      "parameters": {
+        "timeout_s": 15,
+        "before_delta_s": 1,
+        "after_delta_s": 1
+      },
+      "preconditions": [
+        "wake_success",
+        "timeout_config_applied"
+      ],
+      "actions": [
+        "audio.play_before_timeout",
+        "audio.play_after_timeout"
+      ],
+      "evidence": [
+        "restart session timer with ${timeout_s}s",
+        "session timeout",
+        "stop interactive by session timeout"
+      ],
+      "assertions": [
+        {
+          "metric": "before_timeout_command_allowed",
+          "operator": "==",
+          "expected": true,
+          "owner": "requirement"
+        },
+        {
+          "metric": "after_timeout_requires_rewake",
+          "operator": "==",
+          "expected": true,
+          "owner": "requirement"
+        }
+      ],
+      "failure_split": [
+        "No configured timeout evidence -> config or log coverage gap",
+        "Boundary evidence unclear -> TIMING_AMBIGUOUS"
+      ]
+    },
+    "wakeup.word_change": {
+      "title": "Wake word change",
+      "support_status": "contract_ready",
+      "intent": "Verify that a configured wake word can wake the DUT and the old wake-word policy is respected.",
+      "parameters": {
+        "new_wake_word": "",
+        "expected_wakeup_id": "",
+        "old_wake_word_policy": "forbidden_or_compatible"
+      },
+      "preconditions": [
+        "network.online",
+        "cloud.wakeup_word_supported"
+      ],
+      "actions": [
+        "cloud.set_wakeup_word",
+        "audio.play_new_wake_word",
+        "audio.play_old_wake_word"
+      ],
+      "evidence": [
+        "cloud wakeup config ack",
+        "deviceinfo WakeupID",
+        "AP wakeup_callback keyword",
+        "CP WAKE key"
+      ],
+      "assertions": [
+        {
+          "metric": "new_wake_word_wakes",
+          "operator": "==",
+          "expected": true,
+          "owner": "firmware-or-model"
+        },
+        {
+          "metric": "wakeup_id",
+          "operator": "==",
+          "expected": "${expected_wakeup_id}",
+          "owner": "cloud-or-firmware"
+        }
+      ],
+      "failure_split": [
+        "Cloud config failure -> network, env, or permission issue",
+        "New wake word cannot wake -> cloud, model, firmware, or audio issue",
+        "Old wake policy ambiguous -> requirement review"
+      ]
+    }
+  }
+}

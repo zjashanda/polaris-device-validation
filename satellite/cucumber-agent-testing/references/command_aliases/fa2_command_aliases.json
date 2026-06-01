@@ -1,0 +1,63 @@
+﻿{
+  "schema": "polaris.command_aliases.v1",
+  "name": "fa2_command_aliases",
+  "description": "FA2 命令词断言用同义词/项目口径库。用于把需求命令、云端 ASR 文本、本地离线 keyword/pinyin 归一到同一个 oracle。",
+  "updated_at": "2026-05-29",
+  "exact_aliases": {
+    "打开空调": ["空调开机"],
+    "空调开机": ["打开空调"],
+    "关闭空调": ["空调关机"],
+    "空调关机": ["关闭空调"],
+    "关闭模式": ["取消模式"],
+    "取消模式": ["关闭模式"],
+    "打开节能省电": ["打开eco", "打开ECO"],
+    "关闭节能省电": ["关闭eco", "关闭ECO"],
+    "节能省电": ["eco", "ECO"],
+    "制热模式": ["打开制热", "切换制热"],
+    "制冷模式": ["打开制冷", "切换制冷"],
+    "除湿模式": ["抽湿模式"],
+    "抽湿模式": ["除湿模式"],
+    "全域风": ["全面风"],
+    "全面风": ["全域风"],
+    "主动防冷风": ["自动防冷风"],
+    "自动防冷风": ["主动防冷风"]
+  },
+  "contains_replacements": [
+    {
+      "contains": "风向",
+      "replace": "向",
+      "reason": "部分 WB01 本地 keyword 会省略“风”字，例如 风向左吹 -> 向左吹。"
+    },
+    {
+      "contains": "除湿",
+      "replace": "抽湿",
+      "reason": "项目词表存在 除湿/抽湿 口径差异。"
+    },
+    {
+      "contains": "主动防冷风",
+      "replace": "自动防冷风",
+      "reason": "项目词表存在 主动/自动 防冷风口径差异。"
+    },
+    {
+      "contains": "全域风",
+      "replace": "全面风",
+      "reason": "项目词表存在 全域风/全面风 口径差异。"
+    }
+  ],
+  "regex_aliases": [
+    {
+      "pattern": "^(打开|关闭)(左风道|右风道)(.+)$",
+      "template": "{2}{1}{3}",
+      "reason": "左/右风道命令在本地 keyword 中可能调整语序。"
+    }
+  ],
+  "pinyin_alias_notes": [
+    "pypinyin 默认可能把“调”转为 diao；FA2 控制词中应同时接受 tiao。",
+    "部分日志把“除湿”输出为 chou shi；断言应同时接受 chu shi/chou shi。"
+  ],
+  "assertion_policy": [
+    "目标命令命中同义词或拼音同义口径时，不能判 command_domain FAIL。",
+    "目标命令命中但窗口中另有 ASR/keyword，结果保持 PASS_WITH_WARNINGS 并记录 unexpected_recognition_warning。",
+    "目标命令未命中且只出现其他识别文本，按 unexpected_recognition 归因。"
+  ]
+}

@@ -1,0 +1,24 @@
+# Runtime output
+oldTime/
+config/
+satellite/cucumber-agent-testing/debug/
+result/
+cache/
+outputs/
+_runtime/
+
+# Local machine config
+plan.md
+polaris.local.json
+.current_logger_pid
+.current_result_dir
+
+# Python / tools
+__pycache__/
+*.py[cod]
+*.log
+*.tmp
+
+# Office temp
+~$*.docx
+~$*.xlsx

@@ -1,0 +1,55 @@
+{
+  "schema": "polaris.cucumber.task.v1",
+  "task_id": "replace_with_feature_name",
+  "status": "needs_sedimentation",
+  "description": "新功能第一次接入时使用本模板。先把意图、前置、动作、证据、断言和归因写清楚，再沉淀到 feature/mapping/registry。",
+  "feature_intent": "要验证什么功能，以及为什么要验证。",
+  "scenario": {
+    "tag": "replace_with_registered_tag"
+  },
+  "runner": {
+    "mode": "dry-run",
+    "compile_first": true,
+    "strict_compile": true,
+    "feature": "satellite/cucumber-agent-testing/features/polaris_voice_core.feature",
+    "mapping": "satellite/cucumber-agent-testing/references/voice_core_mapping.json"
+  },
+  "environment": {
+    "env_file": "polaris.local.json"
+  },
+  "preconditions": [
+    "设备需要处于什么状态",
+    "是否需要联网、半双工、全双工、夜间模式、特定音量或自播状态",
+    "是否需要先唤醒，是否需要控制识别超时窗口"
+  ],
+  "actions": [
+    "怎么触发：播放音频、发送串口命令、切云端配置、断网/联网、上下电等",
+    "动作之间的时间间隔和临界时序要求"
+  ],
+  "inputs": {
+    "command_file": "",
+    "command_text": "",
+    "audio_files": [],
+    "corpus_files": []
+  },
+  "execution": {
+    "observe_ms": 15000,
+    "recognition_timeout_s": 15,
+    "half_duplex_timeout_s": 15,
+    "full_duplex_timeout_s": 60,
+    "timing_guard_ms": 1200,
+    "manage_session": true,
+    "allow_side_effects": false
+  },
+  "expected_evidence": [
+    "串口上应出现哪些 marker",
+    "是否需要 ASR 文本、TTS 播报、在线状态、云端响应或设备动作证据"
+  ],
+  "failure_attribution": {
+    "firmware_fail": "什么证据充分时才算固件失败",
+    "device_or_environment": "什么情况下算设备、声卡、串口、网络或热点问题",
+    "test_design_or_timing": "什么情况下算时序不明确、注入点不安全或脚本问题",
+    "requirement_review": "什么情况下说明需求口径或 oracle 不清楚"
+  }
+}
+

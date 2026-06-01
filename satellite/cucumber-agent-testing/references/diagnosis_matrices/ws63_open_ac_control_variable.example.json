@@ -1,0 +1,54 @@
+{
+  "matrix": [
+    {
+      "case_id": "ws63_half_open_1500",
+      "mode": "half",
+      "command": "打开空调",
+      "delay_ms": 1500,
+      "observe_ms": 12000,
+      "variable": "same_command_half_baseline",
+      "expected": "打开空调",
+      "timeout_s": 15
+    },
+    {
+      "case_id": "ws63_full_open_1000",
+      "mode": "full",
+      "command": "打开空调",
+      "delay_ms": 1000,
+      "observe_ms": 12000,
+      "variable": "original_full_duplex_1s_delay",
+      "expected": "打开空调",
+      "timeout_s": 15
+    },
+    {
+      "case_id": "ws63_full_open_2500",
+      "mode": "full",
+      "command": "打开空调",
+      "delay_ms": 2500,
+      "observe_ms": 12000,
+      "variable": "late_delay_control",
+      "expected": "打开空调",
+      "timeout_s": 15
+    },
+    {
+      "case_id": "ws63_full_close_1500",
+      "mode": "full",
+      "command": "关闭空调",
+      "delay_ms": 1500,
+      "observe_ms": 12000,
+      "variable": "same_domain_other_ac_command",
+      "expected": "关闭空调",
+      "timeout_s": 15
+    },
+    {
+      "case_id": "ws63_full_news_1000",
+      "mode": "full",
+      "command": "播报今日新闻",
+      "delay_ms": 1000,
+      "observe_ms": 14000,
+      "variable": "same_delay_non_ac_online_command",
+      "expected": "播报今日新闻",
+      "timeout_s": 15
+    }
+  ]
+}

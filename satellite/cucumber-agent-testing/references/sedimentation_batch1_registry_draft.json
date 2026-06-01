@@ -1,0 +1,532 @@
+{
+  "version": 1,
+  "status": "draft_ready_for_local_generation",
+  "purpose": "第一批可沉淀测试能力草案；先固化功能意图、动作、断言、归因和资料缺口，后续由脚本生成 registry extension。",
+  "sources": [
+    "satellite/测试项确认清单_20260513_102831.xlsx",
+    "satellite/voice-test-plan-designer/references/测试项配置.json",
+    "satellite/voice-test-plan-designer/references/执行方法模板.md",
+    "satellite/voice-test-plan-designer/references/测试数据设计模板.md",
+    "docs/requirements",
+    "docs/fa2命令词.txt"
+  ],
+  "global_evidence": {
+    "serial_ports": {
+      "ap": "COM14",
+      "cp": "COM12",
+      "asr": "COM13",
+      "power": "COM15"
+    },
+    "audio_device_key": "VID_8765&PID_5678:9_2A847557_7_0000",
+    "network": {
+      "ssid": "",
+      "device_mac": "8c:3f:44:2b:7a:d9"
+    }
+  },
+  "capabilities": [
+    {
+      "id": "wake.continuous",
+      "category": "唤醒",
+      "test_items": [
+        "连续唤醒"
+      ],
+      "level": "L1",
+      "intent": "连续或短间隔播放唤醒词，验证设备是否出现连续未唤醒、卡死、重启或日志中断。",
+      "data_sources": [
+        "configured_wake_audio"
+      ],
+      "actions": [
+        "ensure_device_listening_or_known_state",
+        "play_wake_audio_repeatedly",
+        "capture_serial_window",
+        "summarize_consecutive_failures"
+      ],
+      "assertions": [
+        "wake_success_count / valid_rounds meets configured threshold",
+        "max_consecutive_wake_failures <= configured limit",
+        "no device reboot, serial silence, or logger interruption during run"
+      ],
+      "attribution": {
+        "firmware_or_algorithm": "playback ok and serial alive but CP/AP/ASR wake evidence missing repeatedly",
+        "device_or_environment": "audio playback failure, serial interruption, reboot, or sound path abnormal",
+        "requirement_gap": "round count, interval, or threshold not configured"
+      },
+      "needs_user_confirmation": [
+        "round_count",
+        "interval_policy",
+        "pass_threshold",
+        "max_consecutive_failure_limit"
+      ]
+    },
+    {
+      "id": "wake.random_interval",
+      "category": "唤醒",
+      "test_items": [
+        "随机间隔唤醒"
+      ],
+      "level": "L1",
+      "intent": "用随机间隔触发唤醒，观察不同设备状态下唤醒稳定性和状态残留。",
+      "data_sources": [
+        "configured_wake_audio"
+      ],
+      "actions": [
+        "sample_interval_from_configured_distribution",
+        "wait_interval",
+        "play_wake_audio",
+        "classify_device_state_before_round",
+        "capture_serial_window"
+      ],
+      "assertions": [
+        "random_interval_wake_rate meets configured threshold",
+        "state_abnormal_count == 0 unless expected",
+        "consecutive_failure_segments are reported separately"
+      ],
+      "attribution": {
+        "timing_ambiguous": "wake audio effective point overlaps recognition timeout gray zone",
+        "firmware_or_algorithm": "safe timing but wake evidence missing",
+        "requirement_gap": "interval distribution or state policy not configured"
+      },
+      "needs_user_confirmation": [
+        "interval_min_seconds",
+        "interval_max_seconds",
+        "distribution",
+        "pass_threshold"
+      ]
+    },
+    {
+      "id": "wake.latency",
+      "category": "唤醒",
+      "test_items": [
+        "响应时间"
+      ],
+      "level": "L1_L2",
+      "intent": "统计成功唤醒样本从唤醒词结束到设备提示音/TTS/唤醒反馈开始的耗时。",
+      "data_sources": [
+        "configured_wake_audio",
+        "serial_timestamps",
+        "optional_recording_timestamps"
+      ],
+      "actions": [
+        "play_wake_audio_with_timeline",
+        "capture_wake_response_markers",
+        "compute_latency_for_success_rounds_only"
+      ],
+      "assertions": [
+        "latency metrics include avg, min, max, p95 when sample size is enough",
+        "failed wake rounds are excluded from latency average and listed separately",
+        "over_threshold_samples are listed with evidence"
+      ],
+      "attribution": {
+        "requirement_gap": "latency start/end marker or threshold is not confirmed",
+        "script_gap": "serial timestamp resolution cannot support configured precision",
+        "firmware_or_algorithm": "confirmed successful wake response exceeds threshold"
+      },
+      "needs_user_confirmation": [
+        "latency_start_marker",
+        "latency_end_marker",
+        "latency_threshold_ms"
+      ]
+    },
+    {
+      "id": "command.coverage_from_requirements",
+      "category": "命令词",
+      "test_items": [
+        "全命令覆盖",
+        "基础命令词识别率"
+      ],
+      "level": "L1",
+      "intent": "从需求文档抽取命令词全集，与可播放/可执行测试集比对，输出覆盖率和缺失项。",
+      "data_sources": [
+        "docs/requirements",
+        "docs/fa2命令词.txt",
+        "requirements_corpus"
+      ],
+      "actions": [
+        "extract_command_candidates_from_requirements",
+        "normalize_command_phrases",
+        "compare_against_executable_command_audio_or_fa2_list",
+        "generate_coverage_matrix"
+      ],
+      "assertions": [
+        "covered_command_count / expected_command_count is reported",
+        "missing_commands are listed",
+        "commands without oracle are marked NEEDS_REVIEW instead of FAIL"
+      ],
+      "attribution": {
+        "requirement_gap": "expected command list cannot be extracted or conflicts between documents",
+        "data_gap": "command exists in requirements but no audio or playback source is available",
+        "script_gap": "parser cannot classify document table structure"
+      },
+      "needs_user_confirmation": [
+        "which requirement file is authoritative",
+        "minimum_samples_per_command",
+        "expected_intent_or_action_columns"
+      ]
+    },
+    {
+      "id": "command.grouped",
+      "category": "命令词",
+      "test_items": [
+        "短词/长词/数字类指令",
+        "停顿/连读/语速"
+      ],
+      "level": "L1_L2",
+      "intent": "按文本长度、数字参数、语速/停顿标签拆分命令词专项结果，避免整体识别率掩盖局部问题。",
+      "data_sources": [
+        "requirements_corpus",
+        "docs/fa2命令词.txt",
+        "synthetic_variants"
+      ],
+      "actions": [
+        "classify_short_long_numeric_commands",
+        "generate_pause_or_speed_variant_tasks",
+        "execute_or_mark_variant_review_required",
+        "summarize_group_metrics"
+      ],
+      "assertions": [
+        "group_accuracy and group_confusion are reported",
+        "numeric_boundary_commands are listed separately",
+        "synthetic variants are not treated as official failure before review"
+      ],
+      "attribution": {
+        "requirement_gap": "short/long/numeric thresholds are not configured",
+        "data_gap": "variant audio is not available and TTS synthesis is not confirmed",
+        "firmware_or_algorithm": "official reviewed sample fails in a safe execution window"
+      },
+      "needs_user_confirmation": [
+        "short_word_max_chars",
+        "long_word_min_chars",
+        "numeric_parameter_ranges",
+        "whether_synthetic_audio_can_be_formal"
+      ]
+    },
+    {
+      "id": "command.oneshot_offline",
+      "category": "命令词",
+      "test_items": [
+        "离线 oneshot"
+      ],
+      "level": "L1_L2",
+      "intent": "构造唤醒词和离线命令词短间隔任务，按唤醒失败、命令未识别、命令识别错误、执行异常拆分失败原因。",
+      "data_sources": [
+        "configured_wake_audio",
+        "requirements_corpus",
+        "docs/fa2命令词.txt",
+        "synthetic_oneshot_interval_tasks"
+      ],
+      "actions": [
+        "build_or_select_oneshot_audio_by_interval",
+        "play_oneshot_audio",
+        "capture_wake_and_command_markers",
+        "split_failure_stage"
+      ],
+      "assertions": [
+        "overall_success requires wake success and command recognition correctness",
+        "failure_stage is one of wake_failed, command_empty, command_wrong, action_abnormal, environment_blocked",
+        "interval metrics are reported separately for 500, 800, 1000, 1500 ms"
+      ],
+      "attribution": {
+        "requirement_gap": "offline oneshot support or interval matrix is not confirmed",
+        "data_gap": "formal interval audio not available",
+        "firmware_or_algorithm": "official interval audio has wake evidence but command stage fails"
+      },
+      "needs_user_confirmation": [
+        "offline_oneshot_supported",
+        "formal_interval_audio_policy",
+        "pass_threshold_by_interval"
+      ]
+    },
+    {
+      "id": "interrupt.prerequisite_discovery",
+      "category": "打断/自激",
+      "test_items": [
+        "打断唤醒",
+        "识别打断",
+        "自激",
+        "全双工识别打断场景"
+      ],
+      "level": "L1_L3",
+      "intent": "自动寻找可稳定进入自播状态的前置：优先联网查天气/播歌，其次扫描离线命令播报时长，选择最长播报作为打断前置。",
+      "data_sources": [
+        "online_weather_or_music_commands",
+        "docs/fa2命令词.txt",
+        "serial_tts_markers"
+      ],
+      "actions": [
+        "ensure_online_when_needed",
+        "try_weather_query",
+        "try_music_playback_command",
+        "scan_offline_commands_for_tts_duration",
+        "select_longest_stable_self_play_prerequisite"
+      ],
+      "assertions": [
+        "selected prerequisite has detectable TTS/audio start and end markers",
+        "duration is long enough for configured interrupt injection point",
+        "unstable prerequisites are excluded and reported"
+      ],
+      "attribution": {
+        "environment_blocked": "network unavailable or no self-play command can be detected",
+        "requirement_gap": "interrupt injection point or success criterion is not configured",
+        "script_gap": "TTS duration cannot be parsed from available logs"
+      },
+      "needs_user_confirmation": [
+        "interrupt_success_definition",
+        "minimum_self_play_duration_ms",
+        "allowed_online_actions"
+      ]
+    },
+    {
+      "id": "free.coverage_from_requirements",
+      "category": "自由说",
+      "test_items": [
+        "全意图覆盖",
+        "全量覆盖率测试",
+        "高频说法识别率",
+        "非高频说法识别率",
+        "纯 slot 说法"
+      ],
+      "level": "L1_L2",
+      "intent": "从需求文档抽取自由说意图、slot、核心说法和长尾说法，先完成覆盖率与 oracle 草案。",
+      "data_sources": [
+        "docs/requirements",
+        "requirements_corpus"
+      ],
+      "actions": [
+        "extract_free_speech_candidates",
+        "infer_intent_and_slot_columns",
+        "generate_intent_slot_coverage_matrix",
+        "mark_records_without_oracle_as_NEEDS_REVIEW"
+      ],
+      "assertions": [
+        "intent_coverage and slot_coverage are reported",
+        "high_frequency and non_high_frequency buckets are separated when labels exist",
+        "pure_slot candidates are reviewed before formal execution"
+      ],
+      "attribution": {
+        "requirement_gap": "intent or slot oracle missing",
+        "data_gap": "phrase exists but no audio or synthesis policy is available",
+        "script_gap": "document structure cannot be parsed"
+      },
+      "needs_user_confirmation": [
+        "authoritative_free_speech_table",
+        "intent_column",
+        "slot_column",
+        "high_frequency_label_policy",
+        "semantic_acceptance_rule"
+      ]
+    },
+    {
+      "id": "free.paraphrase_synthetic",
+      "category": "自由说",
+      "test_items": [
+        "前缀/后缀/插入语",
+        "口语化命令表达"
+      ],
+      "level": "L1_L2",
+      "intent": "基于需求说法生成前缀、后缀、插入语和口语化候选，用于摸底泛化能力，正式结论需人工或需求确认。",
+      "data_sources": [
+        "requirements_corpus",
+        "synthetic_variants"
+      ],
+      "actions": [
+        "generate_prefix_suffix_insert_variants",
+        "generate_colloquial_variants",
+        "bind_variant_to_base_intent",
+        "execute_reviewed_variants_only_for_formal_result"
+      ],
+      "assertions": [
+        "reviewed variants should hit the base intent or accepted equivalent intent",
+        "unreviewed variants are reported as exploratory results",
+        "unsupported colloquial expressions are listed separately"
+      ],
+      "attribution": {
+        "requirement_gap": "semantic acceptance rule missing",
+        "data_gap": "synthetic audio cannot be generated or approved",
+        "firmware_or_algorithm": "reviewed and accepted variant fails recognition"
+      },
+      "needs_user_confirmation": [
+        "allowed_prefix_suffix_insertions",
+        "colloquial_acceptance_policy",
+        "formal_or_exploratory_flag"
+      ]
+    },
+    {
+      "id": "online.oneshot_matrix",
+      "category": "在线识别",
+      "test_items": [
+        "在线 oneshot"
+      ],
+      "level": "L1_L2",
+      "intent": "构造唤醒词和在线语料短间隔任务，分别统计唤醒、在线 ASR、云端/网络失败。",
+      "data_sources": [
+        "configured_wake_audio",
+        "requirements_corpus",
+        "synthetic_oneshot_interval_tasks"
+      ],
+      "actions": [
+        "ensure_online",
+        "build_or_select_online_oneshot_audio",
+        "play_oneshot_audio",
+        "capture_online_asr_and_cloud_response",
+        "split_failure_stage"
+      ],
+      "assertions": [
+        "overall_success requires wake success and expected online ASR text",
+        "network or cloud errors are BLOCKED or ENVIRONMENT_FAIL, not firmware fail",
+        "interval metrics are reported separately"
+      ],
+      "attribution": {
+        "environment_blocked": "hotspot, device online, cloud, or SID path unavailable",
+        "requirement_gap": "online oneshot support or expected ASR text missing",
+        "firmware_or_algorithm": "safe online state but ASR text missing or wrong"
+      },
+      "needs_user_confirmation": [
+        "expected_online_asr_text",
+        "online_oneshot_supported",
+        "pass_threshold_by_interval"
+      ]
+    },
+    {
+      "id": "online.vad_special",
+      "category": "在线识别",
+      "test_items": [
+        "VAD 专项"
+      ],
+      "level": "L1_L2",
+      "intent": "用短句、长句、尾弱音和带停顿语料验证端点检测，统计截断、超时和句准。",
+      "data_sources": [
+        "requirements_corpus",
+        "synthetic_variants",
+        "optional_vad_audio_set"
+      ],
+      "actions": [
+        "classify_vad_candidate_utterances",
+        "execute_online_asr",
+        "compare_expected_text_with_truncation_policy",
+        "summarize_truncation_and_timeout"
+      ],
+      "assertions": [
+        "truncated samples are counted separately from text_wrong",
+        "timeout samples are counted separately from recognition_empty",
+        "formal pass requires reviewed VAD dataset and truncation tolerance"
+      ],
+      "attribution": {
+        "requirement_gap": "truncation tolerance or VAD dataset is not confirmed",
+        "environment_blocked": "online service unavailable",
+        "firmware_or_algorithm": "reviewed VAD sample is cut or timed out under normal network"
+      },
+      "needs_user_confirmation": [
+        "vad_dataset",
+        "truncation_tolerance",
+        "timeout_threshold_ms"
+      ]
+    },
+    {
+      "id": "network.recovery_basic",
+      "category": "在线识别",
+      "test_items": [
+        "弱网稳定性",
+        "云端服务稳定性"
+      ],
+      "level": "L1_L3",
+      "intent": "先沉淀热点/联网恢复和基础弱网/断网验证，严格带宽/延迟/丢包弱网待网络整形环境补充。",
+      "data_sources": [
+        "local_hotspot",
+        "device_mac",
+        "serial_cloud_status"
+      ],
+      "actions": [
+        "check_hotspot_status",
+        "verify_device_mac_attached",
+        "toggle_network_when_allowed",
+        "ensure_online",
+        "capture_cloud_status_and_online_asr"
+      ],
+      "assertions": [
+        "online prerequisite must pass before online recognition assertions",
+        "network failures are attributed to environment unless device stays offline after recovery",
+        "recovery events are logged"
+      ],
+      "attribution": {
+        "environment_blocked": "hotspot off, device not attached, cloud unavailable",
+        "device_or_firmware": "network restored but device does not reconnect within configured timeout",
+        "requirement_gap": "weak network parameters are not configured"
+      },
+      "needs_user_confirmation": [
+        "allow_network_toggle",
+        "strict_weak_network_parameters",
+        "reconnect_timeout_seconds"
+      ]
+    },
+    {
+      "id": "false_wake.quiet_basic",
+      "category": "误唤醒",
+      "test_items": [
+        "安静误唤醒",
+        "整机长期挂机"
+      ],
+      "level": "L1_L3",
+      "intent": "在无主动播放唤醒词的窗口内监听唤醒事件，统计单位时长误唤醒和设备异常。",
+      "data_sources": [
+        "serial_wake_markers",
+        "optional_recording"
+      ],
+      "actions": [
+        "start_long_running_serial_capture",
+        "avoid_active_voice_playback",
+        "collect_false_wake_events",
+        "summarize_events_per_hour"
+      ],
+      "assertions": [
+        "false_wake_frequency is reported as events per hour",
+        "device reboot, serial stop, or process abnormal are reported separately",
+        "audio review is required before final acoustic cause classification"
+      ],
+      "attribution": {
+        "needs_audio_review": "serial wake occurred but acoustic source is unknown",
+        "device_or_environment": "serial/logging/reboot abnormal",
+        "requirement_gap": "duration or frequency threshold not configured"
+      },
+      "needs_user_confirmation": [
+        "test_duration_hours",
+        "false_wake_frequency_limit",
+        "whether_recording_is_available"
+      ]
+    },
+    {
+      "id": "attribution.validator",
+      "category": "公共能力",
+      "test_items": [
+        "全部"
+      ],
+      "level": "L1",
+      "intent": "所有测试统一二次复核原始证据，区分脚本误判、设备/环境、固件/算法和需求不清。",
+      "data_sources": [
+        "runner_summary",
+        "raw_serial_logs",
+        "playback_logs",
+        "network_logs"
+      ],
+      "actions": [
+        "reparse_raw_serial_logs",
+        "cross_check_runner_judgement",
+        "classify_failure_reason",
+        "write_reviewable_evidence_excerpt"
+      ],
+      "assertions": [
+        "runner FAIL with raw PASS is SCRIPT_FALSE_FAIL",
+        "missing prerequisites become BLOCKED instead of firmware FAIL",
+        "ambiguous requirement becomes NEEDS_REQUIREMENT_CONFIRMATION"
+      ],
+      "attribution": {
+        "script_gap": "raw evidence contradicts runner judgement",
+        "environment_blocked": "precondition or IO path failed",
+        "firmware_or_algorithm": "all preconditions pass and expected behavior missing",
+        "requirement_gap": "no objective oracle or threshold"
+      },
+      "needs_user_confirmation": [
+        "project_specific_attribution_labels_if_any"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "schema": "polaris.online-stress.task.v1",
+  "task_id": "online_full_duplex.random_stress",
+  "description": "在线全双工 FD-011/FD-012：全双工配置下随机在线混合交互压测，监控重启、crash、媒体异常和额外识别。",
+  "validation_pack": {
+    "pack": "docs/wiki/voice-validation/packs/online-full-duplex.md",
+    "case_ids": [
+      "FD-011",
+      "FD-012"
+    ],
+    "linked_tag": "full_duplex_recognition"
+  },
+  "scenario": {
+    "tag": "full_duplex_recognition"
+  },
+  "runner": {
+    "entrypoint": "satellite/cucumber-agent-testing/scripts/run_online_mixed_stress.py",
+    "mode": "dry-run",
+    "strategy_file": "satellite/cucumber-agent-testing/references/scene_strategy_pool.json",
+    "strategy_name": "online_full_duplex_matrix"
+  },
+  "environment": {
+    "env_file": "polaris.local.json"
+  },
+  "execution": {
+    "max_rounds": 12,
+    "seed": 63,
+    "summary_every": 4,
+    "sample_window_every": 12,
+    "full_duplex_timeout_s": 60,
+    "allow_side_effects": false,
+    "adapter_flows": {
+      "pre": [
+        {
+          "flow": "laid_check",
+          "when": "always",
+          "required": false
+        },
+        {
+          "flow": "switch_device_env",
+          "when": "always",
+          "required": true
+        },
+        {
+          "flow": "ensure_online",
+          "when": "always",
+          "required": false
+        },
+        {
+          "flow": "set_full_duplex",
+          "when": "always",
+          "required": true,
+          "params": {
+            "full_duplex_timeout_s": "{full_duplex_timeout_s}"
+          }
+        }
+      ],
+      "post": [
+        {
+          "flow": "set_half_duplex",
+          "when": "always",
+          "required": false,
+          "execute": false,
+          "params": {
+            "half_duplex_timeout_s": "{half_duplex_timeout_s}"
+          }
+        }
+      ]
+    }
+  },
+  "overrides": {
+    "random_gap_s": [
+      4,
+      18
+    ],
+    "observe_s": [
+      20,
+      50
+    ]
+  },
+  "expected": {
+    "summary": "全双工随机在线交互中不应出现 reboot/crash/watchdog；媒体响应、额外识别和连续失败需要按类别统计。",
+    "failure_attribution": [
+      "FAIL_REBOOT_OR_CRASH：设备稳定性问题候选。",
+      "WARN_MEDIA_ERROR：媒体/网络/云端响应链路问题候选。",
+      "WARN_UNEXPECTED_RECOGNITION：误识别、自激或环境噪声候选。"
+    ]
+  }
+}

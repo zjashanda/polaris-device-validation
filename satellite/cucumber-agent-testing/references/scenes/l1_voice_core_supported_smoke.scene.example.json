@@ -1,0 +1,290 @@
+{
+  "schema": "polaris.scene_graph.v1",
+  "scene_id": "l1_voice_core_supported_smoke_example",
+  "strategy_name": "l1_voice_core_supported_smoke",
+  "seed": 0,
+  "constraints": [
+    "linear_dependencies",
+    "task_examples_exist",
+    "network_required_for_online_categories"
+  ],
+  "nodes": [
+    {
+      "node_id": "RMW-001",
+      "action": "voice_interaction",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/recognition_mode_wake.example.json",
+      "category": "recognition_mode_wake",
+      "command_text": "二次唤醒",
+      "mode": "dry-run",
+      "depends_on": [],
+      "metadata": {
+        "case_id": "RMW-001",
+        "linked_tag": "recognition_mode_wake",
+        "support_level": "L1"
+      }
+    },
+    {
+      "node_id": "HD-001",
+      "action": "voice_interaction",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/half_duplex.example.json",
+      "category": "half_duplex",
+      "command_text": "打开空调",
+      "mode": "dry-run",
+      "depends_on": [
+        "RMW-001"
+      ],
+      "metadata": {
+        "case_id": "HD-001",
+        "linked_tag": "half_duplex",
+        "support_level": "L1"
+      }
+    },
+    {
+      "node_id": "INT-001",
+      "action": "voice_interaction",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/wake_interrupt.example.json",
+      "category": "wake_interrupt",
+      "command_text": "小美小美",
+      "mode": "dry-run",
+      "depends_on": [
+        "HD-001"
+      ],
+      "metadata": {
+        "case_id": "INT-001",
+        "linked_tag": "wake_interrupt",
+        "support_level": "L1"
+      }
+    },
+    {
+      "node_id": "INT-002",
+      "action": "voice_interaction",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/command_interrupt.example.json",
+      "category": "command_interrupt",
+      "command_text": "打开空调",
+      "mode": "dry-run",
+      "depends_on": [
+        "INT-001"
+      ],
+      "metadata": {
+        "case_id": "INT-002",
+        "linked_tag": "command_interrupt",
+        "support_level": "L1"
+      }
+    },
+    {
+      "node_id": "NET-001",
+      "action": "voice_interaction",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/network_recovery_basic.example.json",
+      "category": "network_recovery",
+      "command_text": "今天天气怎么样",
+      "mode": "dry-run",
+      "depends_on": [
+        "INT-002"
+      ],
+      "metadata": {
+        "case_id": "NET-001",
+        "linked_tag": "network_recovery",
+        "support_level": "L1"
+      }
+    },
+    {
+      "node_id": "OS-001",
+      "action": "voice_interaction",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/offline_oneshot_matrix.example.json",
+      "category": "offline_oneshot",
+      "command_text": "打开空调",
+      "mode": "dry-run",
+      "depends_on": [
+        "NET-001"
+      ],
+      "metadata": {
+        "case_id": "OS-001",
+        "linked_tag": "offline_oneshot",
+        "support_level": "L1"
+      }
+    },
+    {
+      "node_id": "OS-002",
+      "action": "voice_interaction",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/online_oneshot_matrix.example.json",
+      "category": "online_oneshot",
+      "command_text": "今天天气怎么样",
+      "mode": "dry-run",
+      "depends_on": [
+        "OS-001"
+      ],
+      "metadata": {
+        "case_id": "OS-002",
+        "linked_tag": "online_oneshot",
+        "support_level": "L1"
+      }
+    },
+    {
+      "node_id": "WK-001",
+      "action": "voice_interaction",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/wake_latency.example.json",
+      "category": "wake_latency",
+      "command_text": "小美小美",
+      "mode": "dry-run",
+      "depends_on": [
+        "OS-002"
+      ],
+      "metadata": {
+        "case_id": "WK-001",
+        "linked_tag": "wake_latency",
+        "support_level": "L1"
+      }
+    },
+    {
+      "node_id": "WK-002",
+      "action": "voice_interaction",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/continuous_wake.example.json",
+      "category": "continuous_wake",
+      "command_text": "小美小美",
+      "mode": "dry-run",
+      "depends_on": [
+        "WK-001"
+      ],
+      "metadata": {
+        "case_id": "WK-002",
+        "linked_tag": "continuous_wake",
+        "support_level": "L1"
+      }
+    },
+    {
+      "node_id": "WK-003",
+      "action": "voice_interaction",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/random_interval_wake.example.json",
+      "category": "random_interval_wake",
+      "command_text": "小美小美",
+      "mode": "dry-run",
+      "depends_on": [
+        "WK-002"
+      ],
+      "metadata": {
+        "case_id": "WK-003",
+        "linked_tag": "random_interval_wake",
+        "support_level": "L1"
+      }
+    },
+    {
+      "node_id": "FW-001",
+      "action": "analysis_or_monitor",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/false_wake_quiet.example.json",
+      "category": "false_wake_quiet",
+      "command_text": "静默监听",
+      "mode": "dry-run",
+      "depends_on": [
+        "WK-003"
+      ],
+      "metadata": {
+        "case_id": "FW-001",
+        "linked_tag": "false_wake_quiet",
+        "support_level": "L1"
+      }
+    },
+    {
+      "node_id": "FW-002",
+      "action": "voice_interaction",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/false_wake_human_speech.example.json",
+      "category": "false_wake_human_speech",
+      "command_text": "人声干扰",
+      "mode": "dry-run",
+      "depends_on": [
+        "FW-001"
+      ],
+      "metadata": {
+        "case_id": "FW-002",
+        "linked_tag": "false_wake_human_speech",
+        "support_level": "L1"
+      }
+    },
+    {
+      "node_id": "FW-003",
+      "action": "voice_interaction",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/false_wake_white_noise.example.json",
+      "category": "false_wake_white_noise",
+      "command_text": "白噪声",
+      "mode": "dry-run",
+      "depends_on": [
+        "FW-002"
+      ],
+      "metadata": {
+        "case_id": "FW-003",
+        "linked_tag": "false_wake_white_noise",
+        "support_level": "L1"
+      }
+    },
+    {
+      "node_id": "ATTR-001",
+      "action": "analysis_or_monitor",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/attribution_validator.example.json",
+      "category": "attribution_validator",
+      "command_text": "归因复核",
+      "mode": "dry-run",
+      "depends_on": [
+        "FW-003"
+      ],
+      "metadata": {
+        "case_id": "ATTR-001",
+        "linked_tag": "attribution_validator",
+        "support_level": "L1"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "RMW-001",
+      "to": "HD-001"
+    },
+    {
+      "from": "HD-001",
+      "to": "INT-001"
+    },
+    {
+      "from": "INT-001",
+      "to": "INT-002"
+    },
+    {
+      "from": "INT-002",
+      "to": "NET-001"
+    },
+    {
+      "from": "NET-001",
+      "to": "OS-001"
+    },
+    {
+      "from": "OS-001",
+      "to": "OS-002"
+    },
+    {
+      "from": "OS-002",
+      "to": "WK-001"
+    },
+    {
+      "from": "WK-001",
+      "to": "WK-002"
+    },
+    {
+      "from": "WK-002",
+      "to": "WK-003"
+    },
+    {
+      "from": "WK-003",
+      "to": "FW-001"
+    },
+    {
+      "from": "FW-001",
+      "to": "FW-002"
+    },
+    {
+      "from": "FW-002",
+      "to": "FW-003"
+    },
+    {
+      "from": "FW-003",
+      "to": "ATTR-001"
+    }
+  ],
+  "validation_pack_index": "docs/wiki/voice-validation/validation-pack-index.json"
+}

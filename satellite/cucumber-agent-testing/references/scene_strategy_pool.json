@@ -1,0 +1,177 @@
+{
+  "schema": "polaris.scene_strategy_pool.v1",
+  "description": "Cucumber/Agent Testing 可复用场景策略池。runner 解释策略，不在脚本里硬编码压测权重和语料。",
+  "strategies": {
+    "online_mixed_stress": {
+      "description": "在线基础命令、音乐、相声、新闻、烹饪问答、百科问答和组合交互的加权随机压测。",
+      "mode": "weighted_random_bag",
+      "random_gap_s": [
+        6,
+        28
+      ],
+      "observe_s": [
+        18,
+        42
+      ],
+      "bag": [
+        {
+          "category": "basic_command",
+          "weight": 4
+        },
+        {
+          "category": "music",
+          "weight": 3
+        },
+        {
+          "category": "crosstalk",
+          "weight": 3
+        },
+        {
+          "category": "news",
+          "weight": 3
+        },
+        {
+          "category": "qa_cooking",
+          "weight": 1
+        },
+        {
+          "category": "qa_encyclopedia",
+          "weight": 1
+        },
+        {
+          "category": "combo",
+          "weight": 1
+        }
+      ],
+      "phrases": {
+        "basic_command": [
+          "打开空调",
+          "关闭空调",
+          "调高温度",
+          "调低温度",
+          "设置温度到二十六度",
+          "打开制冷",
+          "打开除湿",
+          "打开自动模式"
+        ],
+        "music": [
+          "播放音乐",
+          "播放一首歌",
+          "播放周杰伦的歌",
+          "下一首",
+          "暂停播放",
+          "继续播放",
+          "停止播放"
+        ],
+        "crosstalk": [
+          "播放相声",
+          "我想听相声",
+          "播放郭德纲的相声",
+          "来一段相声"
+        ],
+        "news": [
+          "播放新闻",
+          "今天有什么新闻",
+          "播报今日新闻",
+          "来一段新闻",
+          "播放财经新闻",
+          "播放体育新闻"
+        ],
+        "qa_cooking": [
+          "红烧肉怎么做",
+          "番茄炒蛋怎么做",
+          "宫保鸡丁怎么做",
+          "土豆丝怎么炒",
+          "炒青菜怎么做好吃",
+          "水煮鱼怎么做"
+        ],
+        "qa_encyclopedia": [
+          "太阳为什么会发光",
+          "长城有多长",
+          "地球为什么是圆的",
+          "恐龙为什么灭绝了",
+          "人工智能是什么",
+          "珠穆朗玛峰有多高"
+        ]
+      },
+      "assertion_policy": {
+        "fail_on_reboot_or_crash": true,
+        "fail_on_serial_error": true,
+        "fail_on_no_wake": true,
+        "warn_on_no_asr": true,
+        "warn_on_unexpected_recognition": true,
+        "warn_on_media_error": true,
+        "media_error_markers": [
+          "[E][http] recv timeout/retry/fail/error",
+          "[HTTPC][ERR]",
+          "[http_retry] read_failed"
+        ]
+      }
+    },
+    "online_full_duplex_matrix": {
+      "description": "在线全双工 FD-002~FD-012 的随机补充策略：连续对话、媒体打断、超时边界、异常矩阵和稳定性混合。",
+      "mode": "weighted_random_bag",
+      "random_gap_s": [
+        4,
+        18
+      ],
+      "observe_s": [
+        20,
+        50
+      ],
+      "bag": [
+        {
+          "category": "fd_continuous",
+          "weight": 3
+        },
+        {
+          "category": "fd_media_interrupt",
+          "weight": 2
+        },
+        {
+          "category": "fd_timeout_boundary",
+          "weight": 1
+        },
+        {
+          "category": "fd_exception_probe",
+          "weight": 1
+        },
+        {
+          "category": "fd_stability",
+          "weight": 2
+        }
+      ],
+      "phrases": {
+        "fd_continuous": [
+          "今天天气怎么样",
+          "太阳为什么会发光",
+          "长城有多长"
+        ],
+        "fd_media_interrupt": [
+          "播放新闻",
+          "播放相声",
+          "播放一首歌"
+        ],
+        "fd_timeout_boundary": [
+          "番茄炒蛋怎么做",
+          "人工智能是什么"
+        ],
+        "fd_exception_probe": [
+          "静默监听",
+          "设备离线异常矩阵",
+          "API 环境不一致异常矩阵"
+        ],
+        "fd_stability": [
+          "随机在线全双工压测",
+          "全双工稳定性监控"
+        ]
+      },
+      "assertion_policy": {
+        "fail_on_reboot_or_crash": true,
+        "warn_on_media_error": true,
+        "warn_on_unexpected_recognition": true,
+        "timing_guard_ms": 1200
+      }
+    }
+  }
+}

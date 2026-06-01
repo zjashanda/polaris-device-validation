@@ -1,0 +1,108 @@
+{
+  "schema": "polaris.online-full-duplex.task.v1",
+  "task_id": "online_full_duplex.exception_matrix",
+  "description": "在线全双工 FD-007/FD-008/FD-009/FD-010：离线、环境不一致、声卡/PA 和静默误识别异常矩阵。",
+  "validation_pack": {
+    "pack": "docs/wiki/voice-validation/packs/online-full-duplex.md",
+    "case_ids": [
+      "FD-007",
+      "FD-008",
+      "FD-009",
+      "FD-010"
+    ],
+    "linked_tag": "full_duplex_recognition"
+  },
+  "scenario": {
+    "tag": "full_duplex_recognition"
+  },
+  "runner": {
+    "mode": "dry-run",
+    "compile_first": true,
+    "strict_compile": true,
+    "feature": "satellite/cucumber-agent-testing/features/polaris_voice_core.feature",
+    "mapping": "satellite/cucumber-agent-testing/references/voice_core_mapping.json"
+  },
+  "environment": {
+    "env_file": "polaris.local.json"
+  },
+  "inputs": {
+    "command_text": "静默监听"
+  },
+  "execution": {
+    "observe_ms": 30000,
+    "full_duplex_timeout_s": 60,
+    "half_duplex_timeout_s": 15,
+    "timing_guard_ms": 1200,
+    "manage_session": true,
+    "runtime_strict": true,
+    "allow_side_effects": false,
+    "adapter_flows": {
+      "pre": [
+        {
+          "flow": "laid_check",
+          "when": "always",
+          "required": false
+        },
+        {
+          "flow": "hotspot_off",
+          "when": "case:FD-007",
+          "required": false,
+          "execute": false
+        },
+        {
+          "flow": "switch_device_env",
+          "when": "case:FD-008",
+          "required": false,
+          "execute": false
+        },
+        {
+          "flow": "set_full_duplex",
+          "when": "always",
+          "required": false,
+          "params": {
+            "full_duplex_timeout_s": "{full_duplex_timeout_s}"
+          }
+        }
+      ],
+      "post": [
+        {
+          "flow": "hotspot_on",
+          "when": "always",
+          "required": false,
+          "execute": false
+        },
+        {
+          "flow": "ensure_online",
+          "when": "always",
+          "required": false,
+          "execute": false
+        }
+      ]
+    },
+    "negative_probe": true,
+    "expected_status": [
+      "BLOCKED",
+      "REQUIREMENT_REVIEW",
+      "PASS_NO_UNEXPECTED_RECOGNITION"
+    ]
+  },
+  "expected": {
+    "summary": "异常矩阵不以功能 FAIL 为默认目标，而是确认环境/配置/声卡问题会被正确 BLOCKED，静默窗口不会产生额外 ASR/command。",
+    "key_assertions": [
+      "offline_or_env_mismatch is BLOCKED not firmware FAIL",
+      "audio_or_pa_failure is BLOCKED",
+      "no_unexpected_asr_or_command during negative window"
+    ],
+    "failure_attribution": [
+      "设备离线：联网/热点/云端前置。",
+      "API/设备端环境不一致：配置链路。",
+      "声卡/PA 不可用：测试环境。",
+      "静默或反集窗口出现 ASR/command：误识别/自激候选。"
+    ]
+  },
+  "command_examples": {
+    "precheck": "python satellite/cucumber-agent-testing/scripts/run_optimized_task.py --task satellite/cucumber-agent-testing/tasks/examples/online_full_duplex.exception_matrix.example.json --precheck-only",
+    "dry_run": "python satellite/cucumber-agent-testing/scripts/run_optimized_task.py --task satellite/cucumber-agent-testing/tasks/examples/online_full_duplex.exception_matrix.example.json --mode dry-run",
+    "execute": "python satellite/cucumber-agent-testing/scripts/run_optimized_task.py --task satellite/cucumber-agent-testing/tasks/examples/online_full_duplex.exception_matrix.example.json --mode execute --allow-side-effects --manage-session --runtime-strict"
+  }
+}

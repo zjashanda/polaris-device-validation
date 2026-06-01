@@ -1,0 +1,101 @@
+{
+  "schema": "polaris.online-full-duplex.task.v1",
+  "task_id": "online_full_duplex.media_interrupt",
+  "description": "在线全双工 FD-004：触发长 TTS/媒体自播后，在自播窗口内注入在线语音，验证播报中识别或打断策略。",
+  "validation_pack": {
+    "pack": "docs/wiki/voice-validation/packs/online-full-duplex.md",
+    "case_ids": [
+      "FD-004"
+    ],
+    "linked_tag": "full_duplex_recognition"
+  },
+  "scenario": {
+    "tag": "full_duplex_recognition"
+  },
+  "runner": {
+    "mode": "dry-run",
+    "compile_first": true,
+    "strict_compile": true,
+    "feature": "satellite/cucumber-agent-testing/features/polaris_voice_core.feature",
+    "mapping": "satellite/cucumber-agent-testing/references/voice_core_mapping.json"
+  },
+  "environment": {
+    "env_file": "polaris.local.json"
+  },
+  "inputs": {
+    "command_text": "播放新闻"
+  },
+  "execution": {
+    "observe_ms": 60000,
+    "full_duplex_timeout_s": 60,
+    "half_duplex_timeout_s": 15,
+    "timing_guard_ms": 1200,
+    "manage_session": true,
+    "runtime_strict": true,
+    "allow_side_effects": false,
+    "adapter_flows": {
+      "pre": [
+        {
+          "flow": "laid_check",
+          "when": "always",
+          "required": false
+        },
+        {
+          "flow": "switch_device_env",
+          "when": "always",
+          "required": true
+        },
+        {
+          "flow": "ensure_online",
+          "when": "always",
+          "required": false
+        },
+        {
+          "flow": "set_full_duplex",
+          "when": "always",
+          "required": true,
+          "params": {
+            "full_duplex_timeout_s": "{full_duplex_timeout_s}"
+          }
+        },
+        {
+          "flow": "proactive_interaction",
+          "when": "always",
+          "required": false
+        }
+      ],
+      "post": [
+        {
+          "flow": "set_half_duplex",
+          "when": "always",
+          "required": false,
+          "execute": false,
+          "params": {
+            "half_duplex_timeout_s": "{half_duplex_timeout_s}"
+          }
+        }
+      ]
+    },
+    "interrupt_injection_ms": 5000,
+    "media_window_required_ms": 8000
+  },
+  "expected": {
+    "summary": "必须先证明存在 TTS/media 自播窗口，再判断窗口内注入语音是否按需求识别或打断。",
+    "key_assertions": [
+      "media_or_tts_window observed before injection",
+      "injection_time inside media_or_tts_window or TIMING_AMBIGUOUS",
+      "duplex_policy matches requirement",
+      "no_reboot_in_duplex_recognition"
+    ],
+    "failure_attribution": [
+      "没有稳定自播窗口：打断前置 BLOCKED，不判全双工打断失败。",
+      "注入点不在自播窗口：TIMING_AMBIGUOUS。",
+      "需求未定义播报中识别/打断：REQUIREMENT_REVIEW。"
+    ]
+  },
+  "command_examples": {
+    "precheck": "python satellite/cucumber-agent-testing/scripts/run_optimized_task.py --task satellite/cucumber-agent-testing/tasks/examples/online_full_duplex.media_interrupt.example.json --precheck-only",
+    "dry_run": "python satellite/cucumber-agent-testing/scripts/run_optimized_task.py --task satellite/cucumber-agent-testing/tasks/examples/online_full_duplex.media_interrupt.example.json --mode dry-run",
+    "execute": "python satellite/cucumber-agent-testing/scripts/run_optimized_task.py --task satellite/cucumber-agent-testing/tasks/examples/online_full_duplex.media_interrupt.example.json --mode execute --allow-side-effects --manage-session --runtime-strict"
+  }
+}

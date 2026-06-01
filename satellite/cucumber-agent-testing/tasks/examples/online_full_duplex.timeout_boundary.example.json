@@ -1,0 +1,96 @@
+{
+  "schema": "polaris.online-full-duplex.task.v1",
+  "task_id": "online_full_duplex.timeout_boundary",
+  "description": "在线全双工 FD-005/FD-006：验证全双工超时后语音不应被当作窗口内有效识别，并保护临界超时 guard。",
+  "validation_pack": {
+    "pack": "docs/wiki/voice-validation/packs/online-full-duplex.md",
+    "case_ids": [
+      "FD-005",
+      "FD-006"
+    ],
+    "linked_tag": "full_duplex_recognition"
+  },
+  "scenario": {
+    "tag": "full_duplex_recognition"
+  },
+  "runner": {
+    "mode": "dry-run",
+    "compile_first": true,
+    "strict_compile": true,
+    "feature": "satellite/cucumber-agent-testing/features/polaris_voice_core.feature",
+    "mapping": "satellite/cucumber-agent-testing/references/voice_core_mapping.json"
+  },
+  "environment": {
+    "env_file": "polaris.local.json"
+  },
+  "inputs": {
+    "command_text": "番茄炒蛋怎么做"
+  },
+  "execution": {
+    "observe_ms": 90000,
+    "full_duplex_timeout_s": 60,
+    "half_duplex_timeout_s": 15,
+    "timing_guard_ms": 1500,
+    "manage_session": true,
+    "runtime_strict": true,
+    "allow_side_effects": false,
+    "adapter_flows": {
+      "pre": [
+        {
+          "flow": "laid_check",
+          "when": "always",
+          "required": false
+        },
+        {
+          "flow": "switch_device_env",
+          "when": "always",
+          "required": true
+        },
+        {
+          "flow": "ensure_online",
+          "when": "always",
+          "required": false
+        },
+        {
+          "flow": "set_full_duplex",
+          "when": "always",
+          "required": true,
+          "params": {
+            "full_duplex_timeout_s": "{full_duplex_timeout_s}"
+          }
+        }
+      ],
+      "post": [
+        {
+          "flow": "set_half_duplex",
+          "when": "always",
+          "required": false,
+          "execute": false,
+          "params": {
+            "half_duplex_timeout_s": "{half_duplex_timeout_s}"
+          }
+        }
+      ]
+    },
+    "wait_before_command_ms": 62000,
+    "expect_timing_boundary": true
+  },
+  "expected": {
+    "summary": "超时后语音应按窗口外处理；落入 guard 区的样本只输出证据，不强判固件。",
+    "key_assertions": [
+      "session_timeout observed or inferred",
+      "post_timeout_command requires re-wake or is ignored by requirement",
+      "guard_window samples marked TIMING_AMBIGUOUS"
+    ],
+    "failure_attribution": [
+      "没有超时 marker：需求/日志 oracle 不足。",
+      "播放起点或音频结束点不明确：TIMING_AMBIGUOUS。",
+      "窗口外仍被当作有效连续识别：固件/需求差异候选。"
+    ]
+  },
+  "command_examples": {
+    "precheck": "python satellite/cucumber-agent-testing/scripts/run_optimized_task.py --task satellite/cucumber-agent-testing/tasks/examples/online_full_duplex.timeout_boundary.example.json --precheck-only",
+    "dry_run": "python satellite/cucumber-agent-testing/scripts/run_optimized_task.py --task satellite/cucumber-agent-testing/tasks/examples/online_full_duplex.timeout_boundary.example.json --mode dry-run",
+    "execute": "python satellite/cucumber-agent-testing/scripts/run_optimized_task.py --task satellite/cucumber-agent-testing/tasks/examples/online_full_duplex.timeout_boundary.example.json --mode execute --allow-side-effects --manage-session --runtime-strict"
+  }
+}

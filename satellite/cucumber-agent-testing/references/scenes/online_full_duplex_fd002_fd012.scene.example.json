@@ -1,0 +1,230 @@
+{
+  "schema": "polaris.scene_graph.v1",
+  "scene_id": "online_full_duplex_fd002_fd012_example",
+  "strategy_name": "online_full_duplex_fd002_fd012",
+  "seed": 0,
+  "constraints": [
+    "linear_dependencies",
+    "full_duplex_recognition_tag_alignment",
+    "network_required_for_online_categories"
+  ],
+  "nodes": [
+    {
+      "node_id": "FD-002",
+      "action": "voice_interaction",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/online_full_duplex.continuous.example.json",
+      "category": "online_query",
+      "command_text": "今天天气怎么样",
+      "mode": "dry-run",
+      "depends_on": [],
+      "metadata": {
+        "case_id": "FD-002",
+        "linked_tag": "full_duplex_recognition",
+        "validation_pack": "online-full-duplex"
+      }
+    },
+    {
+      "node_id": "FD-003",
+      "action": "voice_interaction",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/online_full_duplex.continuous.example.json",
+      "category": "continuous_dialog",
+      "command_text": "太阳为什么会发光",
+      "mode": "dry-run",
+      "depends_on": [
+        "FD-002"
+      ],
+      "metadata": {
+        "case_id": "FD-003",
+        "linked_tag": "full_duplex_recognition",
+        "validation_pack": "online-full-duplex"
+      }
+    },
+    {
+      "node_id": "FD-004",
+      "action": "voice_interaction",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/online_full_duplex.media_interrupt.example.json",
+      "category": "media_interrupt",
+      "command_text": "播放新闻",
+      "mode": "dry-run",
+      "depends_on": [
+        "FD-003"
+      ],
+      "metadata": {
+        "case_id": "FD-004",
+        "linked_tag": "full_duplex_recognition",
+        "validation_pack": "online-full-duplex"
+      }
+    },
+    {
+      "node_id": "FD-005",
+      "action": "voice_interaction",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/online_full_duplex.timeout_boundary.example.json",
+      "category": "timeout_boundary",
+      "command_text": "番茄炒蛋怎么做",
+      "mode": "dry-run",
+      "depends_on": [
+        "FD-004"
+      ],
+      "metadata": {
+        "case_id": "FD-005",
+        "linked_tag": "full_duplex_recognition",
+        "validation_pack": "online-full-duplex"
+      }
+    },
+    {
+      "node_id": "FD-006",
+      "action": "voice_interaction",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/online_full_duplex.timeout_boundary.example.json",
+      "category": "timing_guard",
+      "command_text": "长城有多长",
+      "mode": "dry-run",
+      "depends_on": [
+        "FD-005"
+      ],
+      "metadata": {
+        "case_id": "FD-006",
+        "linked_tag": "full_duplex_recognition",
+        "validation_pack": "online-full-duplex"
+      }
+    },
+    {
+      "node_id": "FD-007",
+      "action": "voice_interaction",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/online_full_duplex.exception_matrix.example.json",
+      "category": "offline_exception",
+      "command_text": "设备离线异常矩阵",
+      "mode": "dry-run",
+      "depends_on": [
+        "FD-006"
+      ],
+      "metadata": {
+        "case_id": "FD-007",
+        "linked_tag": "full_duplex_recognition",
+        "validation_pack": "online-full-duplex"
+      }
+    },
+    {
+      "node_id": "FD-008",
+      "action": "voice_interaction",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/online_full_duplex.exception_matrix.example.json",
+      "category": "env_mismatch",
+      "command_text": "API 环境不一致异常矩阵",
+      "mode": "dry-run",
+      "depends_on": [
+        "FD-007"
+      ],
+      "metadata": {
+        "case_id": "FD-008",
+        "linked_tag": "full_duplex_recognition",
+        "validation_pack": "online-full-duplex"
+      }
+    },
+    {
+      "node_id": "FD-009",
+      "action": "voice_interaction",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/online_full_duplex.exception_matrix.example.json",
+      "category": "audio_pa_exception",
+      "command_text": "声卡或 PA 异常矩阵",
+      "mode": "dry-run",
+      "depends_on": [
+        "FD-008"
+      ],
+      "metadata": {
+        "case_id": "FD-009",
+        "linked_tag": "full_duplex_recognition",
+        "validation_pack": "online-full-duplex"
+      }
+    },
+    {
+      "node_id": "FD-010",
+      "action": "voice_interaction",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/online_full_duplex.exception_matrix.example.json",
+      "category": "negative_recognition",
+      "command_text": "静默监听",
+      "mode": "dry-run",
+      "depends_on": [
+        "FD-009"
+      ],
+      "metadata": {
+        "case_id": "FD-010",
+        "linked_tag": "full_duplex_recognition",
+        "validation_pack": "online-full-duplex"
+      }
+    },
+    {
+      "node_id": "FD-011",
+      "action": "voice_interaction",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/online_full_duplex.random_stress.example.json",
+      "category": "stability_reboot_watchdog",
+      "command_text": "全双工稳定性监控",
+      "mode": "dry-run",
+      "depends_on": [
+        "FD-010"
+      ],
+      "metadata": {
+        "case_id": "FD-011",
+        "linked_tag": "full_duplex_recognition",
+        "validation_pack": "online-full-duplex"
+      }
+    },
+    {
+      "node_id": "FD-012",
+      "action": "voice_interaction",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/online_full_duplex.random_stress.example.json",
+      "category": "random_full_duplex_stress",
+      "command_text": "随机在线全双工压测",
+      "mode": "dry-run",
+      "depends_on": [
+        "FD-011"
+      ],
+      "metadata": {
+        "case_id": "FD-012",
+        "linked_tag": "full_duplex_recognition",
+        "validation_pack": "online-full-duplex"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "FD-002",
+      "to": "FD-003"
+    },
+    {
+      "from": "FD-003",
+      "to": "FD-004"
+    },
+    {
+      "from": "FD-004",
+      "to": "FD-005"
+    },
+    {
+      "from": "FD-005",
+      "to": "FD-006"
+    },
+    {
+      "from": "FD-006",
+      "to": "FD-007"
+    },
+    {
+      "from": "FD-007",
+      "to": "FD-008"
+    },
+    {
+      "from": "FD-008",
+      "to": "FD-009"
+    },
+    {
+      "from": "FD-009",
+      "to": "FD-010"
+    },
+    {
+      "from": "FD-010",
+      "to": "FD-011"
+    },
+    {
+      "from": "FD-011",
+      "to": "FD-012"
+    }
+  ],
+  "validation_pack": "docs/wiki/voice-validation/packs/online-full-duplex.md"
+}

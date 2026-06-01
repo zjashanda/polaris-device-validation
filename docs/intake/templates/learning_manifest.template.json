@@ -1,0 +1,78 @@
+{
+  "schema": "polaris.learning_manifest.v1",
+  "project_id": "new_project_id",
+  "project_name": "新项目名称",
+  "learning_goal": "learn_new_project",
+  "material_type": [
+    "project_docs",
+    "feature_docs"
+  ],
+  "summary": "一句话说明这批资料希望我学习什么。",
+  "source_files": [
+    {
+      "path": "raw/README.md",
+      "description": "资料说明或项目概览",
+      "required": true
+    }
+  ],
+  "known_device_config": {
+    "serial": {
+      "topology": "",
+      "ports": {
+        "ap": "",
+        "cp": "",
+        "asr": "",
+        "upper": "",
+        "control": ""
+      },
+      "baudrate": "",
+      "control_baudrate": ""
+    },
+    "audio": {
+      "default_playback_device_key": "",
+      "wake_word": "",
+      "wakeup_id": ""
+    },
+    "network": {
+      "wifi_ssid": "",
+      "wifi_password": "",
+      "enable_hotspot_control": false
+    },
+    "cloud": {
+      "api_environment": "",
+      "device_env_command": "",
+      "device_id": ""
+    }
+  },
+  "feature_learning_requests": [
+    {
+      "feature_id": "first_wake",
+      "intent": "说明这个功能要验证什么",
+      "expected_user_inputs": [
+        "用户会说/播放什么"
+      ],
+      "expected_device_outputs": [
+        "设备应该出现什么日志、播报、状态变化"
+      ],
+      "negative_or_unexpected_behaviors": [
+        "不该出现的唤醒、ASR、命令词、重启、崩溃等"
+      ],
+      "assertion_oracle": [
+        "PASS/FAIL/BLOCKED 如何区分"
+      ]
+    }
+  ],
+  "target_outputs": {
+    "project_profile": true,
+    "cucumber_feature": true,
+    "task_examples": true,
+    "runtime_profile": true,
+    "stress_strategy": false,
+    "documentation_only": false
+  },
+  "questions_for_agent": [
+    "请先判断这些资料能支持哪些自动化测试项。",
+    "请列出缺少哪些串口/API/日志 marker/需求 oracle。"
+  ],
+  "notes": ""
+}

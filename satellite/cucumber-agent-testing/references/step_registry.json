@@ -1,0 +1,880 @@
+{
+  "version": 1,
+  "note": "离线编译用：自然语言步骤必须命中这些受控表达；未命中时 strict 模式报错。",
+  "steps": [
+    {
+      "id": "background.local_ports",
+      "pattern": "^使用当前 Polaris 本地串口配置$",
+      "kind": "precondition",
+      "actions": [],
+      "assertions": [
+        "serial.ready"
+      ]
+    },
+    {
+      "id": "background.default_audio",
+      "pattern": "^使用默认播放声卡$",
+      "kind": "precondition",
+      "actions": [],
+      "assertions": [
+        "audio.playback_ready"
+      ]
+    },
+    {
+      "id": "background.debug_dir",
+      "pattern": "^所有调试输出写入 Cucumber 调试目录$",
+      "kind": "precondition",
+      "actions": [],
+      "assertions": [
+        "debug.output_isolated"
+      ]
+    },
+    {
+      "id": "wake.idle",
+      "pattern": "^设备处于待唤醒状态$",
+      "kind": "precondition",
+      "contract": "wake.first_wake",
+      "actions": [],
+      "assertions": [
+        "session.idle"
+      ]
+    },
+    {
+      "id": "wake.play",
+      "pattern": "^播放唤醒词$",
+      "kind": "action",
+      "contract": "wake.first_wake",
+      "actions": [
+        {
+          "action": "audio.phrase_probe",
+          "params": {
+            "text": "{wake_word}",
+            "label": "bdd_first_wake"
+          }
+        }
+      ],
+      "assertions": []
+    },
+    {
+      "id": "wake.assert_observed",
+      "pattern": "^应观察到 CP/AP/ASR 唤醒证据$",
+      "kind": "assertion",
+      "contract": "wake.first_wake",
+      "actions": [],
+      "assertions": [
+        "cp_wake_count",
+        "ap_wake_count",
+        "asr_wake_count"
+      ]
+    },
+    {
+      "id": "wake.failure_split",
+      "pattern": "^未唤醒、播放失败或串口日志缺失应被区分归因$",
+      "kind": "assertion",
+      "contract": "wake.first_wake",
+      "actions": [],
+      "assertions": [
+        "failure_split.wake"
+      ]
+    },
+    {
+      "id": "wake.first_then_mode",
+      "pattern": "^设备已经通过第一次唤醒进入识别模式$",
+      "kind": "precondition",
+      "contract": "wake.recognition_mode_wake",
+      "actions": [],
+      "assertions": [
+        "first_wake_success",
+        "session.in_recognition_window"
+      ]
+    },
+    {
+      "id": "wake.rewake_in_window",
+      "pattern": "^在识别超时窗口内再次播放唤醒词$",
+      "kind": "action",
+      "contract": "wake.recognition_mode_wake",
+      "actions": [],
+      "assertions": []
+    },
+    {
+      "id": "wake.rewake_assert",
+      "pattern": "^应观察到识别模式内的再次唤醒证据$",
+      "kind": "assertion",
+      "contract": "wake.recognition_mode_wake",
+      "actions": [],
+      "assertions": [
+        "second_wake_observed",
+        "no_timeout_before_second_wake"
+      ]
+    },
+    {
+      "id": "wake.rewake_split",
+      "pattern": "^需要区分识别窗口退出、音频链路失败和固件不支持$",
+      "kind": "assertion",
+      "contract": "wake.recognition_mode_wake",
+      "actions": [],
+      "assertions": [
+        "failure_split.recognition_mode_wake"
+      ]
+    },
+    {
+      "id": "network.online",
+      "pattern": "^设备已联网到 \"(?P<wifi_ssid>[^\"]+)\"$",
+      "kind": "precondition",
+      "contract": "network.online",
+      "actions": [
+        {
+          "action": "network.ensure_online",
+          "params": {
+            "wifi_ssid": "{wifi_ssid}",
+            "label": "bdd_ensure_online"
+          }
+        }
+      ],
+      "assertions": [
+        "network.hotspot_on",
+        "network.device_attached",
+        "network.cloud_online"
+      ]
+    },
+    {
+      "id": "duplex.half_config",
+      "pattern": "^云端或本地配置已切换为半双工$",
+      "kind": "precondition",
+      "contract": "duplex.half",
+      "actions": [
+        {
+          "action": "network.ensure_online",
+          "params": {
+            "label": "bdd_ensure_online_half_duplex"
+          }
+        }
+      ],
+      "assertions": [
+        "cloud_half_duplex_apply"
+      ]
+    },
+    {
+      "id": "duplex.full_config",
+      "pattern": "^云端或本地配置已切换为全双工$",
+      "kind": "precondition",
+      "contract": "duplex.full",
+      "actions": [
+        {
+          "action": "network.ensure_online",
+          "params": {
+            "label": "bdd_ensure_online_full_duplex"
+          }
+        }
+      ],
+      "assertions": [
+        "cloud_full_duplex_apply"
+      ]
+    },
+    {
+      "id": "duplex.set_mode_param",
+      "pattern": "^语音交互模式为 \"(?P<mode>半双工|全双工)\"(?:，?超时时间 (?P<timeout_s>\\d+) 秒)?$",
+      "kind": "precondition",
+      "contract": "duplex.mode",
+      "actions": [
+        {
+          "action": "cloud.set_full_duplex",
+          "params": {
+            "enable": "{mode_enable}",
+            "timeout_s": "{timeout_s}"
+          }
+        }
+      ],
+      "assertions": [
+        "cloud_apply_success",
+        "duplex_timeout_applied"
+      ]
+    },
+    {
+      "id": "duplex.half_play",
+      "pattern": "^播放唤醒词并在半双工识别窗口内播放命令词$",
+      "kind": "action",
+      "contract": "duplex.half",
+      "actions": [],
+      "assertions": []
+    },
+    {
+      "id": "duplex.full_play",
+      "pattern": "^播放唤醒词并在全双工识别窗口内连续播放命令词$",
+      "kind": "action",
+      "contract": "duplex.full",
+      "actions": [],
+      "assertions": []
+    },
+    {
+      "id": "duplex.half_assert",
+      "pattern": "^应观察到符合半双工预期的 ASR 和命令闭环$",
+      "kind": "assertion",
+      "contract": "duplex.half",
+      "actions": [],
+      "assertions": [
+        "command_asr_or_keyword",
+        "cloud_tts_response"
+      ]
+    },
+    {
+      "id": "duplex.full_assert",
+      "pattern": "^应观察到符合全双工预期的 ASR 和命令闭环$",
+      "kind": "assertion",
+      "contract": "duplex.full",
+      "actions": [],
+      "assertions": [
+        "command_asr_or_keyword",
+        "successful_response_count"
+      ]
+    },
+    {
+      "id": "duplex.half_split",
+      "pattern": "^播报中不应响应的输入不能误判为命令词失败$",
+      "kind": "assertion",
+      "contract": "duplex.half",
+      "actions": [],
+      "assertions": [
+        "failure_split.duplex_half"
+      ]
+    },
+    {
+      "id": "duplex.full_split",
+      "pattern": "^播报中可识别、可打断或可连续对话需要按需求口径断言$",
+      "kind": "assertion",
+      "contract": "duplex.full",
+      "actions": [],
+      "assertions": [
+        "failure_split.duplex_full"
+      ]
+    },
+    {
+      "id": "command.data_ready",
+      "pattern": "^已准备命令词词表和固定唤醒词$",
+      "kind": "precondition",
+      "contract": "command.basic_recognition",
+      "actions": [],
+      "assertions": [
+        "command_file.readable",
+        "wake_word.configured"
+      ]
+    },
+    {
+      "id": "command.batch",
+      "pattern": "^对每条命令词执行先唤醒再识别$",
+      "kind": "action",
+      "contract": "command.basic_recognition",
+      "actions": [
+        {
+          "action": "fa2.command_batch",
+          "params": {
+            "label": "bdd_basic_command"
+          }
+        }
+      ],
+      "assertions": []
+    },
+    {
+      "id": "command.batch_assert",
+      "pattern": "^每条命令词应观察到唤醒、ASR 和命令关键词证据$",
+      "kind": "assertion",
+      "contract": "command.basic_recognition",
+      "actions": [],
+      "assertions": [
+        "per_command.cp_wake_count",
+        "per_command.asr_or_keyword"
+      ]
+    },
+    {
+      "id": "command.failure_split",
+      "pattern": "^FAIL 需要区分命令未播、未唤醒、未识别、词表期望不一致和设备行为问题$",
+      "kind": "assertion",
+      "contract": "command.basic_recognition",
+      "actions": [],
+      "assertions": [
+        "failure_split.command_basic"
+      ]
+    },
+    {
+      "id": "audio.play_text",
+      "pattern": "^播放语音 \"(?P<text>[^\"]+)\"$",
+      "kind": "action",
+      "actions": [
+        {
+          "action": "audio.phrase_probe",
+          "params": {
+            "text": "{text}",
+            "label": "bdd_play_text"
+          }
+        }
+      ],
+      "assertions": []
+    },
+    {
+      "id": "assert.table_metrics",
+      "pattern": "^串口证据应满足$",
+      "kind": "assertion",
+      "table": "metrics",
+      "actions": [],
+      "assertions": []
+    },
+    {
+      "id": "auto.feature_step.50",
+      "pattern": "^已从需求文档抽取命令词候选并形成命令文件$",
+      "kind": "precondition",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.51",
+      "pattern": "^对候选命令词执行先唤醒再识别$",
+      "kind": "action",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.52",
+      "pattern": "^应逐条给出识别闭环、期望匹配和失败归因$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.53",
+      "pattern": "^需求词表或\\ oracle\\ 不明确时不能直接判固件\\ FAIL$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.57",
+      "pattern": "^已从需求文档抽取自由说候选并形成语料文件$",
+      "kind": "precondition",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.58",
+      "pattern": "^对候选语料执行先唤醒再识别$",
+      "kind": "action",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.59",
+      "pattern": "^应逐条给出探索性识别闭环和意图证据$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.60",
+      "pattern": "^自由说缺少正式\\ oracle\\ 时结论应标记为探索性或待复核$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.64",
+      "pattern": "^已准备天气、播歌或离线长播报候选$",
+      "kind": "precondition",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.65",
+      "pattern": "^逐个触发候选并解析设备自播\\ start\\-end\\ 证据$",
+      "kind": "action",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.66",
+      "pattern": "^应选出可用于打断注入的稳定自播前置$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.67",
+      "pattern": "^候选不可用、时长不足和日志缺失只阻塞打断主流程不能误判固件打断失败$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.71",
+      "pattern": "^已有可用的自播打断前置和安全注入点$",
+      "kind": "precondition",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.72",
+      "pattern": "^在设备自播窗口内播放唤醒词$",
+      "kind": "action",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.73",
+      "pattern": "^应观察到新的唤醒证据或明确的打断响应$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.74",
+      "pattern": "^注入未落入自播窗口时应标记为时序不明确而不是固件失败$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.79",
+      "pattern": "^在设备自播窗口内播放命令词$",
+      "kind": "action",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.80",
+      "pattern": "^应观察到新的\\ ASR\\ 或命令识别证据$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.81",
+      "pattern": "^若当前模式不允许播报中识别，应区分需求口径、模式配置和固件问题$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.85",
+      "pattern": "^设备已连接到本地热点并可采集联网日志$",
+      "kind": "precondition",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.86",
+      "pattern": "^关闭热点后再恢复热点并等待设备重新在线$",
+      "kind": "action",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.87",
+      "pattern": "^应观察到设备恢复在线并完成一次在线语音\\ smoke$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.88",
+      "pattern": "^热点、设备在线和在线语音链路问题需要分开归因$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.92",
+      "pattern": "^已准备唤醒词、命令词和\\ one\\-shot\\ 间隔集合$",
+      "kind": "precondition",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.93",
+      "pattern": "^按不同唤醒后间隔播放命令词$",
+      "kind": "action",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.94",
+      "pattern": "^每个间隔应输出唤醒和命令识别闭环结果$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.95",
+      "pattern": "^播放、串口、间隔策略和\\ ASR\\ 问题需要分开归因$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.99",
+      "pattern": "^当前环境保持安静且不主动播放测试音频$",
+      "kind": "precondition",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.100",
+      "pattern": "^连续监听一段静默窗口$",
+      "kind": "action",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.101",
+      "pattern": "^不应观察到唤醒相关日志$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.102",
+      "pattern": "^串口无日志、设备重启和环境噪声不能误归为固件误唤醒$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.106",
+      "pattern": "^设备在线且已准备在线语料和\\ one\\-shot\\ 间隔集合$",
+      "kind": "precondition",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.107",
+      "pattern": "^按不同唤醒后间隔播放在线语料$",
+      "kind": "action",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.108",
+      "pattern": "^每个间隔应输出唤醒、在线\\ ASR\\ 或云端播报证据$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.109",
+      "pattern": "^联网、云端、播放和间隔问题需要分开归因$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.113",
+      "pattern": "^已准备唤醒音频时间线和串口时间戳$",
+      "kind": "precondition",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.114",
+      "pattern": "^多轮播放唤醒词并采集唤醒响应\\ marker$",
+      "kind": "action",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.115",
+      "pattern": "^只应统计唤醒成功轮次的响应时间$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.116",
+      "pattern": "^未配置正式阈值时应输出平均值、最大值、最小值和超阈值候选而不是误判固件失败$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.120",
+      "pattern": "^已准备连续唤醒音频和串口稳定性监控$",
+      "kind": "precondition",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.121",
+      "pattern": "^连续播放多段唤醒词音频$",
+      "kind": "action",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.122",
+      "pattern": "^应输出连续唤醒证据、连续失败和设备稳定性结果$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.123",
+      "pattern": "^日志中断、重启或崩溃需要与唤醒识别失败分开归因$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.127",
+      "pattern": "^已准备随机间隔集合和唤醒音频$",
+      "kind": "precondition",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.128",
+      "pattern": "^按随机间隔多轮播放唤醒词$",
+      "kind": "action",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.129",
+      "pattern": "^应逐轮输出唤醒闭环和随机间隔下的状态稳定性$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.130",
+      "pattern": "^临界超时或状态不一致应标记为测试时序风险而不是直接归固件失败$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.134",
+      "pattern": "^设备在线且已准备短句、停顿句和长停顿在线语料$",
+      "kind": "precondition",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.135",
+      "pattern": "^播放唤醒词后执行在线\\ VAD\\ 专项语料$",
+      "kind": "action",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.136",
+      "pattern": "^应输出在线\\ ASR、VAD\\ end、云端播报和文本覆盖证据$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.137",
+      "pattern": "^文本截断容差未确认时应标记探索性待复核而不是直接判固件失败$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.141",
+      "pattern": "^已有\\ Cucumber\\ run\\ 目录和模块\\ summary\\ 证据$",
+      "kind": "precondition",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.142",
+      "pattern": "^二次解析\\ BDD\\ 汇总、模块汇总和关键原始日志$",
+      "kind": "action",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.143",
+      "pattern": "^BDD\\ 结论应与模块证据保持一致$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.144",
+      "pattern": "^发现脚本误判、前置阻塞或\\ oracle\\ 缺失时应单独归因$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.148",
+      "pattern": "^已准备不包含唤醒词的合成人声干扰音频$",
+      "kind": "precondition",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.149",
+      "pattern": "^播放人声干扰并监听串口窗口$",
+      "kind": "action",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.150",
+      "pattern": "^不应观察到唤醒\\ marker$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.151",
+      "pattern": "^合成语音只能作为基础\\ smoke，不能替代标准人声噪声场$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.155",
+      "pattern": "^已准备白噪声干扰音频和安全播放音量$",
+      "kind": "precondition",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.156",
+      "pattern": "^播放白噪声并监听串口窗口$",
+      "kind": "action",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    },
+    {
+      "id": "auto.feature_step.158",
+      "pattern": "^标准非人声噪测试仍需补充噪声素材、声压和声场$",
+      "kind": "assertion",
+      "contract": "feature.mapping",
+      "actions": [],
+      "assertions": [],
+      "note": "自动补齐：该场景执行命令与断言由 voice_core_mapping 提供，此 step 用于 strict 编译校验。"
+    }
+  ]
+}

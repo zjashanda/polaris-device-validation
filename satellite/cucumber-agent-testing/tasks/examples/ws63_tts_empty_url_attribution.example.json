@@ -1,0 +1,29 @@
+﻿{
+  "schema": "polaris.failure-attribution-regression.task.v1",
+  "task_id": "ws63_tts_empty_url_attribution_regression",
+  "description": "回归 WS63 DeviceControl 有回复但 TTS URL 为空的归因，确保不会误判成识别或控制失败。",
+  "knowledge_base": "docs/wiki/voice-validation/failure-patterns/ws63-devicecontrol-empty-tts-url.md",
+  "runner": {
+    "type": "command_control_diagnosis",
+    "script": "satellite/cucumber-agent-testing/scripts/run_command_control_diagnosis.py",
+    "matrix_file": "satellite/cucumber-agent-testing/references/diagnosis_matrices/venusws63_com20_supplement.example.json"
+  },
+  "environment": {
+    "env_file": "satellite/cucumber-agent-testing/debug/goal_command_beep/20260528_201015/envs/venusws63.env.json"
+  },
+  "expected": {
+    "positive_pattern": {
+      "control_reply": "PASS when DeviceControl/audioBroadcast/cloud.speech.reply exists",
+      "tts_response": "FAIL/WARN when TTS url is null or no valid tts url",
+      "overall": "PASS_WITH_WARNINGS with attribution tts_response_chain is acceptable"
+    },
+    "negative_assertions": [
+      "Do not classify DeviceControl + empty TTS URL as ASR failure by default.",
+      "Do not claim physical beep without explicit beep/buzzer/manual/acoustic evidence.",
+      "Do not treat AP-only evidence as full AP+upper coverage."
+    ]
+  },
+  "command_examples": {
+    "execute": "python satellite/cucumber-agent-testing/scripts/run_command_control_diagnosis.py --allow-side-effects --env-file satellite/cucumber-agent-testing/debug/goal_command_beep/20260528_201015/envs/venusws63.env.json --matrix-file satellite/cucumber-agent-testing/references/diagnosis_matrices/venusws63_com20_supplement.example.json --out-root satellite/cucumber-agent-testing/debug/ws63_tts_empty_url_regression"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "schema": "polaris.cucumber.task.v1",
+  "task_id": "first_wake_smoke",
+  "description": "首次唤醒单场景 smoke。默认 dry-run；真机执行时命令行增加 --mode execute --allow-side-effects --manage-session。",
+  "scenario": {
+    "tag": "first_wake"
+  },
+  "runner": {
+    "mode": "dry-run",
+    "compile_first": false,
+    "feature": "satellite/cucumber-agent-testing/features/polaris_voice_core.feature",
+    "mapping": "satellite/cucumber-agent-testing/references/voice_core_mapping.json"
+  },
+  "environment": {
+    "env_file": "polaris.local.json"
+  },
+  "execution": {
+    "observe_ms": 15000,
+    "manage_session": true,
+    "allow_side_effects": false
+  },
+  "expected": {
+    "summary": "播放唤醒词后应观察到 CP/AP/ASR 唤醒证据。",
+    "failure_attribution": [
+      "声卡不存在或播放失败：环境/播放链路问题",
+      "串口日志缺失：logger 或串口配置问题",
+      "播放成功但无唤醒证据：设备听音链路或固件唤醒问题"
+    ]
+  },
+  "policy": {
+    "max_retries": 0,
+    "retry_blocked": false
+  }
+}

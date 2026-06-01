@@ -1,0 +1,44 @@
+﻿{
+  "schema": "polaris.command-control-diagnosis.task.v1",
+  "task_id": "control_command_full_chain_smoke",
+  "description": "控制命令完整链路验证：先唤醒再播放控制命令，并把 recognition/control_reply/tts_response/actuator_feedback 四段分开断言。",
+  "scenario": {
+    "tag": "basic_command_recognition",
+    "focus": "control_command_full_chain"
+  },
+  "runner": {
+    "type": "command_control_diagnosis",
+    "script": "satellite/cucumber-agent-testing/scripts/run_command_control_diagnosis.py",
+    "matrix_file": "satellite/cucumber-agent-testing/references/diagnosis_matrices/fa2_control_beep_probe.example.json"
+  },
+  "environment": {
+    "env_file": "polaris.local.json"
+  },
+  "serial_coverage": {
+    "policy": "full_if_all_configured_ports_open_else_coverage_degraded",
+    "required_serial_roles": "",
+    "blocked_when": [
+      "no configured log port opens",
+      "any role listed in required_serial_roles fails to open"
+    ]
+  },
+  "expected": {
+    "chain_segments": [
+      "recognition",
+      "control_reply",
+      "tts_response",
+      "actuator_feedback"
+    ],
+    "actuator_policy": "蜂鸣器只在状态变化类控制命令中作为 expected_if_state_changes；no-op/查询/不支持不强制蜂鸣。",
+    "failure_attribution": [
+      "无 wake：唤醒/PA/声卡链路",
+      "有 wake 无 ASR：识别入口或时序",
+      "有 ASR 无 DeviceControl/keyword：命令域、云端或 oracle",
+      "有 DeviceControl 但 TTS URL 空：tts_response_chain",
+      "无明确蜂鸣器 marker：actuator_feedback UNKNOWN，不伪造 PASS"
+    ]
+  },
+  "command_examples": {
+    "execute": "python satellite/cucumber-agent-testing/scripts/run_command_control_diagnosis.py --allow-side-effects --env-file polaris.local.json --matrix-file satellite/cucumber-agent-testing/references/diagnosis_matrices/fa2_control_beep_probe.example.json --out-root satellite/cucumber-agent-testing/debug/control_command_full_chain"
+  }
+}

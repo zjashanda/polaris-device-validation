@@ -1,0 +1,39 @@
+# Normalize text files across platforms. Keep repository contents stable even on Windows.
+* text=auto
+.gitattributes text eol=lf
+
+# Source and documentation use LF.
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.jsonl text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.feature text eol=lf
+*.txt text eol=lf
+*.csv text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.mjs text eol=lf
+*.ts text eol=lf
+*.sh text eol=lf
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary/runtime evidence should never be normalized.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.docx binary
+*.xlsx binary
+*.wav binary
+*.pcm binary
+*.mp3 binary
+*.bin binary
+*.zip binary
+*.7z binary

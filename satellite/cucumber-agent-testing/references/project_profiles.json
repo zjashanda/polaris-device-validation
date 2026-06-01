@@ -1,0 +1,169 @@
+{
+  "schema": "polaris.project_profiles.v1",
+  "updated_at": "2026-06-01",
+  "projects": {
+    "cskwb01": {
+      "display_name": "CSK + WB01 历史验证项目",
+      "purpose": "保存此前已经沉淀并可验证的 Cucumber/BDD 能力，作为三串口 CP/AP/WB01 架构基线。",
+      "topology": "csk_ap_cp_wb01_control",
+      "serial": {
+        "ports": {
+          "ap": "COM13",
+          "cp": "COM14",
+          "asr": "COM11",
+          "control": "COM12"
+        },
+        "baudrates": {
+          "ap": 921600,
+          "cp": 921600,
+          "asr": 921600,
+          "control": 115200
+        },
+        "roles": {
+          "ap": "cskap/AP 日志和部分控制",
+          "cp": "cskcp/CP 唤醒与命令关键词证据",
+          "asr": "WB01/ASR 日志",
+          "control": "上下电/复位控制串口"
+        },
+        "control_preconditions": [
+          "uut-pa.on",
+          "pa-enable.set 0 17 0 1"
+        ]
+      },
+      "audio": {
+        "default_playback_device_key": "VID_8765&PID_5678:9_2A847557_7_0000"
+      },
+      "device": {
+        "wake_word": "小美小美",
+        "wakeup_id": "xiao mei xiao mei"
+      },
+      "assertion_profile": "ap_asr_cp_optional",
+      "available_scenarios": [
+        "first_wake",
+        "recognition_mode_wake",
+        "half_duplex_recognition",
+        "full_duplex_recognition",
+        "basic_command_recognition",
+        "requirement_command_smoke",
+        "requirement_free_speech_smoke",
+        "interrupt_prerequisite_measurement",
+        "wake_interrupt",
+        "command_interrupt",
+        "network_recovery_basic",
+        "offline_oneshot_matrix",
+        "false_wake_quiet_basic",
+        "online_oneshot_matrix",
+        "wake_latency_smoke",
+        "continuous_wake_smoke",
+        "random_interval_wake_smoke",
+        "online_vad_special_smoke",
+        "attribution_validator_smoke",
+        "false_wake_human_speech_smoke",
+        "false_wake_white_noise_smoke"
+      ],
+      "notes": [
+        "此前 active Cucumber 场景按 CP/AP/ASR 三端证据设计。",
+        "联网/断网场景要求设备连接到本机可控 Wi-Fi/热点。",
+        "该项目能力基线不要被 venusws63 的无 CP 断言覆盖。",
+        "如果播放命令返回 0 但 CP/AP/ASR 都没有唤醒证据，先按声卡/PA 链路问题处理，不直接判固件失败。",
+        "WB01 声卡链路恢复优先在 control 串口执行 uut-pa.on 与 pa-enable.set 0 17 0 1。",
+        "2026-06-01 最新串口：AP COM13、CP COM14、WB01/ASR COM11、控制 COM12；数据口 921600，控制口 115200。",
+        "WB01 云控当前不作为 WS63 上线验证阻塞项；若云控业务码异常，按 BLOCKED 留证。"
+      ]
+    },
+    "venusws63": {
+      "display_name": "Venus WS63 AP+WiFi 当前调试项目",
+      "purpose": "记录当前新设备 AP+WiFi+控制口拓扑、PA 前置、声卡和可验证能力。",
+      "topology": "ap_wifi_control_no_cp",
+      "serial": {
+        "ports": {
+          "ap": "COM20",
+          "upper": "COM17",
+          "asr": "COM17",
+          "control": "COM19",
+          "cp": ""
+        },
+        "baudrates": {
+          "ap": 921600,
+          "upper": 921600,
+          "asr": 921600,
+          "control": 115200
+        },
+        "roles": {
+          "ap": "AP 日志观察口，只读日志",
+          "upper": "上位/WiFi 日志观察口，只读日志",
+          "control": "上下电与 PA 控制口",
+          "cp": "当前项目无独立 CP 串口"
+        }
+      },
+      "audio": {
+        "default_playback_device_key": "VID_8765&PID_5678:9_27F546DA_3_0000"
+      },
+      "device": {
+        "wake_word": "小美小美",
+        "wakeup_id": "xiao mei xiao mei",
+        "iot_id": "210006741088068",
+        "mac": "60:7A:D8:1A:67:26",
+        "current_ip": "192.168.2.5"
+      },
+      "preconditions": {
+        "control_port_commands": [
+          "uut-pa.on",
+          "pa-enable.set 0 17 0 1"
+        ],
+        "control_port_only": true
+      },
+      "assertion_profile": "ap_upper_no_cp",
+      "ready_scenarios": [
+        "first_wake",
+        "recognition_mode_wake",
+        "wake_latency_smoke",
+        "continuous_wake_smoke",
+        "random_interval_wake_smoke",
+        "false_wake_quiet_basic",
+        "false_wake_human_speech_smoke",
+        "false_wake_white_noise_smoke"
+      ],
+      "adaptable_scenarios": [
+        "basic_command_recognition",
+        "requirement_command_smoke",
+        "requirement_free_speech_smoke",
+        "offline_oneshot_matrix",
+        "online_oneshot_matrix",
+        "interrupt_prerequisite_measurement",
+        "wake_interrupt",
+        "command_interrupt",
+        "online_vad_special_smoke",
+        "half_duplex_recognition",
+        "full_duplex_recognition",
+        "cloud_control_config_apis"
+      ],
+      "needs_external_config_entry": [],
+      "excluded_scenarios": [
+        "network_recovery_basic"
+      ],
+      "notes": [
+        "当前设备不连接本机 Wi-Fi，因此不做 Windows 热点断网/恢复编排。",
+        "如果设备自身在线，在线 ASR/VAD/播报类场景仍可验证。",
+        "PA 命令必须发到 COM19@115200，COM20/COM17 只看日志。",
+        "已验证播放小美小美后 AP 出现 wakeup_callback，上位出现 online_wakeup。",
+        "2026-06-01 WS63 云控已恢复：真实固件账号 vir_ver 已恢复到 35.03.01.01.18.26.05.04.00.01，env=1/UAT，check-env 与 full-duplex/mic/night restore 均 PASS。",
+        "当前 WS63 连接外部 Wi-Fi，IP 192.168.2.5；本机热点 0 客户端时，network_recovery_basic 应标记 BLOCKED_NETWORK_NOT_CONTROLLABLE。",
+        "command-control/online VAD/部分全双工命令闭环存在专项失败，根因按 command_or_audio_baseline 或 wake_precondition_for_online_vad 记录，不扩大为串口或云控失败。"
+      ],
+      "cloud": {
+        "api_environment": "uat",
+        "device_env": "uat",
+        "version_gate": {
+          "authorized_versions": [
+            "35.03.01.01.18.26.05.04.00.01"
+          ],
+          "unauthorized_versions": [
+            "35.03.01.01.18.26.05.04.00.02"
+          ]
+        },
+        "env_gate_required": true
+      }
+    }
+  }
+}

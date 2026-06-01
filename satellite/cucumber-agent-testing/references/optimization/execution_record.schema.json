@@ -1,0 +1,33 @@
+{
+  "schema": "polaris.execution_record.schema.v1",
+  "description": "Minimal schema contract for run_optimized_task.py output.",
+  "required_files": [
+    "execution_record.json",
+    "attempts.jsonl",
+    "state/before.json",
+    "state/after.json",
+    "state_diff.json",
+    "preflight.json",
+    "command.json"
+  ],
+  "top_level_fields": {
+    "schema": "Must be polaris.execution_record.v1.",
+    "task": "Workspace-relative task JSON path.",
+    "task_id": "Stable task id from task file or filename.",
+    "env_file": "Workspace-relative env file path.",
+    "mode": "plan-only, dry-run or execute.",
+    "result": "PASS, FAIL or BLOCKED.",
+    "stability": "PASS, FLAKY_PASS, STABLE_FAIL, FLAKY_FAIL, ENV_RELATED or PRECHECK_BLOCKED.",
+    "preflight": "Constraint and resource preflight result.",
+    "state": "before/after/diff artifact paths.",
+    "attempts": "Structured attempt records."
+  },
+  "attempt_fields": {
+    "attempt": "1-based attempt index.",
+    "returncode": "Wrapped run_task.py process return code.",
+    "result": "Attempt-level result.",
+    "run_dir": "Underlying Cucumber debug run dir when available.",
+    "stdout_log": "Captured stdout/stderr path.",
+    "bdd": "Parsed bdd_run_summary/runtime sidecar information when available."
+  }
+}

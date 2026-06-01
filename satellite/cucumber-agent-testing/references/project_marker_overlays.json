@@ -1,0 +1,96 @@
+﻿{
+  "schema": "polaris.project_marker_overlays.v1",
+  "updated_at": "2026-06-01",
+  "description": "项目私有日志 marker overlay。用于把项目差异化 marker 映射到标准事件和断言段，避免在 runner 中写死所有项目规则。",
+  "projects": {
+    "cskwb01": {
+      "assertion_profile": "ap_asr_cp_optional",
+      "strong_markers": {
+        "wake": [
+          "WAKE(0): KEY=",
+          "offline_wakeup",
+          "online_wakeup",
+          "wakeup_callback",
+          "Pre Wakeup"
+        ],
+        "recognition": [
+          "offline_asr_callbak keyword",
+          "online_asr_callbak text",
+          "algo info keyword",
+          "Recv ASR"
+        ],
+        "local_command_keyword": [
+          "WAKE(0).*KEY=",
+          "\"keyword\""
+        ]
+      },
+      "weak_markers": {
+        "actuator_feedback": [
+          "device ack",
+          "control ack",
+          "appliance",
+          "actuator"
+        ]
+      },
+      "coverage_policy": {
+        "full_roles": ["ap", "cp", "asr"],
+        "minimum_roles": ["ap"],
+        "missing_non_minimum": "COVERAGE_DEGRADED",
+        "missing_minimum": "BLOCKED"
+      },
+      "notes": [
+        "弱 actuator marker 只能给 WARN，不能等价证明物理蜂鸣器已响。",
+        "目标命令命中但伴随额外 keyword/asr 时，保留 PASS_WITH_WARNINGS 和误识别候选。"
+      ]
+    },
+    "venusws63": {
+      "assertion_profile": "ap_upper_no_cp",
+      "strong_markers": {
+        "wake": [
+          "wakeup_callback",
+          "online_wakeup",
+          "Pre Wakeup",
+          "mark has wakeup"
+        ],
+        "recognition": [
+          "online_asr_callbak",
+          "MSpeech Cloud 3 evt",
+          "cloud.speech.trans.ack"
+        ],
+        "control_reply": [
+          "mideaSkillId: DeviceControl",
+          "\"mideaSkillId\":\"DeviceControl\"",
+          "cloud.instructions.audioBroadcast",
+          "cloud.speech.reply",
+          "MSpeech Cloud 4 evt",
+          "MSpeech Cloud 32 evt"
+        ],
+        "tts_negative": [
+          "TTS url is null",
+          "no valid tts url",
+          "empty0.mp3",
+          "empty.mp3"
+        ]
+      },
+      "weak_markers": {
+        "actuator_feedback": [
+          "device ack",
+          "control ack",
+          "appliance",
+          "actuator"
+        ]
+      },
+      "coverage_policy": {
+        "full_roles": ["ap", "upper"],
+        "minimum_roles": ["ap"],
+        "missing_non_minimum": "COVERAGE_DEGRADED",
+        "missing_minimum": "BLOCKED"
+      },
+      "failure_attribution_rules": [
+        "DeviceControl/control_reply 存在但 TTS url is null/no valid tts url 时，归因 tts_response_chain，不归为识别失败或控制失败。",
+        "upper/COM17 打不开但 AP/COM20 正常时，本轮可继续给 AP 侧结论，但必须标记 COVERAGE_DEGRADED。",
+        "2026-06-01 command-control 扩大矩阵 root_cause=command_or_audio_baseline 时，不应归因为全双工单点失败。"
+      ]
+    }
+  }
+}

@@ -1,0 +1,195 @@
+{
+  "schema": "polaris.event_graph_rules.v1",
+  "name": "default_project_overlay",
+  "description": "Optional project-specific Event Graph overlay. Add enabled rules here when a project has private cloud/media/TTS markers that should become causal edges without editing runtime/event_graph.py.",
+  "rules": [
+    {
+      "id": "cloud_media_response_marker",
+      "enabled": false,
+      "relation": "project_cloud_media_response",
+      "confidence": "medium",
+      "within_ms": 15000,
+      "reason": "project-specific cloud/media marker follows ASR or command",
+      "src": {
+        "event_types": [
+          "ASRDetected",
+          "CommandDetected"
+        ]
+      },
+      "dst": {
+        "event_types": [
+          "TTSStarted",
+          "MediaStarted"
+        ],
+        "contains_any": [
+          "music",
+          "news",
+          "crosstalk",
+          "tts",
+          "mp3",
+          "media"
+        ]
+      },
+      "warn_if_unmatched": false
+    },
+    {
+      "id": "cskwb01_media_or_tts_response_marker_candidate",
+      "enabled": true,
+      "projects": [
+        "cskwb01"
+      ],
+      "relation": "cskwb01_asr_to_media_or_tts_response",
+      "confidence": "weak",
+      "within_ms": 15000,
+      "reason": "WB01 私有媒体/TTS marker 候选；需真实日志确认后启用。",
+      "src": {
+        "event_types": [
+          "ASRDetected",
+          "CommandDetected"
+        ]
+      },
+      "dst": {
+        "event_types": [
+          "TTSStarted",
+          "MediaStarted"
+        ],
+        "contains_any": [
+          "audioBroadcast",
+          "TTS",
+          "player",
+          "media",
+          "mp3"
+        ]
+      },
+      "warn_if_unmatched": false
+    },
+    {
+      "id": "venusws63_media_or_tts_response_marker_candidate",
+      "enabled": true,
+      "projects": [
+        "venusws63"
+      ],
+      "relation": "venusws63_asr_to_media_or_tts_response",
+      "confidence": "weak",
+      "within_ms": 15000,
+      "reason": "WS63/AP+upper 私有媒体/TTS marker 候选；需真实日志确认后启用。",
+      "src": {
+        "event_types": [
+          "ASRDetected",
+          "CommandDetected"
+        ]
+      },
+      "dst": {
+        "event_types": [
+          "TTSStarted",
+          "MediaStarted"
+        ],
+        "contains_any": [
+          "audioBroadcast",
+          "TTS",
+          "player",
+          "media",
+          "mp3",
+          "ws63"
+        ]
+      },
+      "warn_if_unmatched": false
+    },
+    {
+      "id": "possible_reboot_after_online_media_candidate",
+      "enabled": true,
+      "projects": [
+        "cskwb01",
+        "venusws63"
+      ],
+      "relation": "possible_reboot_after_online_media",
+      "confidence": "weak",
+      "within_ms": 30000,
+      "reason": "Detect reboot, watchdog, panic, hardfault, and boot reason markers during activity windows.",
+      "src": {
+        "event_types": [
+          "TTSStarted",
+          "MediaStarted",
+          "CommandDetected"
+        ]
+      },
+      "dst": {
+        "event_types": [
+          "RebootDetected",
+          "CrashDetected"
+        ],
+        "contains_any": [
+          "boot",
+          "watchdog",
+          "panic",
+          "assert",
+          "crash"
+        ]
+      },
+      "warn_if_unmatched": false
+    },
+    {
+      "id": "cskwb01_cp_or_ap_wake_to_asr_chain_v1",
+      "enabled": true,
+      "projects": [
+        "cskwb01"
+      ],
+      "relation": "cskwb01_wake_to_asr_chain",
+      "confidence": "medium",
+      "within_ms": 8000,
+      "reason": "WB01 maps CP/AP wake evidence to ASR/WB recognition evidence.",
+      "src": {
+        "event_types": [
+          "WakeDetected"
+        ],
+        "sources": [
+          "cp",
+          "ap"
+        ]
+      },
+      "dst": {
+        "event_types": [
+          "WakeDetected",
+          "ASRDetected"
+        ],
+        "sources": [
+          "asr",
+          "wb01",
+          "upper"
+        ]
+      },
+      "warn_if_unmatched": false
+    },
+    {
+      "id": "venusws63_ap_wake_to_upper_asr_chain_v1",
+      "enabled": true,
+      "projects": [
+        "venusws63"
+      ],
+      "relation": "venusws63_ap_wake_to_upper_asr_chain",
+      "confidence": "medium",
+      "within_ms": 8000,
+      "reason": "WS63 has no CP; map AP wake evidence to upper/asr recognition evidence.",
+      "src": {
+        "event_types": [
+          "WakeDetected"
+        ],
+        "sources": [
+          "ap"
+        ]
+      },
+      "dst": {
+        "event_types": [
+          "WakeDetected",
+          "ASRDetected"
+        ],
+        "sources": [
+          "asr",
+          "upper",
+          "ws63"
+        ]
+      },
+      "warn_if_unmatched": false
+    }
+  ]
+}

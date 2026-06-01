@@ -1,0 +1,103 @@
+﻿{
+  "schema": "polaris.command-control-diagnosis.matrix.v1",
+  "description": "WS63 AP COM20 + upper/asr COM17 小规模补验证矩阵。目的不是重跑 343 条，而是验证 AP+upper 串口覆盖、控制链路、TTS 空 URL归因和在线媒体对照。",
+  "project_id": "venusws63",
+  "serial_coverage_expectation": {
+    "full_roles": ["ap", "upper"],
+    "minimum_roles": ["ap"],
+    "if_upper_missing": "COVERAGE_DEGRADED",
+    "if_ap_missing": "BLOCKED"
+  },
+  "matrix": [
+    {
+      "case_id": "W63C20_001_first_wake_open_ac",
+      "mode": "keep",
+      "command": "空调开机",
+      "expected": "空调开机",
+      "delay_ms": 2500,
+      "observe_ms": 9000,
+      "variable": "control_reply_tts_attribution",
+      "sequence_mode": "split"
+    },
+    {
+      "case_id": "W63C20_002_close_ac",
+      "mode": "keep",
+      "command": "空调关机",
+      "expected": "空调关机",
+      "delay_ms": 2500,
+      "observe_ms": 9000,
+      "variable": "power_control_pair",
+      "sequence_mode": "split"
+    },
+    {
+      "case_id": "W63C20_003_cool_mode",
+      "mode": "keep",
+      "command": "制冷模式",
+      "expected": "制冷模式",
+      "delay_ms": 2500,
+      "observe_ms": 9000,
+      "variable": "mode_control",
+      "sequence_mode": "split"
+    },
+    {
+      "case_id": "W63C20_004_heat_mode",
+      "mode": "keep",
+      "command": "制热模式",
+      "expected": "制热模式",
+      "delay_ms": 2500,
+      "observe_ms": 9000,
+      "variable": "mode_control",
+      "sequence_mode": "split"
+    },
+    {
+      "case_id": "W63C20_005_query_mode",
+      "mode": "keep",
+      "command": "查询空调模式",
+      "expected": "查询空调模式",
+      "delay_ms": 2500,
+      "observe_ms": 9000,
+      "variable": "query_no_beep_required",
+      "sequence_mode": "split"
+    },
+    {
+      "case_id": "W63C20_006_query_network",
+      "mode": "keep",
+      "command": "查询空调联网状态",
+      "expected": "查询空调联网状态",
+      "delay_ms": 2500,
+      "observe_ms": 9000,
+      "variable": "network_query_no_beep_required",
+      "sequence_mode": "split"
+    },
+    {
+      "case_id": "W63C20_007_volume_up",
+      "mode": "keep",
+      "command": "增大音量",
+      "expected": "增大音量",
+      "delay_ms": 2500,
+      "observe_ms": 8000,
+      "variable": "volume_control",
+      "sequence_mode": "split"
+    },
+    {
+      "case_id": "W63C20_008_news",
+      "mode": "keep",
+      "command": "播报今日新闻",
+      "expected": "播报今日新闻",
+      "delay_ms": 2500,
+      "observe_ms": 12000,
+      "variable": "online_media_contrast",
+      "sequence_mode": "split"
+    },
+    {
+      "case_id": "W63C20_009_music",
+      "mode": "keep",
+      "command": "播放音乐",
+      "expected": "播放音乐",
+      "delay_ms": 2500,
+      "observe_ms": 12000,
+      "variable": "online_media_contrast",
+      "sequence_mode": "split"
+    }
+  ]
+}

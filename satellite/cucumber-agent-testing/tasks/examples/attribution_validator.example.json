@@ -1,0 +1,45 @@
+{
+  "schema": "polaris.cucumber.task.v1",
+  "task_id": "attribution_validator_smoke",
+  "description": "归因一致性复核：扫描已有 run，检查 BDD 结论、模块 summary 和原始证据是否一致。",
+  "validation_pack": {
+    "pack": "docs/wiki/voice-validation/assertion-attribution.md",
+    "case_ids": [],
+    "linked_tag": "attribution_validator_smoke"
+  },
+  "scenario": {
+    "tag": "attribution_validator_smoke"
+  },
+  "runner": {
+    "mode": "dry-run",
+    "compile_first": true,
+    "strict_compile": true,
+    "feature": "satellite/cucumber-agent-testing/features/polaris_voice_core.feature",
+    "mapping": "satellite/cucumber-agent-testing/references/voice_core_mapping.json"
+  },
+  "environment": {
+    "env_file": "polaris.local.json"
+  },
+  "inputs": {},
+  "execution": {
+    "observe_ms": 10000,
+    "manage_session": false,
+    "runtime_strict": true,
+    "allow_side_effects": false
+  },
+  "expected": {
+    "result_policy": "PASS/FAIL/BLOCKED/TIMING_AMBIGUOUS 按 assertion registry 和 runtime sidecar 统一归因。",
+    "failure_attribution": [
+      "播放或声卡不可用：BLOCKED，归因到测试环境/播放链路。",
+      "串口端口打不开或日志静默：BLOCKED，归因到 logger/端口占用/接线。",
+      "前置在线、模式切换或云控失败：BLOCKED 或云控前置问题，不直接判固件 FAIL。",
+      "前置均满足但业务事件缺失：FAIL，归因到固件/ASR/设备行为。",
+      "需求口径不明确或注入落在临界时序：TIMING_AMBIGUOUS/REQUIREMENT_REVIEW。"
+    ],
+    "summary": "归因一致性复核：扫描已有 run，检查 BDD 结论、模块 summary 和原始证据是否一致。"
+  },
+  "policy": {
+    "max_retries": 0,
+    "retry_blocked": false
+  }
+}

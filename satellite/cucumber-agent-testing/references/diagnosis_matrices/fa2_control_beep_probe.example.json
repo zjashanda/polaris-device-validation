@@ -1,0 +1,149 @@
+{
+  "schema": "polaris.command-control-diagnosis.matrix.v1",
+  "description": "WB01/WS63 command/beep small control-variable probe",
+  "matrix": [
+    {
+      "case_id": "S01_close_setup",
+      "mode": "keep",
+      "command": "\u5173\u95ed\u7a7a\u8c03",
+      "expected": "\u5173\u95ed\u7a7a\u8c03",
+      "delay_ms": 1600,
+      "observe_ms": 10000,
+      "variable": "state_setup_off",
+      "timeout_s": 15,
+      "sequence_mode": "split"
+    },
+    {
+      "case_id": "S02_open_transition",
+      "mode": "keep",
+      "command": "\u6253\u5f00\u7a7a\u8c03",
+      "expected": "\u6253\u5f00\u7a7a\u8c03",
+      "delay_ms": 1600,
+      "observe_ms": 10000,
+      "variable": "off_to_on_transition",
+      "timeout_s": 15,
+      "sequence_mode": "split"
+    },
+    {
+      "case_id": "S03_open_noop",
+      "mode": "keep",
+      "command": "\u6253\u5f00\u7a7a\u8c03",
+      "expected": "\u6253\u5f00\u7a7a\u8c03",
+      "delay_ms": 1600,
+      "observe_ms": 10000,
+      "variable": "already_on_noop",
+      "timeout_s": 15,
+      "sequence_mode": "split"
+    },
+    {
+      "case_id": "S04_close_transition",
+      "mode": "keep",
+      "command": "\u5173\u95ed\u7a7a\u8c03",
+      "expected": "\u5173\u95ed\u7a7a\u8c03",
+      "delay_ms": 1600,
+      "observe_ms": 10000,
+      "variable": "on_to_off_transition",
+      "timeout_s": 15,
+      "sequence_mode": "split"
+    },
+    {
+      "case_id": "S05_close_noop",
+      "mode": "keep",
+      "command": "\u5173\u95ed\u7a7a\u8c03",
+      "expected": "\u5173\u95ed\u7a7a\u8c03",
+      "delay_ms": 1600,
+      "observe_ms": 10000,
+      "variable": "already_off_noop",
+      "timeout_s": 15,
+      "sequence_mode": "split"
+    },
+    {
+      "case_id": "S06_doc_power_on_alias",
+      "mode": "keep",
+      "command": "\u7a7a\u8c03\u5f00\u673a",
+      "expected": "\u6253\u5f00\u7a7a\u8c03",
+      "delay_ms": 1600,
+      "observe_ms": 10000,
+      "variable": "doc_alias_power_on",
+      "timeout_s": 15,
+      "sequence_mode": "split"
+    },
+    {
+      "case_id": "S07_heat_mode",
+      "mode": "keep",
+      "command": "\u5236\u70ed\u6a21\u5f0f",
+      "expected": "\u5236\u70ed\u6a21\u5f0f",
+      "delay_ms": 1600,
+      "observe_ms": 10000,
+      "variable": "mode_control",
+      "timeout_s": 15,
+      "sequence_mode": "split"
+    },
+    {
+      "case_id": "S08_cool_mode",
+      "mode": "keep",
+      "command": "\u5236\u51b7\u6a21\u5f0f",
+      "expected": "\u5236\u51b7\u6a21\u5f0f",
+      "delay_ms": 1600,
+      "observe_ms": 10000,
+      "variable": "mode_control",
+      "timeout_s": 15,
+      "sequence_mode": "split"
+    },
+    {
+      "case_id": "S09_query_mode",
+      "mode": "keep",
+      "command": "\u67e5\u8be2\u7a7a\u8c03\u6a21\u5f0f",
+      "expected": "\u67e5\u8be2\u7a7a\u8c03\u6a21\u5f0f",
+      "delay_ms": 1600,
+      "observe_ms": 10000,
+      "variable": "query_control",
+      "timeout_s": 15,
+      "sequence_mode": "split"
+    },
+    {
+      "case_id": "S10_auto_fan",
+      "mode": "keep",
+      "command": "\u81ea\u52a8\u98ce",
+      "expected": "\u81ea\u52a8\u98ce",
+      "delay_ms": 1600,
+      "observe_ms": 10000,
+      "variable": "airflow_control",
+      "timeout_s": 15,
+      "sequence_mode": "split"
+    },
+    {
+      "case_id": "S11_volume_up",
+      "mode": "keep",
+      "command": "\u589e\u5927\u97f3\u91cf",
+      "expected": "\u589e\u5927\u97f3\u91cf",
+      "delay_ms": 1600,
+      "observe_ms": 10000,
+      "variable": "volume_control",
+      "timeout_s": 15,
+      "sequence_mode": "split"
+    },
+    {
+      "case_id": "S12_network_status",
+      "mode": "keep",
+      "command": "\u67e5\u8be2\u7a7a\u8c03\u8054\u7f51\u72b6\u6001",
+      "expected": "\u67e5\u8be2\u7a7a\u8c03\u8054\u7f51\u72b6\u6001",
+      "delay_ms": 1600,
+      "observe_ms": 10000,
+      "variable": "network_query",
+      "timeout_s": 15,
+      "sequence_mode": "split"
+    },
+    {
+      "case_id": "S13_news_control",
+      "mode": "keep",
+      "command": "\u64ad\u62a5\u4eca\u65e5\u65b0\u95fb",
+      "expected": "\u64ad\u62a5\u4eca\u65e5\u65b0\u95fb",
+      "delay_ms": 1600,
+      "observe_ms": 10000,
+      "variable": "online_news_control",
+      "timeout_s": 15,
+      "sequence_mode": "split"
+    }
+  ]
+}

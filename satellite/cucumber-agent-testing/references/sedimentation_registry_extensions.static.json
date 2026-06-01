@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "status": "static_extension_ready_for_review",
+  "note": "静态 extension，供 active registry 合并前审阅；正式合并前仍需 smoke。",
+  "feature_contracts": {
+    "wake.continuous": {
+      "intent": "连续或短间隔唤醒稳定性",
+      "preconditions": ["local_serial_config_available", "audio_playback_device_available"],
+      "actions": ["ensure_wake_ready_or_wait_timeout", "play_wake_audio_repeatedly", "capture_serial_window"],
+      "assertions": ["wake_rate_reported", "max_consecutive_failures_reported", "no_reboot_or_serial_silence"],
+      "unknown_policy": "missing_threshold_is_NEEDS_REVIEW"
+    },
+    "wake.random_interval": {
+      "intent": "随机间隔唤醒稳定性",
+      "preconditions": ["local_serial_config_available", "audio_playback_device_available"],
+      "actions": ["sample_random_interval", "play_wake_audio", "capture_serial_window"],
+      "assertions": ["random_interval_wake_rate_reported", "timing_gray_zone_marked", "state_abnormal_reported"],
+      "unknown_policy": "timing_ambiguous_not_fail"
+    },
+    "wake.latency": {
+      "intent": "唤醒响应时间",
+      "preconditions": ["wake_audio_timeline_available", "serial_timestamps_available"],
+      "actions": ["play_wake_audio_with_timeline", "capture_wake_response_markers", "compute_success_latency"],
+      "assertions": ["only_success_rounds_in_latency_average", "avg_min_max_reported", "over_threshold_samples_listed"],
+      "unknown_policy": "missing_start_end_marker_is_NEEDS_REVIEW"
+    },
+    "command.coverage_from_requirements": {
+      "intent": "从需求文档抽取命令词并检查覆盖率",
+      "preconditions": ["doc_requirements_present"],
+      "actions": ["extract_requirement_corpus", "normalize_command_phrases", "compare_executable_command_set"],
+      "assertions": ["coverage_rate_reported", "missing_commands_listed", "commands_without_oracle_marked_NEEDS_REVIEW"],
+      "unknown_policy": "conflicting_requirement_documents_are_NEEDS_REVIEW"
+    },
+    "command.grouped": {
+      "intent": "短词/长词/数字类/停顿/语速命令专项分组",
+      "preconditions": ["command_candidates_available"],
+      "actions": ["classify_short_long_numeric", "generate_pause_speed_tasks", "summarize_group_metrics"],
+      "assertions": ["group_accuracy_reported", "numeric_boundary_listed", "synthetic_unreviewed_not_formal_fail"],
+      "unknown_policy": "missing_group_rule_is_NEEDS_REVIEW"
+    },
+    "command.oneshot_offline": {
+      "intent": "离线 oneshot 间隔矩阵",
+      "preconditions": ["wake_audio_available", "command_candidates_available"],
+      "actions": ["build_or_select_oneshot_audio", "play_oneshot_audio", "split_failure_stage"],
+      "assertions": ["overall_success_requires_wake_and_command", "failure_stage_classified", "interval_metrics_separated"],
+      "unknown_policy": "oneshot_support_unknown_is_BLOCKED"
+    },
+    "interrupt.prerequisite_discovery": {
+      "intent": "打断前置自发现",
+      "preconditions": ["device_can_execute_online_or_offline_command"],
+      "actions": ["try_weather_query", "try_music_playback", "scan_offline_tts_duration", "select_longest_stable_self_play"],
+      "assertions": ["self_play_start_end_detected", "duration_enough_for_injection", "unusable_candidates_reported"],
+      "unknown_policy": "no_self_play_candidate_is_BLOCKED"
+    },
+    "free.coverage_from_requirements": {
+      "intent": "从需求文档抽取自由说意图和 slot 覆盖",
+      "preconditions": ["doc_requirements_present"],
+      "actions": ["extract_free_speech_candidates", "infer_intent_slot_columns", "generate_intent_slot_coverage"],
+      "assertions": ["intent_coverage_reported", "slot_coverage_reported", "missing_oracle_marked_NEEDS_REVIEW"],
+      "unknown_policy": "no_oracle_not_fail"
+    },
+    "free.paraphrase_synthetic": {
+      "intent": "前缀/后缀/插入语和口语化候选",
+      "preconditions": ["base_free_speech_candidates_available"],
+      "actions": ["generate_prefix_suffix_insert_variants", "bind_variant_to_base_intent"],
+      "assertions": ["reviewed_variant_should_hit_base_intent", "unreviewed_variant_exploratory_only"],
+      "unknown_policy": "synthetic_unreviewed_not_formal_fail"
+    },
+    "online.oneshot_matrix": {
+      "intent": "在线 oneshot 间隔矩阵",
+      "preconditions": ["device_online_or_recoverable", "online_candidates_available"],
+      "actions": ["ensure_online", "build_or_select_online_oneshot_audio", "capture_online_asr"],
+      "assertions": ["success_requires_wake_and_expected_asr", "network_errors_not_firmware_fail", "interval_metrics_separated"],
+      "unknown_policy": "missing_expected_asr_is_NEEDS_REVIEW"
+    },
+    "online.vad_special": {
+      "intent": "VAD 截断/超时专项",
+      "preconditions": ["online_candidates_or_vad_dataset_available"],
+      "actions": ["classify_vad_candidates", "execute_online_asr", "compare_with_truncation_policy"],
+      "assertions": ["truncation_counted_separately", "timeout_counted_separately", "formal_requires_reviewed_dataset"],
+      "unknown_policy": "missing_truncation_tolerance_is_NEEDS_REVIEW"
+    },
+    "network.recovery_basic": {
+      "intent": "联网恢复和基础弱网前置",
+      "preconditions": ["local_hotspot_config_available"],
+      "actions": ["check_hotspot_status", "verify_device_mac_attached", "ensure_online", "capture_cloud_status"],
+      "assertions": ["online_precondition_before_online_assertion", "network_failure_attributed_environment", "recovery_events_logged"],
+      "unknown_policy": "strict_weak_network_params_missing_only_blocks_strict_weak_network"
+    },
+    "false_wake.quiet_basic": {
+      "intent": "安静误唤醒和长期挂机基础监听",
+      "preconditions": ["serial_wake_markers_available", "no_active_voice_playback"],
+      "actions": ["start_long_serial_capture", "collect_false_wake_events", "summarize_events_per_hour"],
+      "assertions": ["false_wake_frequency_reported", "device_abnormal_reported_separately", "audio_review_required_for_acoustic_cause"],
+      "unknown_policy": "missing_duration_or_threshold_is_NEEDS_REVIEW"
+    },
+    "attribution.validator": {
+      "intent": "原始证据二次复核和失败归因",
+      "preconditions": ["runner_summary_or_raw_logs_available"],
+      "actions": ["reparse_raw_logs", "cross_check_runner_judgement", "classify_failure_reason"],
+      "assertions": ["raw_pass_runner_fail_is_SCRIPT_FALSE_FAIL", "missing_precondition_is_BLOCKED", "no_oracle_is_NEEDS_REVIEW"],
+      "unknown_policy": "ambiguous_not_firmware_fail"
+    }
+  },
+  "step_patterns": [
+    {"pattern": "执行能力 {capability_id}", "binds_to": "action.execute_capability", "params": ["capability_id"]},
+    {"pattern": "验证能力 {capability_id} 的断言", "binds_to": "assertion.evaluate_capability", "params": ["capability_id"]},
+    {"pattern": "已从需求文档抽取命令词候选", "binds_to": "action.load_or_build_requirements_corpus", "params": {"kind": "command"}},
+    {"pattern": "已从需求文档抽取自由说候选", "binds_to": "action.load_or_build_requirements_corpus", "params": {"kind": "free_speech"}},
+    {"pattern": "已选择稳定自播前置", "binds_to": "action.discover_or_load_interrupt_prerequisite", "params": {}},
+    {"pattern": "临界超时灰区样本应单独标记", "binds_to": "assertion.timing_gray_zone_not_fail", "params": {}}
+  ],
+  "action_bindings": {
+    "action.load_or_build_requirements_corpus": "satellite/cucumber-agent-testing/scripts/ingest_requirements_corpus.py",
+    "action.discover_or_load_interrupt_prerequisite": "satellite/cucumber-agent-testing/scripts/discover_interrupt_prerequisites.py",
+    "action.build_sedimentation_registry_draft": "satellite/cucumber-agent-testing/scripts/build_sedimentation_registry_draft.py",
+    "action.run_sedimentation_pipeline": "satellite/cucumber-agent-testing/scripts/run_sedimentation_pipeline.py"
+  },
+  "assertion_bindings": {
+    "assertion.evaluate_capability": "capability contract rules in this file",
+    "assertion.timing_gray_zone_not_fail": "TIMING_AMBIGUOUS samples are excluded from formal PASS/FAIL denominator unless requirement says otherwise",
+    "assertion.no_oracle_not_fail": "Records missing reviewed oracle are NEEDS_REVIEW, not FAIL",
+    "assertion.environment_not_firmware_fail": "Network/audio/serial/power precondition failures are BLOCKED or ENVIRONMENT_FAIL, not firmware FAIL"
+  }
+}
+

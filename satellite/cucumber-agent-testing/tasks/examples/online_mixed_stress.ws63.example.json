@@ -1,0 +1,42 @@
+{
+  "schema": "polaris.online-stress.task.v1",
+  "task_id": "online_mixed_stress_ws63",
+  "description": "WS63/AP+WiFi 项目的在线混合交互压测示例；串口、声卡、Wi-Fi、云环境从 polaris.local.json 的 venusws63 项目读取。",
+  "runner": {
+    "entrypoint": "satellite/cucumber-agent-testing/scripts/run_online_mixed_stress.py",
+    "mode": "execute",
+    "strategy_file": "satellite/cucumber-agent-testing/references/scene_strategy_pool.json",
+    "strategy_name": "online_mixed_stress"
+  },
+  "environment": {
+    "env_file": "polaris.local.json",
+    "project": "venusws63"
+  },
+  "execution": {
+    "end_at": "",
+    "max_rounds": 10,
+    "seed": 0,
+    "summary_every": 5,
+    "sample_window_every": 20,
+    "allow_side_effects": true
+  },
+  "overrides": {
+    "random_gap_s": [6, 28],
+    "observe_s": [18, 42]
+  },
+  "expected": {
+    "summary": "WS63 无 CP 串口，runner 会跳过 CP reader；断言以 AP + upper/WS63 日志、在线 ASR/TTS/media、reboot/crash marker 为准。",
+    "failure_attribution": [
+      "FAIL_NO_WAKE：播放成功但 AP/upper 都无 wake marker，先排查声卡、PA 前置、麦克风/听音链路。",
+      "WARN_NO_ASR：有 wake 但无在线 ASR/云端识别证据，需确认设备已联网且 CSK/AP 环境与 API 环境一致。",
+      "WARN_MEDIA_ERROR：在线媒体/TTS 出现 HTTP 或播放器错误，优先归网络、云端或媒体资源问题。",
+      "FAIL_REBOOT_OR_CRASH：出现 boot/watchdog/panic/assert 等 marker，归设备稳定性问题。"
+    ]
+  },
+  "notes": [
+    "默认示例只跑 10 轮；夜间压测时把 max_rounds 改为 0，并填写 end_at。",
+    "如果 WS63 没接本机 Wi-Fi，联网/断网类动作会受限，但在线交互仍可在设备已联网的前提下执行。",
+    "声卡播放返回 0 但没有唤醒证据时，先在 control 串口执行 polaris.local.json 中的 serial.control_preconditions。"
+  ],
+  "command_example": "python satellite/cucumber-agent-testing/scripts/run_online_mixed_stress.py --env-file polaris.local.json --project venusws63 --strategy-file satellite/cucumber-agent-testing/references/scene_strategy_pool.json --strategy-name online_mixed_stress --max-rounds 10"
+}

@@ -1,0 +1,559 @@
+{
+  "version": 1,
+  "source": "oldTime/legacy_20260526_144646/satellite/voice-test-plan-designer",
+  "categories": {
+    "唤醒": [
+      {
+        "name": "首次唤醒",
+        "type": "基础",
+        "required": "必填",
+        "support_level": "L0",
+        "current_entry": "first_wake",
+        "gap": "已落地 task/feature/runtime，可做冒烟和压测。"
+      },
+      {
+        "name": "识别模式唤醒",
+        "type": "基础",
+        "required": "必填",
+        "support_level": "L0",
+        "current_entry": "recognition_mode_wake",
+        "gap": "已落地，需配置识别超时和安全边界。"
+      },
+      {
+        "name": "唤醒相似词",
+        "type": "边界",
+        "required": "可选",
+        "support_level": "L2",
+        "current_entry": "",
+        "gap": "可沉淀方案和脚本骨架，但需要正式语料、阈值、配置入口或声场参数。"
+      },
+      {
+        "name": "唤醒反集",
+        "type": "边界",
+        "required": "可选",
+        "support_level": "L2",
+        "current_entry": "",
+        "gap": "可沉淀方案和脚本骨架，但需要正式语料、阈值、配置入口或声场参数。"
+      },
+      {
+        "name": "打断唤醒",
+        "type": "专项",
+        "required": "可选",
+        "support_level": "L1",
+        "current_entry": "wake_interrupt",
+        "gap": "已有自播前置测量和窗口注入，正式口径需确认。"
+      },
+      {
+        "name": "响应时间",
+        "type": "耗时",
+        "required": "可选",
+        "support_level": "L1",
+        "current_entry": "wake_latency_smoke / command latency profile",
+        "gap": "可小样本统计，正式阈值和声学起点需确认。"
+      },
+      {
+        "name": "连续唤醒",
+        "type": "稳定性",
+        "required": "可选",
+        "support_level": "L1",
+        "current_entry": "continuous_wake_smoke",
+        "gap": "可稳定性 smoke/压测。"
+      },
+      {
+        "name": "冷唤醒测试",
+        "type": "稳定性",
+        "required": "可选",
+        "support_level": "L1/L2",
+        "current_entry": "",
+        "gap": "可先沉淀方案，用例执行需要补充项目资料或 oracle。"
+      },
+      {
+        "name": "高低音量交替唤醒",
+        "type": "稳定性",
+        "required": "可选",
+        "support_level": "L2",
+        "current_entry": "",
+        "gap": "可沉淀方案和脚本骨架，但需要正式语料、阈值、配置入口或声场参数。"
+      },
+      {
+        "name": "随机间隔唤醒",
+        "type": "稳定性",
+        "required": "可选",
+        "support_level": "L1",
+        "current_entry": "random_interval_wake_smoke",
+        "gap": "可随机间隔压测，需轮次和分布。"
+      },
+      {
+        "name": "多唤醒词唤醒",
+        "type": "专项",
+        "required": "可选",
+        "support_level": "L2",
+        "current_entry": "",
+        "gap": "可沉淀方案和脚本骨架，但需要正式语料、阈值、配置入口或声场参数。"
+      },
+      {
+        "name": "多唤醒词切换",
+        "type": "专项",
+        "required": "可选",
+        "support_level": "L2",
+        "current_entry": "",
+        "gap": "可沉淀方案和脚本骨架，但需要正式语料、阈值、配置入口或声场参数。"
+      },
+      {
+        "name": "DOA 唤醒",
+        "type": "专项",
+        "required": "可选",
+        "support_level": "L3",
+        "current_entry": "",
+        "gap": "需要物理场景、设备组网、角度/距离/人群/低功耗 rig 或正式样本。"
+      },
+      {
+        "name": "分布式/唯一唤醒",
+        "type": "专项",
+        "required": "可选",
+        "support_level": "L3",
+        "current_entry": "",
+        "gap": "需要物理场景、设备组网、角度/距离/人群/低功耗 rig 或正式样本。"
+      },
+      {
+        "name": "低功耗唤醒",
+        "type": "专项",
+        "required": "可选",
+        "support_level": "L3",
+        "current_entry": "",
+        "gap": "需要物理场景、设备组网、角度/距离/人群/低功耗 rig 或正式样本。"
+      },
+      {
+        "name": "变换位置唤醒",
+        "type": "主观",
+        "required": "可选",
+        "support_level": "L3",
+        "current_entry": "",
+        "gap": "需要物理场景、设备组网、角度/距离/人群/低功耗 rig 或正式样本。"
+      },
+      {
+        "name": "不同人群唤醒",
+        "type": "主观",
+        "required": "可选",
+        "support_level": "L3",
+        "current_entry": "",
+        "gap": "需要物理场景、设备组网、角度/距离/人群/低功耗 rig 或正式样本。"
+      }
+    ],
+    "命令词": [
+      {
+        "name": "基础命令词识别率",
+        "type": "基础",
+        "required": "必填",
+        "support_level": "L0",
+        "current_entry": "basic_command_recognition",
+        "gap": "可读命令词文件执行，正式 oracle/阈值需完善。"
+      },
+      {
+        "name": "全命令覆盖",
+        "type": "覆盖",
+        "required": "必填",
+        "support_level": "L1",
+        "current_entry": "requirement_command_smoke / coverage check",
+        "gap": "可从需求抽取覆盖，权威全集需确认。"
+      },
+      {
+        "name": "命令词反集误识别",
+        "type": "边界",
+        "required": "可选",
+        "support_level": "L2",
+        "current_entry": "",
+        "gap": "可沉淀方案和脚本骨架，但需要正式语料、阈值、配置入口或声场参数。"
+      },
+      {
+        "name": "命令词集外误识别",
+        "type": "边界",
+        "required": "可选",
+        "support_level": "L2",
+        "current_entry": "",
+        "gap": "可沉淀方案和脚本骨架，但需要正式语料、阈值、配置入口或声场参数。"
+      },
+      {
+        "name": "短词/长词/数字类指令",
+        "type": "专项",
+        "required": "可选",
+        "support_level": "L1/L2",
+        "current_entry": "",
+        "gap": "可先沉淀方案，用例执行需要补充项目资料或 oracle。"
+      },
+      {
+        "name": "噪声误识别",
+        "type": "边界",
+        "required": "可选",
+        "support_level": "L2",
+        "current_entry": "",
+        "gap": "可沉淀方案和脚本骨架，但需要正式语料、阈值、配置入口或声场参数。"
+      },
+      {
+        "name": "自激",
+        "type": "边界",
+        "required": "可选",
+        "support_level": "L1/L2",
+        "current_entry": "",
+        "gap": "可先沉淀方案，用例执行需要补充项目资料或 oracle。"
+      },
+      {
+        "name": "识别打断",
+        "type": "专项",
+        "required": "可选",
+        "support_level": "L1",
+        "current_entry": "command_interrupt",
+        "gap": "已有自播窗口命令注入，需确认模式策略。"
+      },
+      {
+        "name": "离线 oneshot",
+        "type": "专项",
+        "required": "可选",
+        "support_level": "L1",
+        "current_entry": "offline_oneshot_matrix",
+        "gap": "已有间隔矩阵入口，需正式间隔/语料。"
+      },
+      {
+        "name": "停顿/连读/语速",
+        "type": "主观",
+        "required": "可选",
+        "support_level": "L1/L2",
+        "current_entry": "",
+        "gap": "可先沉淀方案，用例执行需要补充项目资料或 oracle。"
+      },
+      {
+        "name": "角度/距离/姿态变化",
+        "type": "主观",
+        "required": "可选",
+        "support_level": "L3",
+        "current_entry": "",
+        "gap": "需要物理场景、设备组网、角度/距离/人群/低功耗 rig 或正式样本。"
+      },
+      {
+        "name": "响应时间",
+        "type": "耗时",
+        "required": "可选",
+        "support_level": "L1",
+        "current_entry": "wake_latency_smoke / command latency profile",
+        "gap": "可小样本统计，正式阈值和声学起点需确认。"
+      }
+    ],
+    "自由说": [
+      {
+        "name": "全意图覆盖",
+        "type": "覆盖",
+        "required": "必填",
+        "support_level": "L1/L2",
+        "current_entry": "requirement_free_speech_smoke",
+        "gap": "可做需求抽取和小样本 smoke，正式 oracle/词表需确认。"
+      },
+      {
+        "name": "高频说法识别率",
+        "type": "基础",
+        "required": "必填",
+        "support_level": "L1/L2",
+        "current_entry": "requirement_free_speech_smoke",
+        "gap": "可做需求抽取和小样本 smoke，正式 oracle/词表需确认。"
+      },
+      {
+        "name": "非高频说法识别率",
+        "type": "基础",
+        "required": "必填",
+        "support_level": "L1/L2",
+        "current_entry": "requirement_free_speech_smoke",
+        "gap": "可做需求抽取和小样本 smoke，正式 oracle/词表需确认。"
+      },
+      {
+        "name": "纯 slot 说法",
+        "type": "基础",
+        "required": "必填",
+        "support_level": "L1/L2",
+        "current_entry": "requirement_free_speech_smoke",
+        "gap": "可做需求抽取和小样本 smoke，正式 oracle/词表需确认。"
+      },
+      {
+        "name": "全量覆盖率测试",
+        "type": "覆盖",
+        "required": "可选",
+        "support_level": "L1/L2",
+        "current_entry": "",
+        "gap": "可先沉淀方案，用例执行需要补充项目资料或 oracle。"
+      },
+      {
+        "name": "前缀/后缀/插入语",
+        "type": "专项",
+        "required": "可选",
+        "support_level": "L1/L2",
+        "current_entry": "",
+        "gap": "可先沉淀方案，用例执行需要补充项目资料或 oracle。"
+      },
+      {
+        "name": "口语化命令表达",
+        "type": "主观",
+        "required": "可选",
+        "support_level": "L1/L2",
+        "current_entry": "requirement_free_speech_smoke",
+        "gap": "可做需求抽取和小样本 smoke，正式 oracle/词表需确认。"
+      },
+      {
+        "name": "自由说反集",
+        "type": "边界",
+        "required": "可选",
+        "support_level": "L2",
+        "current_entry": "",
+        "gap": "可沉淀方案和脚本骨架，但需要正式语料、阈值、配置入口或声场参数。"
+      },
+      {
+        "name": "口音/语速/人群",
+        "type": "专项",
+        "required": "可选",
+        "support_level": "L2",
+        "current_entry": "",
+        "gap": "可沉淀方案和脚本骨架，但需要正式语料、阈值、配置入口或声场参数。"
+      },
+      {
+        "name": "主观自由发挥",
+        "type": "主观",
+        "required": "可选",
+        "support_level": "L1/L2",
+        "current_entry": "requirement_free_speech_smoke",
+        "gap": "可做需求抽取和小样本 smoke，正式 oracle/词表需确认。"
+      },
+      {
+        "name": "响应时间",
+        "type": "耗时",
+        "required": "可选",
+        "support_level": "L1",
+        "current_entry": "wake_latency_smoke / command latency profile",
+        "gap": "可小样本统计，正式阈值和声学起点需确认。"
+      }
+    ],
+    "在线识别": [
+      {
+        "name": "半双工识别",
+        "type": "基础",
+        "required": "必填",
+        "support_level": "L0/L1",
+        "current_entry": "half_duplex_recognition",
+        "gap": "已有 tag/flow，配置入口与播报中策略需按项目确认。"
+      },
+      {
+        "name": "全双工识别",
+        "type": "专项",
+        "required": "可选",
+        "support_level": "L0/L1",
+        "current_entry": "full_duplex_recognition",
+        "gap": "已有 tag/task smoke，需扩展完整用例矩阵。"
+      },
+      {
+        "name": "方言/口音在线识别",
+        "type": "专项",
+        "required": "可选",
+        "support_level": "L2",
+        "current_entry": "",
+        "gap": "可沉淀方案和脚本骨架，但需要正式语料、阈值、配置入口或声场参数。"
+      },
+      {
+        "name": "在线噪声误识别",
+        "type": "边界",
+        "required": "可选",
+        "support_level": "L2",
+        "current_entry": "",
+        "gap": "可沉淀方案和脚本骨架，但需要正式语料、阈值、配置入口或声场参数。"
+      },
+      {
+        "name": "全双工识别打断场景",
+        "type": "专项",
+        "required": "可选",
+        "support_level": "L1",
+        "current_entry": "full_duplex_recognition + wake_interrupt/command_interrupt",
+        "gap": "可组合验证，需媒体/TTS oracle。"
+      },
+      {
+        "name": "在线 oneshot",
+        "type": "专项",
+        "required": "可选",
+        "support_level": "L1",
+        "current_entry": "online_oneshot_matrix",
+        "gap": "已有 tag，依赖联网和在线 oracle。"
+      },
+      {
+        "name": "VAD 专项",
+        "type": "专项",
+        "required": "可选",
+        "support_level": "L1",
+        "current_entry": "online_vad_special_smoke",
+        "gap": "已有在线 VAD smoke，正式截断规则需确认。"
+      },
+      {
+        "name": "弱网稳定性",
+        "type": "稳定性",
+        "required": "可选",
+        "support_level": "L1/L2",
+        "current_entry": "network_recovery_basic / online_mixed_stress",
+        "gap": "可做 smoke/压测，正式网络参数和云端指标需确认。"
+      },
+      {
+        "name": "云端服务稳定性",
+        "type": "稳定性",
+        "required": "可选",
+        "support_level": "L1/L2",
+        "current_entry": "network_recovery_basic / online_mixed_stress",
+        "gap": "可做 smoke/压测，正式网络参数和云端指标需确认。"
+      },
+      {
+        "name": "在线响应时间",
+        "type": "耗时",
+        "required": "可选",
+        "support_level": "L1/L2",
+        "current_entry": "network_recovery_basic / online_mixed_stress",
+        "gap": "可做 smoke/压测，正式网络参数和云端指标需确认。"
+      }
+    ],
+    "误唤醒": [
+      {
+        "name": "安静误唤醒",
+        "type": "基础",
+        "required": "必填",
+        "support_level": "L1",
+        "current_entry": "false_wake_quiet_basic",
+        "gap": "可短时/长期监听，正式时长和阈值需确认。"
+      },
+      {
+        "name": "人声噪误唤醒",
+        "type": "基础",
+        "required": "必填",
+        "support_level": "L1/L2",
+        "current_entry": "false_wake_human_speech_smoke",
+        "gap": "可合成 smoke，正式人声噪素材需提供。"
+      },
+      {
+        "name": "非人声噪误唤醒",
+        "type": "基础",
+        "required": "必填",
+        "support_level": "L1/L2",
+        "current_entry": "false_wake_white_noise_smoke",
+        "gap": "可白噪 smoke，正式噪声/SNR需提供。"
+      },
+      {
+        "name": "多点噪误唤醒",
+        "type": "专项",
+        "required": "可选",
+        "support_level": "L3",
+        "current_entry": "",
+        "gap": "需要物理场景、设备组网、角度/距离/人群/低功耗 rig 或正式样本。"
+      },
+      {
+        "name": "高/低灵敏度误唤醒",
+        "type": "专项",
+        "required": "可选",
+        "support_level": "L2",
+        "current_entry": "",
+        "gap": "可沉淀方案和脚本骨架，但需要正式语料、阈值、配置入口或声场参数。"
+      },
+      {
+        "name": "整机长期挂机",
+        "type": "稳定性",
+        "required": "可选",
+        "support_level": "L1/L2",
+        "current_entry": "",
+        "gap": "可先沉淀方案，用例执行需要补充项目资料或 oracle。"
+      }
+    ]
+  },
+  "packs": {
+    "first_wake": {
+      "file": "packs/first-wake.md",
+      "items": [
+        "首次唤醒",
+        "连续唤醒",
+        "随机间隔唤醒",
+        "响应时间"
+      ],
+      "entrypoints": [
+        "first_wake",
+        "first_wake.example.json",
+        "run_wake_stress.py"
+      ],
+      "status": "available"
+    },
+    "recognition_mode_wake": {
+      "file": "packs/recognition-mode-wake.md",
+      "items": [
+        "识别模式唤醒"
+      ],
+      "entrypoints": [
+        "recognition_mode_wake"
+      ],
+      "status": "available"
+    },
+    "half_duplex": {
+      "file": "packs/half-duplex.md",
+      "items": [
+        "半双工识别"
+      ],
+      "entrypoints": [
+        "half_duplex_recognition",
+        "set_half_duplex"
+      ],
+      "status": "available_with_project_config"
+    },
+    "online_full_duplex": {
+      "file": "packs/online-full-duplex.md",
+      "items": [
+        "全双工识别",
+        "全双工识别打断场景",
+        "在线响应时间"
+      ],
+      "entrypoints": [
+        "full_duplex_recognition",
+        "online_full_duplex*.example.json",
+        "online_full_duplex_fd002_fd012.scene.example.json"
+      ],
+      "status": "available_with_project_config"
+    },
+    "basic_command": {
+      "file": "packs/basic-command.md",
+      "items": [
+        "基础命令词识别率",
+        "全命令覆盖",
+        "离线 oneshot",
+        "识别打断"
+      ],
+      "entrypoints": [
+        "basic_command_recognition",
+        "basic_command.example.json"
+      ],
+      "status": "available"
+    },
+    "online_mixed_stress": {
+      "file": "packs/online-mixed-stress.md",
+      "items": [
+        "云端服务稳定性",
+        "弱网稳定性",
+        "在线响应时间"
+      ],
+      "entrypoints": [
+        "online_mixed_stress.example.json",
+        "run_online_mixed_stress.py",
+        "analyze_online_stress.py"
+      ],
+      "status": "available_with_project_config"
+    },
+    "false_wake": {
+      "file": "packs/false-wake.md",
+      "items": [
+        "安静误唤醒",
+        "人声噪误唤醒",
+        "非人声噪误唤醒",
+        "整机长期挂机"
+      ],
+      "entrypoints": [
+        "false_wake_quiet_basic",
+        "false_wake_human_speech_smoke",
+        "false_wake_white_noise_smoke"
+      ],
+      "status": "available_with_test_materials"
+    }
+  }
+}

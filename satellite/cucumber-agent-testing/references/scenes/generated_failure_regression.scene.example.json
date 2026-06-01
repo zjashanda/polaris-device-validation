@@ -1,0 +1,11 @@
+{
+  "schema": "polaris.scene_graph.v1",
+  "scene_id": "generated_failure_regression_approved",
+  "strategy_name": "failure_regression_reviewed",
+  "seed": 0,
+  "constraints": [
+    "task_examples_exist",
+    "reviewed_failure_candidates_only"
+  ],
+  "nodes": []
+}

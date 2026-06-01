@@ -1,0 +1,62 @@
+{
+  "schema": "polaris.cucumber.task.v1",
+  "task_id": "half_duplex_recognition_smoke",
+  "description": "半双工识别 smoke：切半双工/确认半双工后，执行唤醒+命令识别并校验播报窗口策略。",
+  "validation_pack": {
+    "pack": "docs/wiki/voice-validation/packs/half-duplex.md",
+    "case_ids": [
+      "HD-001"
+    ],
+    "linked_tag": "half_duplex_recognition"
+  },
+  "scenario": {
+    "tag": "half_duplex_recognition"
+  },
+  "runner": {
+    "mode": "dry-run",
+    "compile_first": true,
+    "strict_compile": true,
+    "feature": "satellite/cucumber-agent-testing/features/polaris_voice_core.feature",
+    "mapping": "satellite/cucumber-agent-testing/references/voice_core_mapping.json"
+  },
+  "environment": {
+    "env_file": "polaris.local.json"
+  },
+  "inputs": {
+    "command_text": "打开空调"
+  },
+  "execution": {
+    "observe_ms": 30000,
+    "manage_session": true,
+    "runtime_strict": true,
+    "allow_side_effects": false,
+    "half_duplex_timeout_s": 15,
+    "adapter_flows": {
+      "pre": [
+        {
+          "flow": "set_half_duplex",
+          "when": "always",
+          "required": false,
+          "params": {
+            "half_duplex_timeout_s": "{half_duplex_timeout_s}"
+          }
+        }
+      ]
+    }
+  },
+  "expected": {
+    "result_policy": "PASS/FAIL/BLOCKED/TIMING_AMBIGUOUS 按 assertion registry 和 runtime sidecar 统一归因。",
+    "failure_attribution": [
+      "播放或声卡不可用：BLOCKED，归因到测试环境/播放链路。",
+      "串口端口打不开或日志静默：BLOCKED，归因到 logger/端口占用/接线。",
+      "前置在线、模式切换或云控失败：BLOCKED 或云控前置问题，不直接判固件 FAIL。",
+      "前置均满足但业务事件缺失：FAIL，归因到固件/ASR/设备行为。",
+      "需求口径不明确或注入落在临界时序：TIMING_AMBIGUOUS/REQUIREMENT_REVIEW。"
+    ],
+    "summary": "半双工下唤醒后命令可识别，播报中不允许的输入不能被当作命令失败。"
+  },
+  "policy": {
+    "max_retries": 0,
+    "retry_blocked": false
+  }
+}

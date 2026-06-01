@@ -1,0 +1,35 @@
+﻿{
+  "schema": "polaris.command-control-diagnosis.task.v1",
+  "task_id": "ws63_com20_coverage_check",
+  "description": "WS63 COM20/upper 补验证：小规模矩阵验证 AP+upper 覆盖，COM20 不可用时必须显式 COVERAGE_DEGRADED 或 BLOCKED。",
+  "runner": {
+    "type": "command_control_diagnosis",
+    "script": "satellite/cucumber-agent-testing/scripts/run_command_control_diagnosis.py",
+    "matrix_file": "satellite/cucumber-agent-testing/references/diagnosis_matrices/venusws63_com20_supplement.example.json"
+  },
+  "environment": {
+    "env_file": "satellite/cucumber-agent-testing/debug/goal_command_beep/20260528_201015/envs/venusws63.env.json",
+    "project_id": "venusws63"
+  },
+  "serial_coverage": {
+    "full_roles": ["ap", "upper"],
+    "minimum_roles": ["ap"],
+    "default_expected_result_if_upper_busy": "COVERAGE_DEGRADED",
+    "required_serial_roles_for_strict_upper_check": "ap,upper"
+  },
+  "expected": {
+    "summary": "不重跑 343 条；只验证首次唤醒、空调开关/模式/查询、音量、新闻/音乐对照和 TTS 空 URL 归因。",
+    "must_report": [
+      "serial_coverage.status",
+      "serial_coverage.unavailable_ports",
+      "chain_segments.recognition",
+      "chain_segments.control_reply",
+      "chain_segments.tts_response",
+      "chain_segments.actuator_feedback"
+    ]
+  },
+  "command_examples": {
+    "degraded_allowed": "python satellite/cucumber-agent-testing/scripts/run_command_control_diagnosis.py --allow-side-effects --env-file satellite/cucumber-agent-testing/debug/goal_command_beep/20260528_201015/envs/venusws63.env.json --matrix-file satellite/cucumber-agent-testing/references/diagnosis_matrices/venusws63_com20_supplement.example.json --out-root satellite/cucumber-agent-testing/debug/ws63_com20_supplement",
+    "strict_upper_required": "python satellite/cucumber-agent-testing/scripts/run_command_control_diagnosis.py --allow-side-effects --env-file satellite/cucumber-agent-testing/debug/goal_command_beep/20260528_201015/envs/venusws63.env.json --matrix-file satellite/cucumber-agent-testing/references/diagnosis_matrices/venusws63_com20_supplement.example.json --required-serial-roles ap,upper --out-root satellite/cucumber-agent-testing/debug/ws63_com20_supplement_strict"
+  }
+}

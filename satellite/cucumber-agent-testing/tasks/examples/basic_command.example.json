@@ -1,0 +1,36 @@
+﻿{
+  "schema": "polaris.cucumber.task.v1",
+  "task_id": "basic_command_smoke",
+  "description": "基础命令词识别：对命令词文件中的语句执行先唤醒再识别。",
+  "scenario": {
+    "tag": "basic_command_recognition"
+  },
+  "runner": {
+    "mode": "dry-run",
+    "compile_first": false,
+    "feature": "satellite/cucumber-agent-testing/features/polaris_voice_core.feature",
+    "mapping": "satellite/cucumber-agent-testing/references/voice_core_mapping.json"
+  },
+  "environment": {
+    "env_file": "polaris.local.json"
+  },
+  "inputs": {
+    "command_file": "docs/fa2命令词.txt",
+    "command_limit": 20
+  },
+  "execution": {
+    "observe_ms": 15000,
+    "manage_session": true,
+    "allow_side_effects": false
+  },
+  "expected": {
+    "summary": "每条命令词应输出唤醒、ASR 或命令关键词闭环证据。",
+    "failure_attribution": [
+      "某条命令未播放：测试脚本/音频合成问题",
+      "未唤醒：唤醒链路问题，不能直接判命令词失败",
+      "已唤醒但无 ASR/命令证据：识别或固件行为问题",
+      "期望 intent 不明确：需求/oracle 问题"
+    ]
+  }
+}
+
