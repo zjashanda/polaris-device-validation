@@ -111,6 +111,25 @@ Polaris 用来做嵌入式语音设备的本地真机验证，核心是把“用
 4. 真机执行必须显式 `--allow-side-effects`，避免误占串口、声卡、热点或电源控制。
 5. 运行结果、debug、cache、result、`polaris.local.json` 不提交 git。
 
+## Git 同步颗粒度规则
+
+- 同步到 git 时必须以“其他 PC 拉取后能直接使用当前 skill”为标准，不能只提交单个脚本或单个说明文件。
+- 一个功能变更需要同时检查并按需提交：`SKILL.md`、README、`orion.skilltest.json`、task 示例、registry/adapter/runtime 代码、配置模板、项目知识库/Wiki、依赖脚本和必要测试数据。
+- 新增 zhsh 能力模块时，至少要同步 capability profile、自然语言用例模板、默认 task/runner 入口、前置依赖、副作用/风险口径和路径校验结果。
+- 新增或调整真机执行能力时，必须同步配置模板和文档说明；不要只提交本机 `polaris.local.json`，应更新 `polaris.local.example.json` 或对应 `.example.json`。
+- 提交前必须做最小可用性校验：JSON 能解析、引用路径存在、关键 Python 文件能 `py_compile`，必要时执行 dry-run；校验结果同步到 `plan.md`，但 `plan.md` 本身不提交。
+- 禁止把运行产物、debug、cache、临时文件、真实本机配置、token 或设备私密账号提交到 git。
+- 如果发现当前工作目录不是 git 仓库，必须先定位真正的 skill 发布仓库；不要在项目运行目录临时 `git init` 后提交，避免其他 PC 拉错仓库。
+
+## 文件编码与乱码校验规则
+
+- 生成或修改 `SKILL.md`、README、Wiki、Markdown、JSON、YAML、配置模板和 zhsh profile 时，统一使用 UTF-8 保存；中文内容不能出现连续问号、Unicode 替换字符、常见中文乱码字样或典型 mojibake。
+- 提交前必须至少用 Python 以 `encoding="utf-8"` 读取目标文件，确认能正常解析/读取；JSON 文件还必须 `json.load` 成功。
+- 对中文可展示文件必须做乱码特征扫描：检查是否包含 Unicode replacement character、异常密集问号、常见中文乱码字样，以及 UTF-8 被错误按 ANSI/GBK 展示的特征片段。
+- 如果终端显示乱码但 Python UTF-8 读取正常，要以字节和 UTF-8 解码校验为准；如果文件内容本身已经损坏，必须先恢复为正常中文再提交。
+- 从脚本批量生成中文文件时，脚本源码、输出文件和校验脚本都要明确 UTF-8；不要依赖 PowerShell 当前代码页隐式编码。
+- git 同步前的完整性检查必须覆盖编码校验结果，避免其他 PC 拉取后 `SKILL.md`、`orion.skilltest.json` 或文档无法正常阅读。
+
 ## 主要入口
 
 - 任务入口：`satellite/cucumber-agent-testing/scripts/run_task.py`
@@ -123,6 +142,15 @@ Polaris 用来做嵌入式语音设备的本地真机验证，核心是把“用
 - 压测分析：`satellite/cucumber-agent-testing/scripts/analyze_online_stress.py`
 - 新资料学习入口：`docs/intake/<project_id>/<YYYYMMDD_topic>/learning_manifest.json`
 - 长期 Wiki 知识库：`docs/wiki/`，其中 `docs/wiki/voice-validation/` 保存测试方法、断言归因和验证包。
+
+## zhsh / Orion SkillTest Profile 同步规则
+
+- 当前 skill 给 zhsh 平台暴露结构化测试能力的入口文件是根目录 `orion.skilltest.json`，平台优先通过该文件展示“功能模块 -> 测试方案 -> 自然语言用例 -> 执行/证据”。
+- 只要新增、删除、重命名或调整可平台化的功能模块、task 示例、执行入口、前置依赖、副作用、风险等级、用例模板或证据字段，必须同步更新 `orion.skilltest.json`，不能只改 `SKILL.md`、README、plan 或 Wiki。
+- `orion.skilltest.json` 的 `capabilities` 只放用户可选择的设备/项目测试项；快照、Event Runtime、报告汇总、coverage 等属于 skill 内部技术模块，不是 WS63 项目功能，不能作为独立 capability 暴露给 zhsh，也不要作为用户侧显式 `evidence`/`test_cases` 项展示；如需使用，仅在 skill 内部断言、归因和问题定位链路中保留。
+- 基础命令词、在线问答、媒体、云控、烧录等模块如果只是更新语料/命令词表，也要检查 `orion.skilltest.json` 中对应 capability 的 `requires`、`test_cases`、`blocked_conditions` 和 `side_effects` 是否需要同步。
+- 更新 `orion.skilltest.json` 后必须至少执行 JSON 解析校验，例如 `python -c "import json; json.load(open('orion.skilltest.json', encoding='utf-8'))"`；如字段结构有调整，还要和 `D:\revolution4s\zhsh\docs\orion-skilltest-profile-framework.md` 的 profile 规范对齐。
+- 对 zhsh 展示的能力只写已经有明确方案、用例口径或 runner 入口的模块；缺少真机前置或 oracle 的能力可以暴露为 plan-only/dry-run，但不能在 profile 中伪造 execute PASS 能力。
 
 ## 当前支持方向
 
@@ -153,6 +181,20 @@ WS63 最新专项结论：
 - online VAD 12/12 FAIL，归因 `wake_precondition_for_online_vad`；offline one-shot 修复 runtime 假阴性后真机复跑 PASS。
 - interrupt 当前为 `BLOCKED/TIMING_AMBIGUOUS`，因为注入未稳定命中自播保护窗口；外部 Wi-Fi 断网恢复为 `BLOCKED_NETWORK_NOT_CONTROLLABLE`。
 - 最终快照 coverage=1.0，unknown_fields=[]，说明快照框架可用，但不代表所有业务功能 PASS。
+
+## 2026-06-02 WS63 自动烧录口径
+
+- 当前 WS63 串口必须以 `polaris.local.json` 和用户现场确认为准：AP `COM20@921600`、upper/asr `COM17@921600`、control `COM19@115200`。
+- `tools/burn/VenusA+WS63/` 是组合烧录工具目录，固件样本位于 `tools/burn/ws63_fw/`；但旧 `COM12/COM13/COM11` 属于 WB01/历史组合拓扑，不能作为当前 WS63 默认烧录串口。
+- 默认 WS63-only 入口是 `run.bat` / `run_ws63_only.bat`，当前已改为 control `COM19` + WS63 burn/log `COM17`；如现场确认 BurnTool 应走 AP 口，则显式设置 `WS63_BURN_PORT=COM20` 和 `WS63_VERIFY_PORT=COM20`。
+- 完整 VenusA/CSK + WS63 入口是 `run_full_venusa_ws63.bat`，必须显式设置当前真实 `VENUSA_PORT`，脚本不再默认 `COM13`。
+- VenusA/CSK 烧录必须解析 `Uart_Burn_Tool` 输出，出现 `CONNECT ROM FAILED`、`HEX SEGMENT x/y FAILED`、`MD5 FORMAT ERROR`、`RESPONSE OVERTIME` 等失败 marker 时立即阻断，不能因进程返回码为 0 继续烧 WS63。
+- WS63 烧录必须同时看 BurnTool `optLog_*.txt` 的 `烧写结果：成功` 和设备重启日志里的 `ListenAI Build Info`；BuildInfo 需匹配固件包 `BuildInfo.txt`/`Other/WS63_build_*.log` 中的版本与时间。
+- 每次自动烧录默认生成 artifact：`firmware_metadata.json`、console log、WS63 optLog 副本、BuildInfo/Project Version 校验、`burn_summary.json` 和 `burn_summary.md`；没有这些证据不要报告 PASS。
+- 2026-06-02 使用旧 `COM12/COM13/COM11` 得到的 WS63 `.00.01`/`.00.02` 烧录结果只归档为历史/组合拓扑证据；当前 WS63 `COM20/COM17/COM19` 已补做 `.00.01` WS63-only、`.00.02` WS63-only、恢复 `.00.01` 和 VenusA/CSK + WS63 full-burn 真机验证，烧录与版本校验均 PASS。
+- full-burn 已验证端口组合：VenusA/AP `COM20@3000000/921600`、WS63 BurnTool/verify `COM17@1000000/921600`、control `COM19@115200`；烧录后仍需恢复 `env=1/UAT`、云控基线和基础功能 smoke。
+- VenusA 失败阻断逻辑已用真机验证：`HEX SEGMENT 3/5 FAILED` 后脚本退出且不继续进入 WS63 BurnTool；但该动作会真实改写 VenusA flash，曾导致旧 COM13 设备侧持续 `Exception on CORE0 / Illegal instruction`，后续不要把“人为制造 VenusA 失败”当作低风险 smoke。
+- 如果 VenusA/CSK 失败后需要恢复，不要盲目反复全包烧录；先检查 boot/reset 硬件时序和专用烧录夹具，再按 `docs/knowledge/venusws63/ws63-auto-burn.md` 留证处理。
 
 ## 常用命令
 

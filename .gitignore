@@ -6,6 +6,11 @@ result/
 cache/
 outputs/
 _runtime/
+tools/burn/VenusA+WS63/artifacts/
+tools/burn/VenusA+WS63/BurnTool_Gold/
+tools/burn/VenusA+WS63/BurnTool_Gold/optLog/
+tools/burn/VenusA+WS63/VenusA_Burn/
+tools/burn/ws63_fw/
 
 # Local machine config
 plan.md

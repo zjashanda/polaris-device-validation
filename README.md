@@ -1,5 +1,13 @@
 # Polaris Voice Validation Skill
 
+## 最新同步入口
+
+- zhsh / Orion 平台能力描述文件：`orion.skilltest.json`；新增或调整可平台化测试模块时必须同步更新。
+- 本机配置入口：复制 `polaris.local.example.json` 为 `polaris.local.json`，再按现场串口、声卡、Wi-Fi 和云控环境调整；真实本机配置不提交 git。
+- 当前 WS63 默认串口：AP `COM20@921600`、upper/asr `COM17@921600`、control `COM19@115200`。
+- WS63 自动烧录入口：`tools/burn/VenusA+WS63/auto_burn.py`；烧录工具和固件包属于外部受控依赖，拉仓库后需按 `tools/burn/VenusA+WS63/README.md` 准备。
+- 快照、Event Runtime、coverage 是 skill 内部断言和定位模块，不作为 zhsh 用户侧独立功能模块暴露。
+
 Polaris 是一个面向嵌入式语音设备的本地真机验证 skill。当前仓库已经切换到新的 **Cucumber/BDD + Event Runtime** 方案：用 Cucumber 描述测试意图，用固定 runner 执行动作，用 Event Runtime 把串口、声卡、云控和执行产物统一转换成事件，再由确定性的断言逻辑判断 PASS/FAIL/BLOCKED。
 
 本仓库不要求每次执行时联网或依赖大模型生成脚本。新用例只要进入已有的 step/action/assertion registry，后续就可以脱离大模型稳定执行。

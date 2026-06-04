@@ -1,0 +1,1612 @@
+{
+  "schema": "orion.skilltest.v1",
+  "skill_id": "polaris-device-validation",
+  "name": "Polaris Device Validation",
+  "summary": "面向 WS63/WB01 语音设备的功能验证、方案生成、自然语言用例、真机执行和证据归档。",
+  "version": "2.1.0",
+  "flow": [
+    "选择 Agent 节点",
+    "复制 polaris.local.example.json 并生成本机 polaris.local.json",
+    "选择一个或多个待测功能模块",
+    "生成测试方案和自然语言用例",
+    "确认串口、声卡、云控环境和副作用",
+    "以 plan-only、dry-run 或 execute 模式执行",
+    "收集串口日志、结构化结果和报告"
+  ],
+  "call_method": "python satellite/cucumber-agent-testing/scripts/run_optimized_task.py --task <task.json> --mode <plan-only|dry-run|execute> --env-file <polaris.local.json>",
+  "required_config": [
+    "目标 Agent 在线",
+    "本机 polaris.local.json 已由示例配置复制并按现场串口调整",
+    "WS63 当前默认 AP=COM20、upper/asr=COM17、control=COM19",
+    "WB01 当前默认 AP=COM13、CP=COM14、WB01/ASR=COM11、control=COM12",
+    "播放声卡或指定 device key 可用",
+    "执行云控前必须先确认设备端环境与 API 环境一致",
+    "execute 前必须确认真实设备动作、副作用和风险"
+  ],
+  "generation": {
+    "mode": "server-llm",
+    "planner": "codex",
+    "prompt": "根据选中的功能模块、设备配置、用户补充需求和当前 skill 经验，生成测试方案与自然语言用例，并明确 PASS、FAIL、BLOCKED 和 WARN 口径。",
+    "output_schema": "orion.skilltest.plan.v1",
+    "artifacts": [
+      "plan.json",
+      "cases.json",
+      "cases.md"
+    ]
+  },
+  "capabilities": [
+    {
+      "id": "first_wake",
+      "module": "wake",
+      "name": "首次唤醒",
+      "summary": "验证设备从待机到首次唤醒的基础链路。",
+      "requirement": "确认唤醒词能触发设备，并在 AP/upper 串口形成有效唤醒事件。",
+      "logic": "播放标准唤醒音频，采集唤醒 marker、会话事件和基础健康日志。",
+      "modes": [
+        "plan-only",
+        "dry-run",
+        "execute"
+      ],
+      "recommended_mode": "dry-run",
+      "runner": "agent_shell",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/first_wake.example.json",
+      "requires": [
+        "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+        "目标设备串口可用",
+        "播放声卡可用",
+        "测试音频或 TTS 可生成"
+      ],
+      "side_effects": [
+        "播放测试音频",
+        "读取串口日志"
+      ],
+      "risk_level": "low",
+      "test_cases": [
+        {
+          "id": "first_wake_basic",
+          "title": "首次唤醒基础链路验证",
+          "objective": "确认设备在待机状态下可被标准唤醒词稳定唤醒。",
+          "preconditions": [
+            "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+            "目标设备串口可用",
+            "播放声卡可用",
+            "测试音频或 TTS 可生成"
+          ],
+          "steps": [
+            "清理上一轮日志并确认设备处于待唤醒状态。",
+            "播放标准唤醒音频。",
+            "采集 AP/upper 串口唤醒事件和会话事件。"
+          ],
+          "expected_results": [
+            "观察到一次有效唤醒事件。",
+            "唤醒后进入可识别或播报状态。",
+            "无异常重启或卡死。"
+          ],
+          "evidence": [
+            "串口窗口日志",
+            "execution_record.json 或 summary.json",
+            "Markdown 测试报告"
+          ],
+          "pass_criteria": "达到预期结果且无 reboot、crash、watchdog 或串口 reader 异常。",
+          "fail_criteria": "出现明确功能闭环失败、证据冲突或设备异常。",
+          "blocked_conditions": [
+            "串口被占用",
+            "声卡不可用",
+            "测试素材缺失",
+            "设备不在目标环境"
+          ],
+          "estimated_minutes": 3
+        }
+      ]
+    },
+    {
+      "id": "basic_command",
+      "module": "command",
+      "name": "基础命令词",
+      "summary": "验证唤醒后的基础命令词识别与设备侧响应。",
+      "requirement": "确认核心控制命令能被识别，并有设备侧响应或明确回执。",
+      "logic": "按命令词表注入语料，采集识别文本、命令 marker 和播报或状态变化。",
+      "modes": [
+        "plan-only",
+        "dry-run",
+        "execute"
+      ],
+      "recommended_mode": "dry-run",
+      "runner": "agent_shell",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/basic_command.example.json",
+      "requires": [
+        "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+        "目标设备串口可用",
+        "播放声卡可用",
+        "测试音频或 TTS 可生成"
+      ],
+      "side_effects": [
+        "播放测试音频",
+        "读取串口日志"
+      ],
+      "risk_level": "medium",
+      "test_cases": [
+        {
+          "id": "basic_command_selected",
+          "title": "基础命令词抽样验证",
+          "objective": "验证选中的基础命令词可以完成识别与响应闭环。",
+          "preconditions": [
+            "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+            "目标设备串口可用",
+            "播放声卡可用",
+            "测试音频或 TTS 可生成"
+          ],
+          "steps": [
+            "准备命令词清单。",
+            "唤醒设备后播放命令词音频。",
+            "采集识别结果、命令回调和设备响应。"
+          ],
+          "expected_results": [
+            "识别文本与目标命令一致或等价。",
+            "设备侧出现命令执行证据。",
+            "无误触发其他命令。"
+          ],
+          "evidence": [
+            "串口窗口日志",
+            "execution_record.json 或 summary.json",
+            "Markdown 测试报告"
+          ],
+          "pass_criteria": "达到预期结果且无 reboot、crash、watchdog 或串口 reader 异常。",
+          "fail_criteria": "出现明确功能闭环失败、证据冲突或设备异常。",
+          "blocked_conditions": [
+            "串口被占用",
+            "声卡不可用",
+            "测试素材缺失",
+            "设备不在目标环境"
+          ],
+          "estimated_minutes": 6
+        }
+      ]
+    },
+    {
+      "id": "recognition_mode_wake",
+      "module": "wake",
+      "name": "识别模式唤醒",
+      "summary": "验证设备处于识别模式时再次唤醒或会话衔接。",
+      "requirement": "确认识别窗口内二次唤醒不会造成会话错乱。",
+      "logic": "先进入识别模式，再注入二次唤醒音频并观察事件衔接。",
+      "modes": [
+        "plan-only",
+        "dry-run",
+        "execute"
+      ],
+      "recommended_mode": "dry-run",
+      "runner": "agent_shell",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/recognition_mode_wake.example.json",
+      "requires": [
+        "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+        "目标设备串口可用",
+        "播放声卡可用",
+        "测试音频或 TTS 可生成"
+      ],
+      "side_effects": [
+        "播放测试音频",
+        "读取串口日志"
+      ],
+      "risk_level": "medium",
+      "test_cases": [
+        {
+          "id": "recognition_mode_wake_chain",
+          "title": "识别模式二次唤醒验证",
+          "objective": "验证识别模式中的唤醒处理和会话衔接符合预期。",
+          "preconditions": [
+            "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+            "目标设备串口可用",
+            "播放声卡可用",
+            "测试音频或 TTS 可生成"
+          ],
+          "steps": [
+            "播放唤醒音频进入识别模式。",
+            "在识别窗口内再次播放唤醒音频。",
+            "观察会话 ID、唤醒事件和后续识别状态。"
+          ],
+          "expected_results": [
+            "二次唤醒有明确处理结果。",
+            "会话不会异常断裂或重复卡住。",
+            "无异常重启。"
+          ],
+          "evidence": [
+            "串口窗口日志",
+            "execution_record.json 或 summary.json",
+            "Markdown 测试报告"
+          ],
+          "pass_criteria": "达到预期结果且无 reboot、crash、watchdog 或串口 reader 异常。",
+          "fail_criteria": "出现明确功能闭环失败、证据冲突或设备异常。",
+          "blocked_conditions": [
+            "串口被占用",
+            "声卡不可用",
+            "测试素材缺失",
+            "设备不在目标环境"
+          ],
+          "estimated_minutes": 5
+        }
+      ]
+    },
+    {
+      "id": "wake_latency",
+      "module": "timing",
+      "name": "唤醒耗时",
+      "summary": "采集音频注入到串口唤醒事件之间的耗时。",
+      "requirement": "确认唤醒耗时满足项目阈值，并输出可追溯统计。",
+      "logic": "记录 audio_start 与 wake_event 时间点，计算耗时分布。",
+      "modes": [
+        "plan-only",
+        "dry-run",
+        "execute"
+      ],
+      "recommended_mode": "dry-run",
+      "runner": "agent_shell",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/wake_latency.example.json",
+      "requires": [
+        "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+        "目标设备串口可用",
+        "播放声卡可用",
+        "测试音频或 TTS 可生成"
+      ],
+      "side_effects": [
+        "播放测试音频",
+        "读取串口日志"
+      ],
+      "risk_level": "low",
+      "test_cases": [
+        {
+          "id": "wake_latency_basic",
+          "title": "基础唤醒耗时验证",
+          "objective": "计算标准唤醒音频到设备唤醒事件的耗时。",
+          "preconditions": [
+            "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+            "目标设备串口可用",
+            "播放声卡可用",
+            "测试音频或 TTS 可生成"
+          ],
+          "steps": [
+            "播放唤醒音频并记录播放起点。",
+            "采集串口 wake_event 时间。",
+            "计算耗时并和阈值比较。"
+          ],
+          "expected_results": [
+            "耗时低于配置阈值。",
+            "样本统计包含最大值、最小值和平均值。",
+            "超阈值样本有原始日志。"
+          ],
+          "evidence": [
+            "串口日志",
+            "耗时统计 JSON",
+            "Markdown 测试报告"
+          ],
+          "pass_criteria": "达到预期结果且无 reboot、crash、watchdog 或串口 reader 异常。",
+          "fail_criteria": "出现无唤醒事件、耗时超阈值或时间锚点缺失。",
+          "blocked_conditions": [
+            "串口被占用",
+            "声卡不可用",
+            "测试素材缺失",
+            "设备不在目标环境"
+          ],
+          "estimated_minutes": 4
+        }
+      ]
+    },
+    {
+      "id": "continuous_wake",
+      "module": "wake",
+      "name": "连续唤醒",
+      "summary": "验证连续多次唤醒的稳定性。",
+      "requirement": "确认设备可在连续唤醒中保持事件闭环和健康状态。",
+      "logic": "按固定间隔重复注入唤醒音频，统计每轮唤醒和异常。",
+      "modes": [
+        "plan-only",
+        "dry-run",
+        "execute"
+      ],
+      "recommended_mode": "dry-run",
+      "runner": "agent_shell",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/continuous_wake.example.json",
+      "requires": [
+        "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+        "目标设备串口可用",
+        "播放声卡可用",
+        "测试音频或 TTS 可生成"
+      ],
+      "side_effects": [
+        "播放测试音频",
+        "读取串口日志"
+      ],
+      "risk_level": "medium",
+      "test_cases": [
+        {
+          "id": "continuous_wake_small_sample",
+          "title": "连续唤醒小样本",
+          "objective": "验证连续多轮唤醒不丢事件且不引发异常。",
+          "preconditions": [
+            "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+            "目标设备串口可用",
+            "播放声卡可用",
+            "测试音频或 TTS 可生成"
+          ],
+          "steps": [
+            "设置轮次和固定间隔。",
+            "循环播放唤醒音频。",
+            "统计每轮唤醒事件、耗时和异常 marker。"
+          ],
+          "expected_results": [
+            "每轮均有明确唤醒或可解释结果。",
+            "无 crash、watchdog、串口 reader 异常。",
+            "统计结果可追溯到单轮日志。"
+          ],
+          "evidence": [
+            "串口窗口日志",
+            "execution_record.json 或 summary.json",
+            "Markdown 测试报告"
+          ],
+          "pass_criteria": "达到预期结果且无 reboot、crash、watchdog 或串口 reader 异常。",
+          "fail_criteria": "出现明确功能闭环失败、证据冲突或设备异常。",
+          "blocked_conditions": [
+            "串口被占用",
+            "声卡不可用",
+            "测试素材缺失",
+            "设备不在目标环境"
+          ],
+          "estimated_minutes": 8
+        }
+      ]
+    },
+    {
+      "id": "random_interval_wake",
+      "module": "wake",
+      "name": "随机间隔唤醒",
+      "summary": "验证不同间隔下的唤醒稳定性。",
+      "requirement": "确认短间隔、长间隔和随机间隔不会造成状态漂移。",
+      "logic": "生成随机间隔序列，执行唤醒并记录每轮结果。",
+      "modes": [
+        "plan-only",
+        "dry-run",
+        "execute"
+      ],
+      "recommended_mode": "dry-run",
+      "runner": "agent_shell",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/random_interval_wake.example.json",
+      "requires": [
+        "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+        "目标设备串口可用",
+        "播放声卡可用",
+        "测试音频或 TTS 可生成"
+      ],
+      "side_effects": [
+        "播放测试音频",
+        "读取串口日志"
+      ],
+      "risk_level": "medium",
+      "test_cases": [
+        {
+          "id": "random_interval_wake_matrix",
+          "title": "随机间隔唤醒矩阵",
+          "objective": "覆盖不同间隔组合下的唤醒稳定性。",
+          "preconditions": [
+            "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+            "目标设备串口可用",
+            "播放声卡可用",
+            "测试音频或 TTS 可生成"
+          ],
+          "steps": [
+            "生成随机间隔计划。",
+            "按计划播放唤醒音频。",
+            "统计唤醒成功率和异常分布。"
+          ],
+          "expected_results": [
+            "有效样本满足成功率要求。",
+            "异常样本有间隔、轮次和日志定位。",
+            "无设备健康异常。"
+          ],
+          "evidence": [
+            "串口窗口日志",
+            "execution_record.json 或 summary.json",
+            "Markdown 测试报告"
+          ],
+          "pass_criteria": "达到预期结果且无 reboot、crash、watchdog 或串口 reader 异常。",
+          "fail_criteria": "出现明确功能闭环失败、证据冲突或设备异常。",
+          "blocked_conditions": [
+            "串口被占用",
+            "声卡不可用",
+            "测试素材缺失",
+            "设备不在目标环境"
+          ],
+          "estimated_minutes": 10
+        }
+      ]
+    },
+    {
+      "id": "half_duplex_recognition",
+      "module": "duplex",
+      "name": "半双工验证",
+      "summary": "验证半双工配置下唤醒、识别和回复链路。",
+      "requirement": "确认半双工模式下不会出现全双工串扰类误判。",
+      "logic": "设置或确认半双工模式后执行唤醒和命令识别。",
+      "modes": [
+        "plan-only",
+        "dry-run",
+        "execute"
+      ],
+      "recommended_mode": "dry-run",
+      "runner": "agent_shell",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/half_duplex.example.json",
+      "requires": [
+        "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+        "目标设备串口可用",
+        "播放声卡可用",
+        "测试音频或 TTS 可生成",
+        "设备端 env 与 cloud.api_environment 一致",
+        "云控账号、设备授权和固件版本有效"
+      ],
+      "side_effects": [
+        "播放测试音频",
+        "读取串口日志",
+        "可能调整半双工或全双工配置"
+      ],
+      "risk_level": "medium",
+      "test_cases": [
+        {
+          "id": "half_duplex_basic",
+          "title": "半双工基础链路验证",
+          "objective": "确认半双工配置下基础语音链路稳定。",
+          "preconditions": [
+            "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+            "目标设备串口可用",
+            "播放声卡可用",
+            "测试音频或 TTS 可生成",
+            "设备端 env 与 cloud.api_environment 一致",
+            "云控账号、设备授权和固件版本有效"
+          ],
+          "steps": [
+            "通过云控或设备状态确认半双工前置。",
+            "执行唤醒和基础命令词。",
+            "观察识别、回复和超时窗口。"
+          ],
+          "expected_results": [
+            "半双工状态证据明确。",
+            "基础命令闭环成功。",
+            "无全双工连续识别串扰。"
+          ],
+          "evidence": [
+            "串口窗口日志",
+            "execution_record.json 或 summary.json",
+            "Markdown 测试报告"
+          ],
+          "pass_criteria": "达到预期结果且无 reboot、crash、watchdog 或串口 reader 异常。",
+          "fail_criteria": "出现明确功能闭环失败、证据冲突或设备异常。",
+          "blocked_conditions": [
+            "串口被占用",
+            "声卡不可用",
+            "测试素材缺失",
+            "设备不在目标环境"
+          ],
+          "estimated_minutes": 8
+        }
+      ]
+    },
+    {
+      "id": "online_full_duplex",
+      "module": "online",
+      "name": "在线全双工",
+      "summary": "验证云控环境、在线全双工配置、连续识别和响应链路。",
+      "requirement": "确认全双工在线配置生效，并能完成连续问答或命令闭环。",
+      "logic": "先过环境门禁和云控设置，再执行连续语音交互并采集云端闭环证据。",
+      "modes": [
+        "plan-only",
+        "dry-run",
+        "execute"
+      ],
+      "recommended_mode": "dry-run",
+      "runner": "agent_shell",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/online_full_duplex.example.json",
+      "requires": [
+        "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+        "目标设备串口可用",
+        "播放声卡可用",
+        "测试音频或 TTS 可生成",
+        "设备端 env 与 cloud.api_environment 一致",
+        "云控账号、设备授权和固件版本有效"
+      ],
+      "side_effects": [
+        "调用云控 API",
+        "播放在线语音",
+        "可能触发 TTS 或媒体播报"
+      ],
+      "risk_level": "high",
+      "test_cases": [
+        {
+          "id": "online_full_duplex_chain",
+          "title": "在线全双工连续交互",
+          "objective": "验证全双工模式下连续识别和响应链路。",
+          "preconditions": [
+            "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+            "目标设备串口可用",
+            "播放声卡可用",
+            "测试音频或 TTS 可生成",
+            "设备端 env 与 cloud.api_environment 一致",
+            "云控账号、设备授权和固件版本有效"
+          ],
+          "steps": [
+            "执行云控环境门禁。",
+            "设置 full-duplex=1 和目标超时。",
+            "连续注入在线问答或控制命令。",
+            "采集 ASR、TTS、媒体和设备响应。"
+          ],
+          "expected_results": [
+            "云控返回业务成功。",
+            "设备侧出现全双工状态证据。",
+            "至少一个连续交互闭环成功，异常样本有归因。"
+          ],
+          "evidence": [
+            "串口窗口日志",
+            "execution_record.json 或 summary.json",
+            "Markdown 测试报告"
+          ],
+          "pass_criteria": "达到预期结果且无 reboot、crash、watchdog 或串口 reader 异常。",
+          "fail_criteria": "出现明确功能闭环失败、证据冲突或设备异常。",
+          "blocked_conditions": [
+            "串口被占用",
+            "声卡不可用",
+            "测试素材缺失",
+            "设备不在目标环境"
+          ],
+          "estimated_minutes": 12
+        }
+      ]
+    },
+    {
+      "id": "online_vad",
+      "module": "online",
+      "name": "在线 VAD",
+      "summary": "验证在线 VAD 场景的识别窗口与超时边界。",
+      "requirement": "确认唤醒后在线 VAD 能正确打开、结束并返回识别结果。",
+      "logic": "注入唤醒和在线语料，观察 recognizer、VAD timeout、ASR 和 TTS marker。",
+      "modes": [
+        "plan-only",
+        "dry-run",
+        "execute"
+      ],
+      "recommended_mode": "dry-run",
+      "runner": "agent_shell",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/online_vad.example.json",
+      "requires": [
+        "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+        "目标设备串口可用",
+        "播放声卡可用",
+        "测试音频或 TTS 可生成",
+        "设备端 env 与 cloud.api_environment 一致",
+        "云控账号、设备授权和固件版本有效"
+      ],
+      "side_effects": [
+        "播放在线语音",
+        "读取串口日志"
+      ],
+      "risk_level": "medium",
+      "test_cases": [
+        {
+          "id": "online_vad_timeout_boundary",
+          "title": "在线 VAD 窗口验证",
+          "objective": "验证在线 VAD 的识别窗口、结束条件和超时表现。",
+          "preconditions": [
+            "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+            "目标设备串口可用",
+            "播放声卡可用",
+            "测试音频或 TTS 可生成",
+            "设备端 env 与 cloud.api_environment 一致",
+            "云控账号、设备授权和固件版本有效"
+          ],
+          "steps": [
+            "确认设备在线且环境门禁通过。",
+            "播放唤醒和在线语料。",
+            "观察 VAD 起止、ASR 返回和 TTS 播报。"
+          ],
+          "expected_results": [
+            "VAD 起止 marker 明确。",
+            "识别或超时结果与预期一致。",
+            "无长时间卡住。"
+          ],
+          "evidence": [
+            "串口窗口日志",
+            "execution_record.json 或 summary.json",
+            "Markdown 测试报告"
+          ],
+          "pass_criteria": "达到预期结果且无 reboot、crash、watchdog 或串口 reader 异常。",
+          "fail_criteria": "出现明确功能闭环失败、证据冲突或设备异常。",
+          "blocked_conditions": [
+            "串口被占用",
+            "声卡不可用",
+            "测试素材缺失",
+            "设备不在目标环境"
+          ],
+          "estimated_minutes": 8
+        }
+      ]
+    },
+    {
+      "id": "offline_oneshot_matrix",
+      "module": "oneshot",
+      "name": "离线 One-shot 矩阵",
+      "summary": "验证离线 one-shot 语料矩阵的识别和归因。",
+      "requirement": "确认唤醒词和命令词连读场景可离线识别。",
+      "logic": "按矩阵播放 one-shot 音频，统计识别文本、命令和失败原因。",
+      "modes": [
+        "plan-only",
+        "dry-run",
+        "execute"
+      ],
+      "recommended_mode": "dry-run",
+      "runner": "agent_shell",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/offline_oneshot_matrix.example.json",
+      "requires": [
+        "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+        "目标设备串口可用",
+        "播放声卡可用",
+        "测试音频或 TTS 可生成"
+      ],
+      "side_effects": [
+        "播放测试音频",
+        "读取串口日志"
+      ],
+      "risk_level": "medium",
+      "test_cases": [
+        {
+          "id": "offline_oneshot_matrix_basic",
+          "title": "离线 One-shot 矩阵抽样",
+          "objective": "验证离线 one-shot 语料在多命令矩阵中的识别效果。",
+          "preconditions": [
+            "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+            "目标设备串口可用",
+            "播放声卡可用",
+            "测试音频或 TTS 可生成"
+          ],
+          "steps": [
+            "准备 one-shot 语料矩阵。",
+            "逐条播放唤醒词加命令词音频。",
+            "采集离线识别文本和命令回调。"
+          ],
+          "expected_results": [
+            "目标命令能被识别或给出明确失败归因。",
+            "无跨样本状态污染。",
+            "矩阵结果可按语料追溯。"
+          ],
+          "evidence": [
+            "串口窗口日志",
+            "execution_record.json 或 summary.json",
+            "Markdown 测试报告"
+          ],
+          "pass_criteria": "达到预期结果且无 reboot、crash、watchdog 或串口 reader 异常。",
+          "fail_criteria": "出现明确功能闭环失败、证据冲突或设备异常。",
+          "blocked_conditions": [
+            "串口被占用",
+            "声卡不可用",
+            "测试素材缺失",
+            "设备不在目标环境"
+          ],
+          "estimated_minutes": 12
+        }
+      ]
+    },
+    {
+      "id": "online_oneshot_matrix",
+      "module": "oneshot",
+      "name": "在线 One-shot 矩阵",
+      "summary": "验证在线 one-shot 语料矩阵的识别和响应。",
+      "requirement": "确认在线链路下 one-shot 语料可进入云端识别和回复。",
+      "logic": "按矩阵播放 one-shot 在线语料，采集 ASR、TTS 和设备响应。",
+      "modes": [
+        "plan-only",
+        "dry-run",
+        "execute"
+      ],
+      "recommended_mode": "dry-run",
+      "runner": "agent_shell",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/online_oneshot_matrix.example.json",
+      "requires": [
+        "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+        "目标设备串口可用",
+        "播放声卡可用",
+        "测试音频或 TTS 可生成",
+        "设备端 env 与 cloud.api_environment 一致",
+        "云控账号、设备授权和固件版本有效"
+      ],
+      "side_effects": [
+        "播放在线语音",
+        "可能触发云端回复或媒体播报"
+      ],
+      "risk_level": "medium",
+      "test_cases": [
+        {
+          "id": "online_oneshot_matrix_basic",
+          "title": "在线 One-shot 矩阵抽样",
+          "objective": "验证在线 one-shot 语料的云端识别和响应闭环。",
+          "preconditions": [
+            "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+            "目标设备串口可用",
+            "播放声卡可用",
+            "测试音频或 TTS 可生成",
+            "设备端 env 与 cloud.api_environment 一致",
+            "云控账号、设备授权和固件版本有效"
+          ],
+          "steps": [
+            "确认网络和云控环境可用。",
+            "逐条播放 one-shot 在线语料。",
+            "采集 ASR 文本、TTS 或业务响应。"
+          ],
+          "expected_results": [
+            "目标语料至少形成可解释闭环。",
+            "失败样本区分网络、ASR、TTS 或语料问题。",
+            "无设备健康异常。"
+          ],
+          "evidence": [
+            "串口窗口日志",
+            "execution_record.json 或 summary.json",
+            "Markdown 测试报告"
+          ],
+          "pass_criteria": "达到预期结果且无 reboot、crash、watchdog 或串口 reader 异常。",
+          "fail_criteria": "出现明确功能闭环失败、证据冲突或设备异常。",
+          "blocked_conditions": [
+            "串口被占用",
+            "声卡不可用",
+            "测试素材缺失",
+            "设备不在目标环境"
+          ],
+          "estimated_minutes": 14
+        }
+      ]
+    },
+    {
+      "id": "wake_interrupt",
+      "module": "interrupt",
+      "name": "唤醒打断",
+      "summary": "验证播放或播报窗口中的唤醒打断能力。",
+      "requirement": "确认设备在播报窗口内能响应唤醒打断，并对命中窗口给出归因。",
+      "logic": "制造播放窗口，在保护窗口内外注入唤醒词并采集打断事件。",
+      "modes": [
+        "plan-only",
+        "dry-run",
+        "execute"
+      ],
+      "recommended_mode": "dry-run",
+      "runner": "agent_shell",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/wake_interrupt.example.json",
+      "requires": [
+        "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+        "目标设备串口可用",
+        "播放声卡可用",
+        "测试音频或 TTS 可生成"
+      ],
+      "side_effects": [
+        "触发播报或媒体播放",
+        "播放唤醒音频",
+        "可能打断当前播报"
+      ],
+      "risk_level": "high",
+      "test_cases": [
+        {
+          "id": "wake_interrupt_playback_window",
+          "title": "播报窗口唤醒打断",
+          "objective": "验证播放或播报过程中再次唤醒能否打断当前链路。",
+          "preconditions": [
+            "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+            "目标设备串口可用",
+            "播放声卡可用",
+            "测试音频或 TTS 可生成"
+          ],
+          "steps": [
+            "触发一段播报或媒体播放。",
+            "在目标时间点播放唤醒词。",
+            "采集播放状态、唤醒事件和打断结果。"
+          ],
+          "expected_results": [
+            "命中窗口样本有明确打断或不可打断归因。",
+            "未命中窗口样本不误判为固件失败。",
+            "无播放状态卡死。"
+          ],
+          "evidence": [
+            "串口窗口日志",
+            "execution_record.json 或 summary.json",
+            "Markdown 测试报告"
+          ],
+          "pass_criteria": "达到预期结果且无 reboot、crash、watchdog 或串口 reader 异常。",
+          "fail_criteria": "出现明确功能闭环失败、证据冲突或设备异常。",
+          "blocked_conditions": [
+            "串口被占用",
+            "声卡不可用",
+            "测试素材缺失",
+            "设备不在目标环境"
+          ],
+          "estimated_minutes": 10
+        }
+      ]
+    },
+    {
+      "id": "command_interrupt",
+      "module": "interrupt",
+      "name": "命令词打断",
+      "summary": "验证命令词对当前播报或媒体链路的打断和响应。",
+      "requirement": "确认播报窗口内命令词可被识别或给出时序归因。",
+      "logic": "在播放窗口注入命令词，观察识别文本、命令回调和播放状态变化。",
+      "modes": [
+        "plan-only",
+        "dry-run",
+        "execute"
+      ],
+      "recommended_mode": "dry-run",
+      "runner": "agent_shell",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/command_interrupt.example.json",
+      "requires": [
+        "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+        "目标设备串口可用",
+        "播放声卡可用",
+        "测试音频或 TTS 可生成"
+      ],
+      "side_effects": [
+        "触发播报或媒体播放",
+        "播放命令音频",
+        "可能改变设备播放状态"
+      ],
+      "risk_level": "high",
+      "test_cases": [
+        {
+          "id": "command_interrupt_playback_window",
+          "title": "播报窗口命令词打断",
+          "objective": "验证命令词能否打断当前播报或媒体链路。",
+          "preconditions": [
+            "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+            "目标设备串口可用",
+            "播放声卡可用",
+            "测试音频或 TTS 可生成"
+          ],
+          "steps": [
+            "触发播报或媒体。",
+            "在计划时间点播放命令词。",
+            "采集识别、命令回调、播放停止或继续证据。"
+          ],
+          "expected_results": [
+            "命令词打断结果与预期一致。",
+            "未命中时给出 TIMING_AMBIGUOUS 或 BLOCKED 归因。",
+            "无异常重启。"
+          ],
+          "evidence": [
+            "串口窗口日志",
+            "execution_record.json 或 summary.json",
+            "Markdown 测试报告"
+          ],
+          "pass_criteria": "达到预期结果且无 reboot、crash、watchdog 或串口 reader 异常。",
+          "fail_criteria": "出现明确功能闭环失败、证据冲突或设备异常。",
+          "blocked_conditions": [
+            "串口被占用",
+            "声卡不可用",
+            "测试素材缺失",
+            "设备不在目标环境"
+          ],
+          "estimated_minutes": 10
+        }
+      ]
+    },
+    {
+      "id": "network_recovery_basic",
+      "module": "network",
+      "name": "联网恢复",
+      "summary": "验证断网和恢复后的设备状态、请求和响应恢复。",
+      "requirement": "确认网络中断后设备能按预期进入未联网状态，并在恢复后重新闭环。",
+      "logic": "按可用方案控制 Wi-Fi、热点或设备侧网络配置，观察离线和恢复证据。",
+      "modes": [
+        "plan-only",
+        "dry-run",
+        "execute"
+      ],
+      "recommended_mode": "dry-run",
+      "runner": "agent_shell",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/network_recovery_basic.example.json",
+      "requires": [
+        "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+        "目标设备串口可用",
+        "播放声卡可用",
+        "测试音频或 TTS 可生成",
+        "具备至少一种可控断网方案"
+      ],
+      "side_effects": [
+        "可能断开设备网络",
+        "可能重启网络连接",
+        "可能影响同网段其他验证"
+      ],
+      "risk_level": "high",
+      "test_cases": [
+        {
+          "id": "network_recovery_wifi_or_hotspot",
+          "title": "断网恢复基础验证",
+          "objective": "验证设备断网后状态变化和恢复后的在线闭环。",
+          "preconditions": [
+            "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+            "目标设备串口可用",
+            "播放声卡可用",
+            "测试音频或 TTS 可生成",
+            "具备至少一种可控断网方案"
+          ],
+          "steps": [
+            "记录初始联网状态。",
+            "按当前环境选择 Wi-Fi 开关、热点控制或设备侧网络配置方案。",
+            "等待离线证据后恢复网络。",
+            "执行在线问答或云控 smoke。"
+          ],
+          "expected_results": [
+            "断网阶段有离线或请求失败证据。",
+            "恢复后重新获得 IP 或云端闭环。",
+            "异常按网络不可控、设备未上线或云端失败归因。"
+          ],
+          "evidence": [
+            "串口窗口日志",
+            "execution_record.json 或 summary.json",
+            "Markdown 测试报告"
+          ],
+          "pass_criteria": "达到预期结果且无 reboot、crash、watchdog 或串口 reader 异常。",
+          "fail_criteria": "出现明确功能闭环失败、证据冲突或设备异常。",
+          "blocked_conditions": [
+            "当前 PC 或热点不可控",
+            "设备网络方案未确认",
+            "执行窗口不允许断网"
+          ],
+          "estimated_minutes": 15
+        }
+      ]
+    },
+    {
+      "id": "false_wake_quiet",
+      "module": "false-wake",
+      "name": "安静误唤醒",
+      "summary": "验证安静环境下误唤醒事件统计。",
+      "requirement": "确认无播放输入时设备不会产生异常唤醒。",
+      "logic": "保持安静窗口并采集串口唤醒、ASR 和健康事件。",
+      "modes": [
+        "plan-only",
+        "dry-run",
+        "execute"
+      ],
+      "recommended_mode": "dry-run",
+      "runner": "agent_shell",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/false_wake_quiet.example.json",
+      "requires": [
+        "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+        "目标设备串口可用",
+        "播放声卡可用",
+        "测试音频或 TTS 可生成"
+      ],
+      "side_effects": [
+        "读取串口日志",
+        "占用观察窗口"
+      ],
+      "risk_level": "low",
+      "test_cases": [
+        {
+          "id": "false_wake_quiet_window",
+          "title": "安静窗口误唤醒统计",
+          "objective": "统计安静环境下是否出现误唤醒。",
+          "preconditions": [
+            "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+            "目标设备串口可用",
+            "播放声卡可用",
+            "测试音频或 TTS 可生成"
+          ],
+          "steps": [
+            "确认无计划播放音频。",
+            "保持安静观察窗口。",
+            "采集唤醒事件、ASR 文本和健康日志。"
+          ],
+          "expected_results": [
+            "观察窗口内误唤醒数不超过阈值。",
+            "若出现事件可追溯时间点和日志。",
+            "无设备异常。"
+          ],
+          "evidence": [
+            "串口日志",
+            "误唤醒统计 JSON",
+            "Markdown 测试报告"
+          ],
+          "pass_criteria": "达到预期结果且无 reboot、crash、watchdog 或串口 reader 异常。",
+          "fail_criteria": "出现明确功能闭环失败、证据冲突或设备异常。",
+          "blocked_conditions": [
+            "串口被占用",
+            "声卡不可用",
+            "测试素材缺失",
+            "设备不在目标环境"
+          ],
+          "estimated_minutes": 10
+        }
+      ]
+    },
+    {
+      "id": "false_wake_human_speech",
+      "module": "false-wake",
+      "name": "人声误唤醒",
+      "summary": "验证非唤醒词人声下的误唤醒情况。",
+      "requirement": "确认普通人声或干扰语料不会被误判为唤醒。",
+      "logic": "播放非唤醒词人声素材，统计唤醒事件和误识别。",
+      "modes": [
+        "plan-only",
+        "dry-run",
+        "execute"
+      ],
+      "recommended_mode": "dry-run",
+      "runner": "agent_shell",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/false_wake_human_speech.example.json",
+      "requires": [
+        "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+        "目标设备串口可用",
+        "播放声卡可用",
+        "测试音频或 TTS 可生成"
+      ],
+      "side_effects": [
+        "播放人声干扰音频",
+        "读取串口日志"
+      ],
+      "risk_level": "low",
+      "test_cases": [
+        {
+          "id": "false_wake_human_speech_window",
+          "title": "人声反集误唤醒统计",
+          "objective": "验证普通人声干扰下的误唤醒率。",
+          "preconditions": [
+            "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+            "目标设备串口可用",
+            "播放声卡可用",
+            "测试音频或 TTS 可生成"
+          ],
+          "steps": [
+            "准备非唤醒词人声素材。",
+            "按指定音量播放素材。",
+            "采集唤醒事件和误识别文本。"
+          ],
+          "expected_results": [
+            "误唤醒数不超过阈值。",
+            "异常样本记录素材、时间点和串口证据。",
+            "无设备健康异常。"
+          ],
+          "evidence": [
+            "串口窗口日志",
+            "execution_record.json 或 summary.json",
+            "Markdown 测试报告"
+          ],
+          "pass_criteria": "达到预期结果且无 reboot、crash、watchdog 或串口 reader 异常。",
+          "fail_criteria": "出现明确功能闭环失败、证据冲突或设备异常。",
+          "blocked_conditions": [
+            "串口被占用",
+            "声卡不可用",
+            "测试素材缺失",
+            "设备不在目标环境"
+          ],
+          "estimated_minutes": 10
+        }
+      ]
+    },
+    {
+      "id": "false_wake_white_noise",
+      "module": "false-wake",
+      "name": "白噪声误唤醒",
+      "summary": "验证白噪声或环境噪声下的误唤醒情况。",
+      "requirement": "确认噪声干扰不会造成异常唤醒。",
+      "logic": "播放白噪声素材，按窗口统计唤醒和健康事件。",
+      "modes": [
+        "plan-only",
+        "dry-run",
+        "execute"
+      ],
+      "recommended_mode": "dry-run",
+      "runner": "agent_shell",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/false_wake_white_noise.example.json",
+      "requires": [
+        "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+        "目标设备串口可用",
+        "播放声卡可用",
+        "测试音频或 TTS 可生成"
+      ],
+      "side_effects": [
+        "播放噪声素材",
+        "读取串口日志"
+      ],
+      "risk_level": "low",
+      "test_cases": [
+        {
+          "id": "false_wake_white_noise_window",
+          "title": "白噪声反集误唤醒统计",
+          "objective": "验证白噪声干扰下的误唤醒率。",
+          "preconditions": [
+            "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+            "目标设备串口可用",
+            "播放声卡可用",
+            "测试音频或 TTS 可生成"
+          ],
+          "steps": [
+            "准备白噪声素材和音量。",
+            "播放噪声并保持观察窗口。",
+            "采集唤醒事件、ASR 文本和健康 marker。"
+          ],
+          "expected_results": [
+            "误唤醒数不超过阈值。",
+            "异常样本可追溯到噪声音量和时间点。",
+            "无设备异常。"
+          ],
+          "evidence": [
+            "串口窗口日志",
+            "execution_record.json 或 summary.json",
+            "Markdown 测试报告"
+          ],
+          "pass_criteria": "达到预期结果且无 reboot、crash、watchdog 或串口 reader 异常。",
+          "fail_criteria": "出现明确功能闭环失败、证据冲突或设备异常。",
+          "blocked_conditions": [
+            "串口被占用",
+            "声卡不可用",
+            "测试素材缺失",
+            "设备不在目标环境"
+          ],
+          "estimated_minutes": 10
+        }
+      ]
+    },
+    {
+      "id": "online_mixed_stress",
+      "module": "stress",
+      "name": "WS63 在线混合压测",
+      "summary": "混合执行在线音乐、新闻、问答、命令词等场景并统计异常。",
+      "requirement": "确认在线混合场景长时间运行时不会出现系统性异常。",
+      "logic": "按策略混合执行在线问答、媒体、新闻和控制命令，统计 PASS、WARN、FAIL 和异常归因。",
+      "modes": [
+        "plan-only",
+        "dry-run",
+        "execute"
+      ],
+      "recommended_mode": "dry-run",
+      "runner": "agent_shell",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/online_mixed_stress.ws63.example.json",
+      "requires": [
+        "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+        "目标设备串口可用",
+        "播放声卡可用",
+        "测试音频或 TTS 可生成",
+        "设备端 env 与 cloud.api_environment 一致",
+        "云控账号、设备授权和固件版本有效"
+      ],
+      "side_effects": [
+        "连续播放在线语音",
+        "可能触发媒体和 TTS",
+        "长时间占用设备"
+      ],
+      "risk_level": "high",
+      "test_cases": [
+        {
+          "id": "online_mixed_stress_small",
+          "title": "在线混合小样本压测",
+          "objective": "覆盖在线问答、媒体和命令词组合场景。",
+          "preconditions": [
+            "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+            "目标设备串口可用",
+            "播放声卡可用",
+            "测试音频或 TTS 可生成",
+            "设备端 env 与 cloud.api_environment 一致",
+            "云控账号、设备授权和固件版本有效"
+          ],
+          "steps": [
+            "确认 WS63 在线、环境门禁和云控基线。",
+            "按混合策略循环执行多类语料。",
+            "统计每轮闭环、媒体错误、误识别和设备健康。"
+          ],
+          "expected_results": [
+            "压测完成并输出统计。",
+            "无 reboot、crash、watchdog。",
+            "异常按媒体、ASR、网络或时序分类。"
+          ],
+          "evidence": [
+            "串口窗口日志",
+            "execution_record.json 或 summary.json",
+            "Markdown 测试报告"
+          ],
+          "pass_criteria": "达到预期结果且无 reboot、crash、watchdog 或串口 reader 异常。",
+          "fail_criteria": "出现明确功能闭环失败、证据冲突或设备异常。",
+          "blocked_conditions": [
+            "串口被占用",
+            "声卡不可用",
+            "测试素材缺失",
+            "设备不在目标环境"
+          ],
+          "estimated_minutes": 30
+        }
+      ]
+    },
+    {
+      "id": "online_qa",
+      "module": "online",
+      "name": "在线问答/天气时间",
+      "summary": "验证天气、时间、百科和通用问答等在线能力。",
+      "requirement": "确认设备在线问答链路可以形成 ASR 到回复闭环。",
+      "logic": "注入天气、时间和百科语料，采集 ASR、TTS、业务响应和异常。",
+      "modes": [
+        "plan-only",
+        "dry-run",
+        "execute"
+      ],
+      "recommended_mode": "dry-run",
+      "runner": "agent_shell",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/online_mixed_stress.ws63.example.json",
+      "requires": [
+        "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+        "目标设备串口可用",
+        "播放声卡可用",
+        "测试音频或 TTS 可生成",
+        "设备端 env 与 cloud.api_environment 一致",
+        "云控账号、设备授权和固件版本有效"
+      ],
+      "side_effects": [
+        "播放在线问答音频",
+        "可能触发 TTS 播报"
+      ],
+      "risk_level": "medium",
+      "test_cases": [
+        {
+          "id": "online_qa_weather_time",
+          "title": "在线问答抽样",
+          "objective": "验证天气、时间和百科问答闭环。",
+          "preconditions": [
+            "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+            "目标设备串口可用",
+            "播放声卡可用",
+            "测试音频或 TTS 可生成",
+            "设备端 env 与 cloud.api_environment 一致",
+            "云控账号、设备授权和固件版本有效"
+          ],
+          "steps": [
+            "确认设备在线且云控基线正常。",
+            "播放天气、时间和百科类语料。",
+            "采集 ASR 文本、回复播报和错误 marker。"
+          ],
+          "expected_results": [
+            "至少目标样本形成在线回复闭环。",
+            "无闭环样本区分误识别、无回复、网络或媒体问题。",
+            "无设备健康异常。"
+          ],
+          "evidence": [
+            "串口窗口日志",
+            "execution_record.json 或 summary.json",
+            "Markdown 测试报告"
+          ],
+          "pass_criteria": "达到预期结果且无 reboot、crash、watchdog 或串口 reader 异常。",
+          "fail_criteria": "出现明确功能闭环失败、证据冲突或设备异常。",
+          "blocked_conditions": [
+            "串口被占用",
+            "声卡不可用",
+            "测试素材缺失",
+            "设备不在目标环境"
+          ],
+          "estimated_minutes": 12
+        }
+      ]
+    },
+    {
+      "id": "online_media",
+      "module": "online",
+      "name": "在线媒体/新闻/音乐",
+      "summary": "验证音乐、新闻、相声等媒体类在线链路。",
+      "requirement": "确认在线媒体请求、播放和错误归因可被采集。",
+      "logic": "注入媒体类语料，观察 ASR、media url、HTTP retry、播放状态和停止命令。",
+      "modes": [
+        "plan-only",
+        "dry-run",
+        "execute"
+      ],
+      "recommended_mode": "dry-run",
+      "runner": "agent_shell",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/online_mixed_stress.ws63.example.json",
+      "requires": [
+        "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+        "目标设备串口可用",
+        "播放声卡可用",
+        "测试音频或 TTS 可生成",
+        "设备端 env 与 cloud.api_environment 一致",
+        "云控账号、设备授权和固件版本有效"
+      ],
+      "side_effects": [
+        "可能播放音乐、新闻或相声",
+        "可能占用媒体链路"
+      ],
+      "risk_level": "medium",
+      "test_cases": [
+        {
+          "id": "online_media_news_music",
+          "title": "在线媒体抽样",
+          "objective": "验证新闻、音乐和相声等媒体类链路。",
+          "preconditions": [
+            "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+            "目标设备串口可用",
+            "播放声卡可用",
+            "测试音频或 TTS 可生成",
+            "设备端 env 与 cloud.api_environment 一致",
+            "云控账号、设备授权和固件版本有效"
+          ],
+          "steps": [
+            "确认设备在线且音量合适。",
+            "播放媒体类请求语料。",
+            "采集 ASR、媒体请求、播放开始结束和 HTTP 错误。"
+          ],
+          "expected_results": [
+            "目标样本形成播放或明确失败归因。",
+            "媒体错误保留 URL、mid 或 session 线索。",
+            "无播放状态卡死。"
+          ],
+          "evidence": [
+            "串口窗口日志",
+            "execution_record.json 或 summary.json",
+            "Markdown 测试报告"
+          ],
+          "pass_criteria": "达到预期结果且无 reboot、crash、watchdog 或串口 reader 异常。",
+          "fail_criteria": "出现明确功能闭环失败、证据冲突或设备异常。",
+          "blocked_conditions": [
+            "串口被占用",
+            "声卡不可用",
+            "测试素材缺失",
+            "设备不在目标环境"
+          ],
+          "estimated_minutes": 15
+        }
+      ]
+    },
+    {
+      "id": "cloud_config_control",
+      "module": "cloud",
+      "name": "云端配置控制",
+      "summary": "验证云控环境门禁和全双工、麦克风、音量、夜间模式等配置项。",
+      "requirement": "确认网络云端配置 API 只在设备环境正确时执行，并能返回业务成功。",
+      "logic": "先执行 check-env，再按配置项调用云控 API，并用设备侧 marker 复核。",
+      "modes": [
+        "plan-only",
+        "dry-run",
+        "execute"
+      ],
+      "recommended_mode": "dry-run",
+      "runner": "agent_shell",
+      "task": "tools/cloud/polaris_app_control.py",
+      "requires": [
+        "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+        "目标设备串口可用",
+        "播放声卡可用",
+        "测试音频或 TTS 可生成",
+        "设备端 env 与 cloud.api_environment 一致",
+        "云控账号、设备授权和固件版本有效"
+      ],
+      "side_effects": [
+        "调用云控 API",
+        "可能改变全双工、麦克风、音量或夜间模式"
+      ],
+      "risk_level": "high",
+      "test_cases": [
+        {
+          "id": "cloud_config_gate_and_restore",
+          "title": "云控环境门禁和基线恢复",
+          "objective": "验证云控前置环境正确，并恢复目标基线配置。",
+          "preconditions": [
+            "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+            "目标设备串口可用",
+            "播放声卡可用",
+            "测试音频或 TTS 可生成",
+            "设备端 env 与 cloud.api_environment 一致",
+            "云控账号、设备授权和固件版本有效"
+          ],
+          "steps": [
+            "执行 check-env 确认设备端 env 与 API 环境一致。",
+            "设置 full-duplex、mic、night、volume 等目标项。",
+            "读取业务返回码和设备侧 marker。"
+          ],
+          "expected_results": [
+            "环境门禁 PASS 后才调用 API。",
+            "API 返回 HTTP 200 且业务成功。",
+            "设备侧可观察到配置生效或明确归因。"
+          ],
+          "evidence": [
+            "云控命令输出",
+            "设备串口日志",
+            "配置 smoke 报告"
+          ],
+          "pass_criteria": "达到预期结果且无 reboot、crash、watchdog 或串口 reader 异常。",
+          "fail_criteria": "出现明确功能闭环失败、证据冲突或设备异常。",
+          "blocked_conditions": [
+            "设备环境不匹配",
+            "云控账号未登录或授权版本不匹配",
+            "网络无法访问云端 API"
+          ],
+          "estimated_minutes": 10
+        }
+      ]
+    },
+    {
+      "id": "ws63_auto_burn",
+      "module": "burn",
+      "name": "WS63 自动烧录 smoke",
+      "summary": "验证 WS63-only 或 VenusA+WS63 自动烧录、版本校验和基础功能 smoke。",
+      "requirement": "确认烧录工具、固件包、串口和 BuildInfo 校验链路完整。",
+      "logic": "执行 preflight、烧录、optLog 解析、BuildInfo 校验、环境恢复和 first_wake/basic smoke。",
+      "modes": [
+        "plan-only",
+        "dry-run",
+        "execute"
+      ],
+      "recommended_mode": "dry-run",
+      "runner": "agent_shell",
+      "task": "tools/burn/VenusA+WS63/auto_burn.py",
+      "requires": [
+        "外部烧录工具目录 BurnTool_Gold 和 VenusA_Burn",
+        "外部固件包 tools/burn/ws63_fw",
+        "当前 WS63 串口配置 COM20/COM17/COM19 或显式覆盖",
+        "execute 前二次确认烧录风险"
+      ],
+      "side_effects": [
+        "真实烧录会改写设备固件",
+        "设备会重启或进入工厂模式",
+        "可能改变设备环境和云控基线"
+      ],
+      "risk_level": "high",
+      "test_cases": [
+        {
+          "id": "ws63_auto_burn_smoke",
+          "title": "WS63 自动烧录 smoke",
+          "objective": "验证当前 WS63 固件可以自动烧录并通过版本与基础功能校验。",
+          "preconditions": [
+            "已从外部受控渠道准备烧录工具目录 BurnTool_Gold 和 VenusA_Burn",
+            "已从外部受控渠道准备 tools/burn/ws63_fw 固件包",
+            "当前 WS63 串口为 COM20、COM17、COM19 或已显式覆盖",
+            "已确认 execute 会真实改写固件"
+          ],
+          "steps": [
+            "确认 BurnTool、VenusA_Burn 和 ws63_fw 固件包已按 README 放置。",
+            "先运行 dry-run 检查命令、串口和固件路径。",
+            "execute 前二次确认烧录风险。",
+            "执行烧录并校验 optLog、BuildInfo 和基础功能。"
+          ],
+          "expected_results": [
+            "烧录工具无失败 marker。",
+            "WS63 optLog 显示烧写成功。",
+            "设备重启后 BuildInfo 或 Project Version 匹配固件包。",
+            "环境恢复和基础 smoke 可用。"
+          ],
+          "evidence": [
+            "burn_summary.json",
+            "burn_summary.md",
+            "BurnTool optLog 副本",
+            "设备启动 BuildInfo 日志"
+          ],
+          "pass_criteria": "烧录、版本校验、环境恢复和基础功能 smoke 均通过。",
+          "fail_criteria": "出现工具失败 marker、optLog 失败、版本不匹配、环境无法恢复或基础功能 smoke 失败。",
+          "blocked_conditions": [
+            "烧录工具或固件包未准备",
+            "串口与现场配置不一致",
+            "用户未确认真实烧录风险"
+          ],
+          "estimated_minutes": 25
+        }
+      ]
+    },
+    {
+      "id": "attribution_validator",
+      "module": "diagnosis",
+      "name": "异常归因诊断",
+      "summary": "验证异常样本可按网络、媒体、ASR、时序、配置或证据不足分类。",
+      "requirement": "确认框架能把失败样本转成可追溯的归因结果。",
+      "logic": "读取任务输出和日志，生成归因摘要和定位线索。",
+      "modes": [
+        "plan-only",
+        "dry-run",
+        "execute"
+      ],
+      "recommended_mode": "dry-run",
+      "runner": "agent_shell",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/attribution_validator.example.json",
+      "requires": [
+        "已有任务输出或示例样本"
+      ],
+      "side_effects": [
+        "读取本地日志和任务输出"
+      ],
+      "risk_level": "low",
+      "test_cases": [
+        {
+          "id": "attribution_validator_basic",
+          "title": "异常归因规则验证",
+          "objective": "验证失败或 WARN 样本能给出明确归因路径。",
+          "preconditions": [
+            "已有任务输出或示例样本",
+            "归因任务文件存在"
+          ],
+          "steps": [
+            "准备一组包含 PASS、FAIL、WARN 或 BLOCKED 的样本。",
+            "运行归因验证任务。",
+            "检查输出分类、证据路径和建议动作。"
+          ],
+          "expected_results": [
+            "每个异常样本都有可解释分类。",
+            "不会把前置阻塞误判为固件失败。",
+            "报告包含下一步定位建议。"
+          ],
+          "evidence": [
+            "串口窗口日志",
+            "execution_record.json 或 summary.json",
+            "Markdown 测试报告"
+          ],
+          "pass_criteria": "达到预期结果且无 reboot、crash、watchdog 或串口 reader 异常。",
+          "fail_criteria": "出现明确功能闭环失败、证据冲突或设备异常。",
+          "blocked_conditions": [
+            "串口被占用",
+            "声卡不可用",
+            "测试素材缺失",
+            "设备不在目标环境"
+          ],
+          "estimated_minutes": 5
+        }
+      ]
+    },
+    {
+      "id": "ws63_serial_coverage",
+      "module": "serial",
+      "name": "WS63 串口覆盖检查",
+      "summary": "验证 WS63 AP、upper/asr 和控制口均可枚举、打开并采集到预期证据。",
+      "requirement": "确认 COM20、COM17、COM19 当前可用，避免旧端口残留影响测试。",
+      "logic": "执行串口 preflight，读取版本、环境、日志活跃度和控制口可打开状态。",
+      "modes": [
+        "plan-only",
+        "dry-run",
+        "execute"
+      ],
+      "recommended_mode": "dry-run",
+      "runner": "agent_shell",
+      "task": "satellite/cucumber-agent-testing/tasks/examples/ws63_com20_coverage_check.example.json",
+      "requires": [
+        "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+        "目标设备串口可用",
+        "播放声卡可用",
+        "测试音频或 TTS 可生成"
+      ],
+      "side_effects": [
+        "读取串口日志",
+        "短时间占用串口"
+      ],
+      "risk_level": "low",
+      "test_cases": [
+        {
+          "id": "ws63_serial_coverage_current_ports",
+          "title": "WS63 当前串口覆盖检查",
+          "objective": "验证当前 WS63 三个串口均可用于后续功能测试。",
+          "preconditions": [
+            "已根据 polaris.local.example.json 准备本机 polaris.local.json",
+            "目标设备串口可用",
+            "播放声卡可用",
+            "测试音频或 TTS 可生成"
+          ],
+          "steps": [
+            "枚举系统串口。",
+            "按 COM20@921600、COM17@921600、COM19@115200 打开端口。",
+            "读取版本、环境或日志活跃度。"
+          ],
+          "expected_results": [
+            "三个端口均可打开。",
+            "AP 或 upper 能返回版本、环境或日志证据。",
+            "控制口可打开且不误用旧 COM 组合。"
+          ],
+          "evidence": [
+            "串口枚举结果",
+            "preflight JSON",
+            "串口窗口日志"
+          ],
+          "pass_criteria": "达到预期结果且无 reboot、crash、watchdog 或串口 reader 异常。",
+          "fail_criteria": "出现明确功能闭环失败、证据冲突或设备异常。",
+          "blocked_conditions": [
+            "串口被占用",
+            "声卡不可用",
+            "测试素材缺失",
+            "设备不在目标环境"
+          ],
+          "estimated_minutes": 4
+        }
+      ]
+    }
+  ]
+}
