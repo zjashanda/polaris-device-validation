@@ -6,6 +6,10 @@ summary: Polaris 语音设备 BDD + Event Runtime 真机验证 skill。
 
 # Polaris 语音设备验证 Skill
 
+> **已归档（2026-11-07）。本仓库只作历史参照，不要安装、不要用于新任务。**
+>
+> 同源框架仍在维护的是 [`zjashanda/Polaris`](https://github.com/zjashanda/Polaris)（事件运行时、WS63 烧录、交互时延追踪等更新只进了那边）。能力台账中本仓库 `status=archived`、`replaced_by=Polaris`。迁移前请先核对 `Polaris/` 的 `polaris.local.example.json` 与最新 `SKILL.md`，旧的本机配置键不保证兼容。
+
 本 skill 已切换到新方案：Cucumber/BDD 用例入口 + Event Runtime 事件断言 + 项目化本机配置。旧方案已迁移到 `oldTime/`，不再作为执行入口。
 
 ## 快速定位
