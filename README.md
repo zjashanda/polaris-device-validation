@@ -1,5 +1,8 @@
 # Polaris Voice Validation Skill
 
+> **已归档（2026-11-07）：本仓库由 [`zjashanda/Polaris`](https://github.com/zjashanda/Polaris) 取代，不再维护，不要安装。**
+> 台账登记见 `ark-kb/registry/skills.json`：`status=archived`、`replaced_by=Polaris`。以下内容仅作历史参照。
+
 ## 最新同步入口
 
 - zhsh / Orion 平台能力描述文件：`orion.skilltest.json`；新增或调整可平台化测试模块时必须同步更新。
